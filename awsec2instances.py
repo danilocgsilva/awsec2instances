@@ -7,7 +7,7 @@ def extractPublicIpAddress( instanceInfos ):
     if "PublicIpAddress" in instanceInfos:
         return instanceInfos["PublicIpAddress"]
     else:
-        return "Sem endereco de instancia"
+        return "---"
 
 def extractInstanceType( instanceInfos ):
     return instanceInfos["InstanceType"]

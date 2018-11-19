@@ -15,7 +15,12 @@ if len(arguments) > 1:
     commandLine.append('--profile')
     commandLine.append(arguments[1])
 
-outputBytes = subprocess.check_output(commandLine)
+try:
+    outputBytes = subprocess.check_output(commandLine)
+except:
+    print("Exception returned in the AWS request.")
+    exit()
+
 jsonString = outputBytes.decode("utf-8")
 j = json.loads(jsonString)
 instances = j['Reservations']

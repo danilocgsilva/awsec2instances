@@ -1,12 +1,6 @@
 #!/usr/bin/python3
 
 import sys, json, subprocess
-
-from awsec2instances_includes.fn import extractPublicIpAddress 
-from awsec2instances_includes.fn import extractInstanceType 
-from awsec2instances_includes.fn import extractName
-from awsec2instances_includes.fn import extracState
-from awsec2instances_includes.fn import extractInstanceId
 from awsec2instances_includes.fn import getInstancesData
 
 arguments = sys.argv

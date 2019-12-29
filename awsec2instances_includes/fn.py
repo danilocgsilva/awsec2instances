@@ -27,24 +27,24 @@ def extractInstanceId ( instanceInfos ):
     return instanceInfos["InstanceId"]
 
 
-def getInstancesData(instances):
-    loopInteration = 0
-    for instance in instances:
+# def getInstancesData(instances):
+#     loopInteration = 0
+#     for instance in instances:
 
-        loopInteration += 1
-        instanceInfos = instance["Instances"][0]
+#         loopInteration += 1
+#         instanceInfos = instance["Instances"][0]
 
-        tipoInstancia = extractInstanceType( instanceInfos )
-        instanceId = extractInstanceId( instanceInfos )
-        enderecoInstancia = extractPublicIpAddress( instanceInfos )
-        identificacao = extractName( instanceInfos )
-        state = extracState( instanceInfos )
+#         tipoInstancia = extractInstanceType( instanceInfos )
+#         instanceId = extractInstanceId( instanceInfos )
+#         enderecoInstancia = extractPublicIpAddress( instanceInfos )
+#         identificacao = extractName( instanceInfos )
+#         state = extracState( instanceInfos )
 
-        print('Instance count:', loopInteration)
-        print('Instance Id:', instanceId)
-        print('Instance type:', tipoInstancia)
-        print('PublicIp:', enderecoInstancia)
-        print('Name:', identificacao)
-        print('Status:', state)
-        print('---')
+#         print('Instance count:', loopInteration)
+#         print('Instance Id:', instanceId)
+#         print('Instance type:', tipoInstancia)
+#         print('PublicIp:', enderecoInstancia)
+#         print('Name:', identificacao)
+#         print('Status:', state)
+#         print('---')
     

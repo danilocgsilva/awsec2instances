@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import sys, json, subprocess
-from awsec2instances_includes.fn import getInstancesData
+from awsec2instances_includes.DataIterator import DataIterator
 
 arguments = sys.argv
 commandLine = ['aws', 'ec2', 'describe-instances']
@@ -20,4 +20,7 @@ jsonString = outputBytes.decode("utf-8")
 j = json.loads(jsonString)
 instances = j['Reservations']
 
-getInstancesData(instances)
+di = DataIterator()
+di.showInstancesInfos(instances)
+
+# getInstancesData(instances)

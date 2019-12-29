@@ -1,3 +1,5 @@
+import sys, json, subprocess
+
 def extractPublicIpAddress( instanceInfos ):
     if "PublicIpAddress" in instanceInfos:
         return instanceInfos["PublicIpAddress"]
@@ -27,24 +29,20 @@ def extractInstanceId ( instanceInfos ):
     return instanceInfos["InstanceId"]
 
 
-# def getInstancesData(instances):
-#     loopInteration = 0
-#     for instance in instances:
+def getRawData():
+    arguments = sys.argv
+    commandLine = ['aws', 'ec2', 'describe-instances']
 
-#         loopInteration += 1
-#         instanceInfos = instance["Instances"][0]
+    if len(arguments) > 1:
+        commandLine.append('--profile')
+        commandLine.append(arguments[1])
 
-#         tipoInstancia = extractInstanceType( instanceInfos )
-#         instanceId = extractInstanceId( instanceInfos )
-#         enderecoInstancia = extractPublicIpAddress( instanceInfos )
-#         identificacao = extractName( instanceInfos )
-#         state = extracState( instanceInfos )
+    try:
+        outputBytes = subprocess.check_output(commandLine)
+    except:
+        print("Exception returned in the AWS request.")
+        exit()
 
-#         print('Instance count:', loopInteration)
-#         print('Instance Id:', instanceId)
-#         print('Instance type:', tipoInstancia)
-#         print('PublicIp:', enderecoInstancia)
-#         print('Name:', identificacao)
-#         print('Status:', state)
-#         print('---')
-    
+    jsonString = outputBytes.decode("utf-8")
+    j = json.loads(jsonString)
+    return j['Reservations']

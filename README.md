@@ -48,3 +48,13 @@ If you have several profiles configured in your machine, then you can provide th
 ```
 awsec2instances <your_profile>
 ```
+
+## File list
+
+* `awsec2instances_includes/DataIterator.py`: Object that have the method to iterate through raw data from AWS Aamazon API.
+
+* `awsec2instances_includes/fn.py`: Files containing general functions.
+
+* `awsec2instances.py`: script entry file. Designed to be executed by the posix command line style or as file input to the python interpreter.
+
+* `Makefile`: scripts that uses the `make` posix like utility to make a local installation. Do not works on Windows or if the `make` utility is not installed in your system.

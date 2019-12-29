@@ -55,6 +55,14 @@ awsec2instances <your_profile>
 
 * `awsec2instances_includes/fn.py`: Files containing general functions.
 
+* `awsec2instances_includes/Talk.py`: Object specialized to output information to the command line.
+
+* `testsAssets/get_mocked_raw_data.py`: Module to provides a sample data in the same format provided by the AWS api.
+
+* `testsAssets/get_raw_json.py`: Get a sample from real raw json from AWS api.
+
 * `awsec2instances.py`: script entry file. Designed to be executed by the posix command line style or as file input to the python interpreter.
+
+* `DataIteratorTest.py`: Class to tests the DataIterator.
 
 * `Makefile`: scripts that uses the `make` posix like utility to make a local installation. Do not works on Windows or if the `make` utility is not installed in your system.

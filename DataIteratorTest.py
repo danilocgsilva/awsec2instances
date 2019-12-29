@@ -15,5 +15,17 @@ class DataIteratorTest(unittest.TestCase):
         self.assertEqual(2, len(instanceInfos))
 
 
+    def test_filter_stopped_instances(self):
+        instances = get_mocked_raw_data()
+
+        di = DataIterator()
+        di.set_allow_stopped(False)
+        instanceInfos = di.getInstancesInfos(instances)
+
+        self.assertEqual(1, len(instanceInfos))
+
+
+
+
 if __name__ == '__main__':
     unittest.main()

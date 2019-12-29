@@ -1,15 +1,10 @@
 #!/usr/bin/python3
 
 from awsec2instances_includes.DataIterator import DataIterator
-from awsec2instances_includes.fn import getRawData
+from awsec2instances_includes.fn import getRawDataFromCli
 import sys
 
-arguments = sys.argv
-
-if len(arguments) > 1:
-    instances = getRawData(arguments[1])
-else:
-    instances = getRawData()
+instances = getRawDataFromCli()
 
 di = DataIterator()
 di.showInstancesInfos(instances)

@@ -8,30 +8,29 @@ from awsec2instances_includes.fn import \
 
 class DataIterator:
 
-    def showInstancesInfos(self, instances):
+    def getInstancesInfos(self, instances):
+
+        array_data = []
+
         iteration_loop = 1
         for instance in instances:
             instanceInfos = instance["Instances"][0]
-            array_data = self.__get_data_to_print__(instanceInfos)
-            self.__print_data_single_instance__(array_data, iteration_loop)
+            array_data.append(
+                self.__build_dataInfo_entry__(instanceInfos, iteration_loop)
+            )
             iteration_loop += 1
 
-
-    def __get_data_to_print__(self, instanceInfos):
-        state = extracState( instanceInfos )
-        tipoInstancia = extractInstanceType( instanceInfos )
-        instanceId = extractInstanceId( instanceInfos )
-        enderecoInstancia = extractPublicIpAddress( instanceInfos )
-        identificacao = extractName( instanceInfos )
-
-        return [instanceId, tipoInstancia, enderecoInstancia, identificacao, state]
+        return array_data
 
 
-    def __print_data_single_instance__(self, list_data: list, iteration_loop: int):
-        print('Instance counted:',  iteration_loop)
-        print('Instance Id:', list_data[0])
-        print('Instance type:', list_data[1])
-        print('PublicIp:', list_data[2])
-        print('Name:', list_data[3])
-        print('Status:', list_data[4])
-        print('---')
+    def __build_dataInfo_entry__(self, list: list, count: int):
+        dataInfo = {}
+        dataInfo['count'] = count
+        dataInfo['id'] = extractInstanceId(list)
+        dataInfo['type'] = extractInstanceType(list)
+        dataInfo['ip'] = extractPublicIpAddress(list)
+        dataInfo['name'] = extractName(list)
+        dataInfo['status'] = extracState(list)
+
+        return dataInfo
+

@@ -29,13 +29,17 @@ def extractInstanceId ( instanceInfos ):
     return instanceInfos["InstanceId"]
 
 
-def getRawData():
-    arguments = sys.argv
+def getRawData(profile = None):
+
     commandLine = ['aws', 'ec2', 'describe-instances']
 
-    if len(arguments) > 1:
+    # if len(arguments) > 1:
+    #     commandLine.append('--profile')
+    #     commandLine.append(arguments[1])
+
+    if profile:
         commandLine.append('--profile')
-        commandLine.append(arguments[1])
+        commandLine.append(profile)
 
     try:
         outputBytes = subprocess.check_output(commandLine)

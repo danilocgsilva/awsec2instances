@@ -3,3 +3,5 @@ awsec2instances_includes/__pycache__/fn.cpython-37.pyc
 awsec2instances_includes/__pycache__/DataIterator.cpython-37.pyc
 awsec2instances_includes/__pycache__/Talk.cpython-37.pyc
 testsAssets/__pycache__/get_mocked_raw_data.cpython-37.pyc
+awsec2instances_includes/__pycache__/DataExtractor.cpython-37.pyc
+testsAssets/__pycache__/get_mocked_single_instance_data.cpython-37.pyc

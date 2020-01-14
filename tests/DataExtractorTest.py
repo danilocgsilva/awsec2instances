@@ -19,13 +19,17 @@ class DataExtractorTest(unittest.TestCase):
 
     def testCanExtractInstanceType(self):
         instance_type = self.dataExtractor.extract_instance_type()
-        self.assertEqual(instance_type, )
+        self.assertEqual(instance_type, t2.nano)
 
 
     def testCanExtractPublicIpAddress(self):
+        instance_type = self.dataExtractor.extract_public_ip_address()
+        self.assertEqual(instance_type, "---")
 
 
     def testCanExtractName(self):
+        instance_name = self.dataExtractor.extract_name()
+        self.assertEqual(instance_name, "opsworks")
 
 
 if __name__ == '__main__':

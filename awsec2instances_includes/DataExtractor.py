@@ -9,11 +9,14 @@ class DataExtractor():
 
 
     def extract_instance_type(self):
-        return self.instance_type
+        return self.instance_raw_data["instanceType"]
 
 
     def extract_public_ip_address(self):
-        return self.public_id_address
+        if "PublicIpAddress" in self.instance_raw_data:
+            return self.instance_raw_data["PublicIpAddress"]
+        else:
+            return "---"
 
 
     def extract_name(self):

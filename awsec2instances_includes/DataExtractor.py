@@ -5,11 +5,11 @@ class DataExtractor():
 
 
     def extract_instance_id(self):
-        return self.instance_raw_data["InstanceType"]
+        return self.instance_raw_data["InstanceId"]
 
 
     def extract_instance_type(self):
-        return self.instance_raw_data["instanceType"]
+        return self.instance_raw_data["InstanceType"]
 
 
     def extract_public_ip_address(self):

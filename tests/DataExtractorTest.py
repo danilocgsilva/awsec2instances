@@ -2,14 +2,14 @@ import sys
 import unittest
 sys.path.append("..")
 from awsec2instances_includes.DataExtractor import DataExtractor
-from testsAssets.get_mocked_single_instance_data import mocked_single_instance
+from testsAssets.mocked_single_instance_data import mocked_single_instance_data
 
 class DataExtractorTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(DataExtractorTest, self).__init__(*args, **kwargs)
         self.dataExtractor = DataExtractor()
-        self.dataExtractor.set_instance_raw_data(mocked_single_instance)
+        self.dataExtractor.set_instance_raw_data(mocked_single_instance_data)
 
 
     def testCanExtractInstanceId(self):
@@ -19,7 +19,7 @@ class DataExtractorTest(unittest.TestCase):
 
     def testCanExtractInstanceType(self):
         instance_type = self.dataExtractor.extract_instance_type()
-        self.assertEqual(instance_type, t2.nano)
+        self.assertEqual(instance_type, "t2.nano")
 
 
     def testCanExtractPublicIpAddress(self):

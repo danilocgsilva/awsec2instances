@@ -1,4 +1,4 @@
-{
+mocked_single_instance_data = {
     "AmiLaunchIndex": 0,
     "ImageId": "ami-0922553b7b0369273",
     "InstanceId": "i-0aef91c9532fbbcfd",
@@ -30,22 +30,22 @@
             "DeviceName": "/dev/xvda",
             "Ebs": {
                 "AttachTime": "2018-10-11T02: 20: 37.000Z",
-                "DeleteOnTermination": true,
+                "DeleteOnTermination": True,
                 "Status": "attached",
                 "VolumeId": "vol-0f7285cb48ab826f5"
             }
         }
     ],
     "ClientToken": "",
-    "EbsOptimized": false,
-    "EnaSupport": true,
+    "EbsOptimized": False,
+    "EnaSupport": True,
     "Hypervisor": "xen",
     "NetworkInterfaces": [
         {
             "Attachment": {
                 "AttachTime": "2018-10-11T02: 20: 36.000Z",
                 "AttachmentId": "eni-attach-040686e1fe6e697b8",
-                "DeleteOnTermination": true,
+                "DeleteOnTermination": True,
                 "DeviceIndex": 0,
                 "Status": "attached"
             },
@@ -72,12 +72,12 @@
             "PrivateIpAddress": "172.31.24.11",
             "PrivateIpAddresses": [
                 {
-                    "Primary": true,
+                    "Primary": True,
                     "PrivateDnsName": "ip-172-31-24-11.ec2.internal",
                     "PrivateIpAddress": "172.31.24.11"
                 }
             ],
-            "SourceDestCheck": true,
+            "SourceDestCheck": True,
             "Status": "in-use",
             "SubnetId": "subnet-bad9a4f0",
             "VpcId": "vpc-202ad85a",
@@ -100,7 +100,7 @@
             "GroupId": "sg-0d3fba8e55ca910b7"
         }
     ],
-    "SourceDestCheck": true,
+    "SourceDestCheck": True,
     "StateReason": {
         "Code": "Client.UserInitiatedShutdown",
         "Message": "Client.UserInitiatedShutdown: User initiated shutdown"
@@ -128,6 +128,6 @@
         "CapacityReservationPreference": "open"
     },
     "HibernationOptions": {
-        "Configured": false
+        "Configured": False
     }
 }

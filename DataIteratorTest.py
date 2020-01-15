@@ -25,7 +25,5 @@ class DataIteratorTest(unittest.TestCase):
         self.assertEqual(1, len(instanceInfos))
 
 
-
-
 if __name__ == '__main__':
     unittest.main()

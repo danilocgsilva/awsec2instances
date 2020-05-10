@@ -3,3 +3,4 @@ awsec2instances_includes/__pycache__/*.pyc
 testsAssets/__pycache__/*.pyc
 awsec2instances_includes/__pycache__/*.pyc
 testsAssets/__pycache__/*.pyc
+*.cpython-*

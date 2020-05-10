@@ -4,10 +4,10 @@ sys.path.append("..")
 from awsec2instances_includes.DataExtractor import DataExtractor
 from testsAssets.mocked_single_instance_data import mocked_single_instance_data
 
-class DataExtractorTest(unittest.TestCase):
+class test_DataExtractorTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
-        super(DataExtractorTest, self).__init__(*args, **kwargs)
+        super(test_DataExtractorTest, self).__init__(*args, **kwargs)
         self.dataExtractor = DataExtractor()
         self.dataExtractor.set_instance_raw_data(mocked_single_instance_data)
 

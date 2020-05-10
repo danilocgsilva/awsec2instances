@@ -1,4 +1,5 @@
 import sys, json, subprocess
+from awsec2instances_includes.Command_Line_Wrapper import Command_Line_Wrapper
 
 def extractPublicIpAddress( instanceInfos ):
     if "PublicIpAddress" in instanceInfos:
@@ -40,17 +41,19 @@ def getRawDataFromCli():
 
 def getRawData(profile = None):
 
-    commandLine = ['aws', 'ec2', 'describe-instances']
+    command = Command_Line_Wrapper()
+
+    command.set_command_string('aws ec2 describe-instances')
 
     if profile:
-        commandLine.append('--profile')
-        commandLine.append(profile)
+        command.append_command_string('--profile ' + profile)
 
-    try:
-        outputBytes = subprocess.check_output(commandLine)
-    except:
-        print("Exception returned in the AWS request.")
-        exit()
+    # try:
+    #     outputBytes = command.execute()
+    # except:
+    #     print("Exception returned in the AWS request.")
+    #     exit()
+    outputBytes = command.execute()
 
     jsonString = outputBytes.decode("utf-8")
     j = json.loads(jsonString)

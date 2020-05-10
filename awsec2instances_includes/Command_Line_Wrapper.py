@@ -1,3 +1,5 @@
+import subprocess
+
 class Command_Line_Wrapper:
 
     def set_command_string(self, command_string: str):
@@ -8,3 +10,7 @@ class Command_Line_Wrapper:
 
     def get_command_string(self) -> str:
         return self.command_string
+
+    def execute(self) -> str:
+        command_terms = self.command_string.split(" ")
+        return subprocess.check_output(command_terms)

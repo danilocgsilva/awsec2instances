@@ -48,12 +48,11 @@ def getRawData(profile = None):
     if profile:
         command.append_command_string('--profile ' + profile)
 
-    # try:
-    #     outputBytes = command.execute()
-    # except:
-    #     print("Exception returned in the AWS request.")
-    #     exit()
-    outputBytes = command.execute()
+    try:
+        outputBytes = command.execute()
+    except:
+        print("Exception returned in the AWS request. The current system may need the profile name to proceed.")
+        exit()
 
     jsonString = outputBytes.decode("utf-8")
     j = json.loads(jsonString)

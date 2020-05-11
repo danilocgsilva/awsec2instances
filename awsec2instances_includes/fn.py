@@ -30,16 +30,16 @@ def extractInstanceId ( instanceInfos ):
     return instanceInfos["InstanceId"]
 
 
-def getRawDataFromCli():
+def getRawDataFromCli(region = None):
     arguments = sys.argv
 
     if len(arguments) > 1:
-        return getRawData(arguments[1])
+        return getRawData(arguments[1], region)
     else:
-        return getRawData()
+        return getRawData(None, region)
 
 
-def getRawData(profile = None):
+def getRawData(profile = None, region = None):
 
     command = Command_Line_Wrapper()
 
@@ -47,6 +47,9 @@ def getRawData(profile = None):
 
     if profile:
         command.append_command_string('--profile ' + profile)
+
+    if region:
+        command.append_command_string('--region ' + region)
 
     try:
         outputBytes = command.execute()
@@ -57,3 +60,15 @@ def getRawData(profile = None):
     jsonString = outputBytes.decode("utf-8")
     j = json.loads(jsonString)
     return j['Reservations']
+
+
+def get_region_list(json_formatted_string: str) -> list:
+
+    region_entries = []
+
+    j = json.loads(json_formatted_string)
+
+    for region_data in j["Regions"]:
+        region_entries.append(region_data["RegionName"])
+
+    return region_entries

@@ -1,5 +1,6 @@
 import sys, json, subprocess
 from awsec2instances_includes.Command_Line_Wrapper import Command_Line_Wrapper
+import boto3
 
 def extractPublicIpAddress( instanceInfos ):
     if "PublicIpAddress" in instanceInfos:
@@ -30,7 +31,7 @@ def extractInstanceId ( instanceInfos ):
     return instanceInfos["InstanceId"]
 
 
-def getRawDataFromCli(region = None):
+def getRawDataFromCli(region = None) -> dict:
     arguments = sys.argv
 
     if len(arguments) > 1:
@@ -39,7 +40,7 @@ def getRawDataFromCli(region = None):
         return getRawData(None, region)
 
 
-def getRawData(profile = None, region = None):
+def getRawData(profile = None, region = None) -> dict:
 
     command = Command_Line_Wrapper()
 
@@ -72,3 +73,8 @@ def get_region_list(json_formatted_string: str) -> list:
         region_entries.append(region_data["RegionName"])
 
     return region_entries
+
+
+def get_regions_data_string() -> str:
+    aws_client = boto3.client('ec2')
+    return str(aws_client.describe_regions())

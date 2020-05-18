@@ -1,3 +1,6 @@
+
+from awsec2instances_includes.DataIterator import DataIterator
+
 class Talk:
 
     def get_instance_data(self, instance_data):
@@ -13,5 +16,14 @@ class Talk:
             print('Status: ' + instanceSingle['status'])
             print('Type: ' + instanceSingle['type'])
             print('Ip: ' + instanceSingle['ip'])
-            
-            
+    
+
+    def print_region_data(self, region, instances):
+
+        print("Getting data from region " + region)
+
+        di = DataIterator()
+        data_instances = di.getInstancesInfos(instances)
+
+        self.get_instance_data(data_instances)
+        self.printData()

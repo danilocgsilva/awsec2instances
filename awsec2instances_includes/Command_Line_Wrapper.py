@@ -13,4 +13,5 @@ class Command_Line_Wrapper:
 
     def execute(self) -> str:
         command_terms = self.command_string.split(" ")
+        print(command_terms)
         return subprocess.check_output(command_terms)

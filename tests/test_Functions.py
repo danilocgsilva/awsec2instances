@@ -1,6 +1,6 @@
 import unittest
 from testsAssets.get_region_output_json_text import get_text
-from awsec2instances_includes.fn import get_region_list
+from awsec2instances_includes.fn import get_region_list, extractName
 
 class test_Functions(unittest.TestCase):
 
@@ -24,3 +24,30 @@ class test_Functions(unittest.TestCase):
         region_to_exists = "us-west-2"
         self.assertTrue(region_to_exists in region_list)
 
+
+    def test_extractName(self):
+
+        instance_name = "InstanceName"
+
+        instanceInfos = {'Tags': [
+            {
+                'Key': "Name",
+                'Value': instance_name
+            }
+        ]}
+
+        returned_name =  extractName(instanceInfos)
+
+        self.assertEqual(instance_name, returned_name)
+
+
+    def test_extractName_without_key_name(self):
+        instanceInfos = {'Tags': []}
+        returned_name =  extractName(instanceInfos)
+        self.assertEqual("---", returned_name)
+
+
+    def test_extractName_without_tags(self):
+        instanceInfos = {}
+        returned_name =  extractName(instanceInfos)
+        self.assertEqual("---", returned_name)

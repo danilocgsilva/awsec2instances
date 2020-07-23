@@ -15,12 +15,13 @@ def extractInstanceType( instanceInfos ):
     return instanceInfos["InstanceType"]
 
 
-def extractName( instanceInfos ):
-    listTags = instanceInfos["Tags"]
+def extractName(instanceInfos):
+    if "Tags" in instanceInfos:
+        listTags = instanceInfos["Tags"]
 
-    for tag in listTags:
-        if tag["Key"] == "Name":
-            return tag["Value"]
+        for tag in listTags:
+            if tag["Key"] == "Name":
+                return tag["Value"]
 
     return "---"
 

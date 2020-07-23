@@ -13,7 +13,7 @@ def main():
     resume = Resume()
 
     string_region_data = get_regions_data_string()
-    
+     
     for region in get_region_list(string_region_data):
 
         instances = getRawDataFromCli(region)

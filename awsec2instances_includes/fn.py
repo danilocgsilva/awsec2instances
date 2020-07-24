@@ -1,5 +1,4 @@
 import sys, json, subprocess
-from awsec2instances_includes.Command_Line_Wrapper import Command_Line_Wrapper
 import boto3
 import re
 import os
@@ -35,12 +34,7 @@ def extractInstanceId ( instanceInfos ):
 
 
 def getRawDataFromCli(region = None) -> dict:
-    arguments = sys.argv
-
-    if len(arguments) > 1:
-        return getRawData(arguments[1], region)
-    else:
-        return getRawData(None, region)
+    return getRawData(None, region)
 
 
 def getRawData(profile = None, region = None) -> dict:

@@ -23,13 +23,22 @@ def main():
         help="Defines a specific action"
     )
 
+    parser.add_argument(
+        "--id-to-kill",
+        "-ik",
+        required=False,
+        help="Set an instance id to terminate"
+    )
+
     args = parser.parse_args()
-    commands = Commands()
+    commands = Commands(args.region)
 
     if not args.command or args.command == "list":
         commands.list(args.region)
     elif args.command == "new":
-        commands.new(args.region)
+        commands.new()
+    elif args.command == "kill":
+        commands.kill(args.id_to_kill)
     else:
         print("The command " + args.command + " does not exists.")
 

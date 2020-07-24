@@ -68,19 +68,15 @@ def get_regions_data_string() -> str:
     return re.sub(r"'", "\"", raw_string)
 
 
-def create_new_instance(region = None):
+def create_new_instance(aws_resource):
 
-    aws_client = boto3.resource('ec2')
-
-    if region:
-        aws_client = boto3.resource('ec2', region_name=region)
-    else:
-        aws_client = boto3.resource('ec2')
-
-
-    aws_client.create_instances(
+    aws_resource.create_instances(
         ImageId='ami-08f3d892de259504d',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.nano'
     )
+
+
+def kill_instance(aws_resource, id_to_kill):
+    aws_resource.instances.filter(InstanceIds=[id_to_kill]).terminate()

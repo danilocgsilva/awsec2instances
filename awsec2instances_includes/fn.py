@@ -66,3 +66,21 @@ def get_regions_data_string() -> str:
     aws_client = boto3.client('ec2')
     raw_string = str(aws_client.describe_regions())
     return re.sub(r"'", "\"", raw_string)
+
+
+def create_new_instance(region = None):
+
+    aws_client = boto3.resource('ec2')
+
+    if region:
+        aws_client = boto3.resource('ec2', region_name=region)
+    else:
+        aws_client = boto3.resource('ec2')
+
+
+    aws_client.create_instances(
+        ImageId='ami-08f3d892de259504d',
+        MinCount=1,
+        MaxCount=1,
+        InstanceType='t2.nano'
+    )

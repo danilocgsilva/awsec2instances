@@ -57,6 +57,8 @@ pip install .
 
 ## Usage
 
+### List instances
+
 In the terminal type:
 ```
 awsec2
@@ -70,4 +72,16 @@ awsec2 --region <your_region>
 or
 ```
 awsec2 -r <your_region>
+```
+
+### Create new instance
+
+You may want create a new instance...
+
+```
+awsec2 --command new
+```
+or
+```
+awsec2 -c new
 ```

@@ -1,27 +1,36 @@
 #!/usr/bin/python3
 
-from awsec2instances_includes.Talk import Talk
-from awsec2instances_includes.Resume import Resume
-from awsec2instances_includes.fn import get_region_list, get_regions_data_string, getRawDataFromCli
+from awsec2instances_includes.fn import get_region_list, get_regions_data_string
+from awsec2instances_includes.Commands import Commands
 import sys
 import argparse
 
 def main():
 
-    resume = Resume()
-
     parser = argparse.ArgumentParser()
+
     parser.add_argument(
         "--region",
         "-r",
         required=False,
         help="Restrict search just for a single region"
     )
-    args = parser.parse_args()
-    talk = Talk()
 
-    if args.region:
-        talk.print_data_single_region(args.region, getRawDataFromCli, resume)
+    parser.add_argument(
+        "--command",
+        "-c",
+        required=False,
+        help="Defines a specific action"
+    )
+
+    args = parser.parse_args()
+    commands = Commands()
+
+    if not args.command or args.command == "list":
+        commands.list(args.region)
+    elif args.command == "new":
+        commands.new(args.region)
     else:
-        string_region_data = get_regions_data_string()
-        talk.print_data_all_regions(resume, string_region_data, getRawDataFromCli)
+        print("The command " + args.command + " does not exists.")
+
+    

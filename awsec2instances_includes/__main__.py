@@ -5,37 +5,28 @@ from awsec2instances_includes.Commands import Commands
 import sys
 import argparse
 
+
+def mass_parser_arguments(arguments_group_list: list, parser):
+    for argument_list in arguments_group_list:
+        parser.add_argument(
+            "--" + argument_list[0],
+            "-" + argument_list[1],
+            required=argument_list[2],
+            help=argument_list[3]
+        )
+    return parser
+
+
 def main():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        "--region",
-        "-r",
-        required=False,
-        help="Restrict search just for a single region"
-    )
-
-    parser.add_argument(
-        "--command",
-        "-c",
-        required=False,
-        help="Defines a specific action"
-    )
-
-    parser.add_argument(
-        "--id-to-kill",
-        "-ik",
-        required=False,
-        help="Set an instance id to terminate"
-    )
-
-    parser.add_argument(
-        "--profile",
-        "-p",
-        required=False,
-        help="Set the aws cli profile, if needed"
-    )
+    parser = mass_parser_arguments([
+        ["region", "r", False, "Restrict search just for a single region"],
+        ["command", "c", False, "Defines a specific action"],
+        ["id-to-kill", "ik", False, "Set an instance id to terminate"],
+        ["profile", "p", False, "Set the aws cli profile, if needed"]
+    ], parser)
 
     args = parser.parse_args()
     commands = Commands(args.region, args.profile)

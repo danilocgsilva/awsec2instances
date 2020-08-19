@@ -6,14 +6,20 @@ from awsec2instances_includes.fn import \
     kill_instance
 from awsec2instances_includes.Resume import Resume
 import boto3
+import os
+
 
 class Commands:
 
-    def __init__(self, region = None):
+    def __init__(self, region = None, profile = None):
+
         if region:
-            self.aws_client = boto3.client('ec2', region_name=region)
-        else:
-            self.aws_client = boto3.client('ec2')
+            os.environ['AWS_DEFAULT_REGION'] = region
+
+        if profile:
+            os.environ['AWS_PROFILE'] = "dcs"
+
+        self.aws_client = boto3.client('ec2')
 
 
     def list(self, excplit_region = None):

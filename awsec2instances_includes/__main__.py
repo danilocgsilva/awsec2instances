@@ -30,8 +30,15 @@ def main():
         help="Set an instance id to terminate"
     )
 
+    parser.add_argument(
+        "--profile",
+        "-p",
+        required=False,
+        help="Set the aws cli profile, if needed"
+    )
+
     args = parser.parse_args()
-    commands = Commands(args.region)
+    commands = Commands(args.region, args.profile)
 
     if not args.command or args.command == "list":
         commands.list(args.region)

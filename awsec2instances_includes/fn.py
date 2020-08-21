@@ -3,16 +3,15 @@ import boto3
 import re
 import os
 
+
 def extractPublicIpAddress( instanceInfos ):
     if "PublicIpAddress" in instanceInfos:
         return instanceInfos["PublicIpAddress"]
     else:
         return "---"
 
-
 def extractInstanceType( instanceInfos ):
     return instanceInfos["InstanceType"]
-
 
 def extractName(instanceInfos):
     if "Tags" in instanceInfos:
@@ -24,18 +23,14 @@ def extractName(instanceInfos):
 
     return "---"
 
-
 def extracState ( instanceInfos ):
     return instanceInfos["State"]["Name"]
-
 
 def extractInstanceId ( instanceInfos ):
     return instanceInfos["InstanceId"]
 
-
 def getRawDataFromCli(region = None) -> dict:
     return getRawData(None, region)
-
 
 def getRawData(profile = None, region = None) -> dict:
 
@@ -49,7 +44,6 @@ def getRawData(profile = None, region = None) -> dict:
     raw_return = aws_client.describe_instances()
     return raw_return["Reservations"]
 
-
 def get_region_list(json_formatted_string: str) -> list:
 
     region_entries = []
@@ -61,12 +55,10 @@ def get_region_list(json_formatted_string: str) -> list:
 
     return region_entries
 
-
 def get_regions_data_string() -> str:
     aws_client = boto3.client('ec2')
     raw_string = str(aws_client.describe_regions())
     return re.sub(r"'", "\"", raw_string)
-
 
 def create_new_instance(aws_resource):
 
@@ -77,6 +69,11 @@ def create_new_instance(aws_resource):
         InstanceType='t2.nano'
     )
 
-
 def kill_instance(aws_resource, id_to_kill):
     aws_resource.instances.filter(InstanceIds=[id_to_kill]).terminate()
+
+def restart_instance(aws_resource, id_to_restart):
+    try:
+        aws_resource.instances.filter(InstanceIds=[id_to_restart]).start()
+    except Exception:
+        print("Nothing to restart: I could not found the instance id.\nCheck if the instance are in the region. If you have not defined a region, the instance id may not exists in the default region.")

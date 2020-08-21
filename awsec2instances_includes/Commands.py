@@ -3,7 +3,8 @@ from awsec2instances_includes.fn import \
     get_regions_data_string, \
     getRawDataFromCli, \
     create_new_instance, \
-    kill_instance
+    kill_instance, \
+    restart_instance
 from awsec2instances_includes.Resume import Resume
 import boto3
 import os
@@ -41,3 +42,7 @@ class Commands:
     def kill(self, id_to_kill):
         aws_resource = boto3.resource('ec2', region_name=self.aws_client.meta.region_name)
         kill_instance(aws_resource, id_to_kill)
+
+    def restart(self, id_to_restart):
+        aws_resource = boto3.resource('ec2', region_name=self.aws_client.meta.region_name)
+        restart_instance(aws_resource, id_to_restart)

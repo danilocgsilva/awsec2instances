@@ -25,7 +25,8 @@ def main():
         ["region", "r", False, "Restrict search just for a single region"],
         ["command", "c", False, "Defines a specific action"],
         ["id-to-kill", "ik", False, "Set an instance id to terminate"],
-        ["profile", "p", False, "Set the aws cli profile, if needed"]
+        ["profile", "p", False, "Set the aws cli profile, if needed"],
+        ["id-to-restart", "ir", False, "Set an existing stopped instance to restart"]
     ], parser)
 
     args = parser.parse_args()
@@ -37,6 +38,8 @@ def main():
         commands.new()
     elif args.command == "kill":
         commands.kill(args.id_to_kill)
+    elif args.command == "restart":
+        commands.restart(args.id_to_restart)
     else:
         print("The command " + args.command + " does not exists.")
 

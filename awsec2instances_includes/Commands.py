@@ -33,11 +33,9 @@ class Commands:
             string_region_data = get_regions_data_string()
             talk.print_data_all_regions(resume, string_region_data, getRawDataFromCli)
 
-
     def new(self):
         aws_resource = boto3.resource('ec2', region_name=self.aws_client.meta.region_name)
         create_new_instance(aws_resource)
-
 
     def kill(self, id_to_kill):
         aws_resource = boto3.resource('ec2', region_name=self.aws_client.meta.region_name)

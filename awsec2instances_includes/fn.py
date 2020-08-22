@@ -73,7 +73,5 @@ def kill_instance(aws_resource, id_to_kill):
     aws_resource.instances.filter(InstanceIds=[id_to_kill]).terminate()
 
 def restart_instance(aws_resource, id_to_restart):
-    try:
-        aws_resource.instances.filter(InstanceIds=[id_to_restart]).start()
-    except Exception:
-        print("Nothing to restart: I could not found the instance id.\nCheck if the instance are in the region. If you have not defined a region, the instance id may not exists in the default region.")
+    aws_resource.instances.filter(InstanceIds=[id_to_restart]).start()
+

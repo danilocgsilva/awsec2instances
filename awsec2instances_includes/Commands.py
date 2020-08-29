@@ -12,16 +12,14 @@ import os
 
 class Commands:
 
-    def __init__(self, region = None, profile = None):
+    def __init__(self, profile, region = None):
 
         if region:
             os.environ['AWS_DEFAULT_REGION'] = region
 
-        if profile:
-            os.environ['AWS_PROFILE'] = "dcs"
+        os.environ['AWS_PROFILE'] = profile
 
         self.aws_client = boto3.client('ec2')
-
 
     def list(self, excplit_region = None):
         talk = Talk()

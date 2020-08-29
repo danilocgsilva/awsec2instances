@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from awsec2instances_includes.fn import get_region_list, get_regions_data_string
+from awsec2instances_includes.fn import get_region_list, get_regions_data_string, guess_profile
 from awsec2instances_includes.Commands import Commands
 import sys
 import argparse
@@ -30,7 +30,17 @@ def main():
     ], parser)
 
     args = parser.parse_args()
-    commands = Commands(args.region, args.profile)
+
+    if args.profile:
+        profile = args.profile
+    else:
+        profile = guess_profile()
+
+    if profile == "":
+        print("I cound not guess credentials, sorry. Explicitly set a profile name using -p or --profile or set in the aws configuration using the command: \"aws configure --profile <your_profile>\".")
+        exit()
+
+    commands = Commands(profile, args.region)
 
     if not args.command or args.command == "list":
         commands.list(args.region)

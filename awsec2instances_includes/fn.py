@@ -64,7 +64,6 @@ def get_regions_data_string() -> str:
 def create_new_instance(aws_resource, region: str):
 
     return aws_resource.create_instances(
-        # ImageId='ami-08f3d892de259504d',
         ImageId=GetPreferredIam().getIam(region),
         MinCount=1,
         MaxCount=1,
@@ -76,4 +75,12 @@ def kill_instance(aws_resource, id_to_kill):
 
 def restart_instance(aws_resource, id_to_restart):
     aws_resource.instances.filter(InstanceIds=[id_to_restart]).start()
+
+def guess_profile() -> str:
+    profile_list = boto3.session.Session().available_profiles
+    if len(profile_list) == 1:
+        return profile_list[0]
+    if len(profile_list) > 1 and 'default' in profile_list:
+        return 'default'
+    return ""
 

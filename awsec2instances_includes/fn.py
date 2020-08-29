@@ -2,6 +2,7 @@ import sys, json, subprocess
 import boto3
 import re
 import os
+from awsec2instances_includes.GetPreferredIam import GetPreferredIam
 
 
 def extractPublicIpAddress( instanceInfos ):
@@ -60,10 +61,11 @@ def get_regions_data_string() -> str:
     raw_string = str(aws_client.describe_regions())
     return re.sub(r"'", "\"", raw_string)
 
-def create_new_instance(aws_resource):
+def create_new_instance(aws_resource, region: str):
 
-    aws_resource.create_instances(
-        ImageId='ami-08f3d892de259504d',
+    return aws_resource.create_instances(
+        # ImageId='ami-08f3d892de259504d',
+        ImageId=GetPreferredIam().getIam(region),
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.nano'

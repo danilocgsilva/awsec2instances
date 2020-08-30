@@ -34,8 +34,7 @@ class Commands:
     def new(self):
         region = self.aws_client.meta.region_name
         aws_resource = boto3.resource('ec2', region_name=region)
-        results = create_new_instance(aws_resource, region)
-        print(results)
+        return create_new_instance(aws_resource, region)
 
     def kill(self, id_to_kill):
         aws_resource = boto3.resource('ec2', region_name=self.aws_client.meta.region_name)

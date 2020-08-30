@@ -45,7 +45,8 @@ def main():
     if not args.command or args.command == "list":
         commands.list(args.region)
     elif args.command == "new":
-        commands.new()
+        instance_id = commands.new()
+        print("The instance with id " + instance_id + " is about to be created.")
     elif args.command == "kill":
         commands.kill(args.id_to_kill)
     elif args.command == "restart":

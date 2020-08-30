@@ -63,12 +63,15 @@ def get_regions_data_string() -> str:
 
 def create_new_instance(aws_resource, region: str):
 
-    return aws_resource.create_instances(
+    instances_list_to_create = aws_resource.create_instances(
         ImageId=GetPreferredIam().getIam(region),
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.nano'
     )
+    id_data = instances_list_to_create[0].id
+    
+    return id_data
 
 def kill_instance(aws_resource, id_to_kill):
     aws_resource.instances.filter(InstanceIds=[id_to_kill]).terminate()

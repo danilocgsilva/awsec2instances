@@ -55,5 +55,5 @@ In the terminal, from the root project folder:
 pip install .
 ```
 
-Check [usages](USAGES.md).
+Check [usages](docs/_usages.md).
 

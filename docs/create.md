@@ -10,7 +10,7 @@ or
 awsec2 -c new
 ```
 
-**(still not implemented yet)** You may want create and access it by ssh
+You may want create and access it by ssh
 ```
 awsec2 --command new --access with-ssh
 ```

@@ -3,6 +3,8 @@ import boto3
 import re
 import os
 from awsec2instances_includes.GetPreferredIam import GetPreferredIam
+from awssg.SGConfig import SGConfig
+from awssg.SG_Client import SG_Client
 
 
 def extractPublicIpAddress( instanceInfos ):
@@ -87,3 +89,11 @@ def guess_profile() -> str:
         return 'default'
     return ""
 
+def assign_sg(sg_client: SG_Client, sgc: SGConfig):
+    sgid = sg_client.getGroupId()
+    sg_client.set_rule(
+        sgid, 
+        sgc.getProtocol(),
+        sgc.getIp(),
+        str(sgc.getPort())
+    )

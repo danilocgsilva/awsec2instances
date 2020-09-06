@@ -1,10 +1,14 @@
-import sys, json, subprocess
-import boto3
-import re
-import os
 from awsec2instances_includes.GetPreferredIam import GetPreferredIam
+from awssg.Client import Client
 from awssg.SGConfig import SGConfig
 from awssg.SG_Client import SG_Client
+from danilocgsilvame_python_helpers.DcgsPythonHelpers import DcgsPythonHelpers
+from wimiapi.Wimi import Wimi
+import boto3
+import datetime
+import os
+import re
+import sys, json, subprocess
 
 
 def extractPublicIpAddress( instanceInfos ):
@@ -89,11 +93,22 @@ def guess_profile() -> str:
         return 'default'
     return ""
 
-def assign_sg(sg_client: SG_Client, sgc: SGConfig):
+def put_sg_to_instance(instance_id: str, access_type: str):
+
+    ip = Wimi().get_ip('ipv4')
+
+    group_name = 'securitygroup-for-' + instance_id + '-at-' + DcgsPythonHelpers().getHashDateFromDate(datetime.datetime.now())
+
+    if access_type == 'with-ssh':
+        port = 22
+    elif access_type == 'with-http':
+        port = 80
+    else:
+        raise Exception('Wrong value given')
+
+    ec2 = Client()
+    sg_client = SG_Client()
+    sg_client.set_client(ec2).set_group_name(group_name).create_sg()
+
     sgid = sg_client.getGroupId()
-    sg_client.set_rule(
-        sgid, 
-        sgc.getProtocol(),
-        sgc.getIp(),
-        str(sgc.getPort())
-    )
+    sg_client.set_rule(sgid, 'tcp',ip,str(port))

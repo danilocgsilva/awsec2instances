@@ -4,16 +4,10 @@ from awsec2instances_includes.fn import \
     get_region_list,\
     get_regions_data_string,\
     guess_profile,\
-    assign_sg
+    put_sg_to_instance
 from awsec2instances_includes.Commands import Commands
-from awssg.SG_Client import SG_Client
-from awssg.Client import Client
-from awssg.SGConfig import SGConfig
-from wimiapi.Wimi import Wimi
-from danilocgsilvame_python_helpers.DcgsPythonHelpers import DcgsPythonHelpers
 import sys
 import argparse
-import datetime
 
 
 def mass_parser_arguments(arguments_group_list: list, parser):
@@ -58,24 +52,7 @@ def main():
     elif args.command == "new":
         instance_id = commands.new()
         if args.access:
-
-            ip = Wimi().get_ip('ipv4')
-
-            group_name = 'securitygroup-for-' + instance_id + '-at-' + DcgsPythonHelpers().getHashDateFromDate(datetime.datetime.now())
-
-            if args.access == 'with-ssh':
-                sgc = SGConfig(ip, 'tcp', 22, group_name)
-            elif args.access == 'with-http':
-                sgc = SGConfig(ip, 'tcp', 80, group_name)
-            else:
-                raise Exception('Wrong value given')
-
-            ec2 = Client()
-            sg_client = SG_Client()
-            sg_client.set_client(ec2).set_group_name(group_name).create_sg()
-
-            assign_sg(sg_client, sgc)
-
+            put_sg_to_instance(instance_id, args.access)
         print("The instance with id " + instance_id + " is about to be created.")
     elif args.command == "kill":
         commands.kill(args.id_to_kill)

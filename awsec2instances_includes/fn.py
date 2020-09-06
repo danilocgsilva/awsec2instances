@@ -107,6 +107,7 @@ def put_sg_to_instance(instance_id: str, access_type: str) -> str:
 
     if access_type == 'with-ssh':
         port = 22
+        keypair = get_key_pair_name()
     elif access_type == 'with-http':
         port = 80
     else:
@@ -119,6 +120,8 @@ def put_sg_to_instance(instance_id: str, access_type: str) -> str:
     sgid = sg_client.getGroupId()
     sg_client.set_rule(sgid, 'tcp', ip, str(port))
 
+    assign_sg_to_ec2(sgid, instance_id)
+
     return group_name
 
 def get_key_pair_name():
@@ -129,3 +132,24 @@ def get_key_pair_name():
         return key_pairs_list[0]["KeyName"]
 
     return None
+
+def assign_sg_to_ec2(sgid: str, instance_id: str):
+
+    custom_filter = [{
+        'Name': 'instance-id', 
+        'Values': [instance_id]
+    }]
+
+    ec2 = boto3.resource('ec2')
+    instances = list(ec2.instances.filter(Filters=custom_filter))
+    instances[0].modify_attribute(Groups=[sgid], DryRun=False)
+
+# def assing_keypair_to_instance(keyparname: str, instance_id: str):
+#     custom_filter = [{
+#         'Name': 'instance-id', 
+#         'Values': [instance_id]
+#     }]
+
+#     ec2 = boto3.resource('ec2')
+#     instances = list(ec2.instances.filter(Filters=custom_filter))
+#     instances[0].modify_attribute(KeyName=[keyparname], DryRun=False)

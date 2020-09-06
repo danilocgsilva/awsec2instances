@@ -4,7 +4,8 @@ from awsec2instances_includes.fn import \
     get_region_list,\
     get_regions_data_string,\
     guess_profile,\
-    put_sg_to_instance
+    put_sg_to_instance,\
+    get_key_pair_name
 from awsec2instances_includes.Commands import Commands
 import sys
 import argparse
@@ -49,10 +50,14 @@ def main():
     if not args.command or args.command == "list":
         commands.list(args.region)
     elif args.command == "new":
-        instance_id = commands.new()
-        print("The instance with id " + instance_id + " is about to be created.")
+        access_arguments = None
         if args.access:
-            put_sg_to_instance(instance_id, args.access)
+            access_arguments = args.access
+        instance_id = commands.new(access_arguments)
+        print("The instance with id " + instance_id + " is about to be created.")
+        if access_arguments:
+            print("Setting security group for instance...")
+            put_sg_to_instance(instance_id, access_arguments)
     elif args.command == "kill":
         commands.kill(args.id_to_kill)
     elif args.command == "restart":

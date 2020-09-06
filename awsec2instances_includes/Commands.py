@@ -32,10 +32,14 @@ class Commands:
             string_region_data = get_regions_data_string()
             talk.print_data_all_regions(resume, string_region_data, getRawDataFromCli)
 
-    def new(self):
+    def new(self, access_arguments = None):
+
+        keypairname = None
+        if access_arguments and access_arguments == "with-ssh":
+            keypairname = get_key_pair_name()
+        
         region = self.aws_client.meta.region_name
         aws_resource = boto3.resource('ec2', region_name=region)
-        keypairname = get_key_pair_name()
         return create_new_instance(aws_resource, region, keypairname)
 
     def kill(self, id_to_kill):

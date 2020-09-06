@@ -119,13 +119,36 @@ def put_sg_to_instance(instance_id: str, access_type: str) -> str:
     sgid = sg_client.getGroupId()
     sg_client.set_rule(sgid, 'tcp', ip, str(port))
 
+    assign_sg_to_ec2(sgid, instance_id)
+
     return group_name
 
 def get_key_pair_name():
 
     aws_client = boto3.client('ec2')
     key_pairs_list = aws_client.describe_key_pairs()["KeyPairs"]
-    if len(key_pairs_list) == 1:
-        return key_pairs_list[0]["KeyName"]
 
-    return None
+    if len(key_pairs_list) == 0:
+        return None
+    elif len(key_pairs_list) == 1:
+        return key_pairs_list[0]["KeyName"]
+    else:
+        return choose_between_keypairs(key_pairs_list)
+
+
+def assign_sg_to_ec2(sgid: str, instance_id: str):
+
+    custom_filter = [{
+        'Name': 'instance-id', 
+        'Values': [instance_id]
+    }]
+
+    ec2 = boto3.resource('ec2')
+    instances = list(ec2.instances.filter(Filters=custom_filter))
+    instances[0].modify_attribute(Groups=[sgid], DryRun=False)
+
+def choose_between_keypairs(keypairs_result):
+    # print("There are several keypairs in the account.")
+    # print(keypairs_result)
+    # input("Choose one between them: ")
+    raise Exception("Still not implemented.")

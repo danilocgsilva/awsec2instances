@@ -4,7 +4,8 @@ from awsec2instances_includes.fn import \
     getRawDataFromCli, \
     create_new_instance, \
     kill_instance, \
-    restart_instance
+    restart_instance, \
+    get_key_pair_name
 from awsec2instances_includes.Resume import Resume
 import boto3
 import os
@@ -34,7 +35,8 @@ class Commands:
     def new(self):
         region = self.aws_client.meta.region_name
         aws_resource = boto3.resource('ec2', region_name=region)
-        return create_new_instance(aws_resource, region)
+        keypairname = get_key_pair_name()
+        return create_new_instance(aws_resource, region, keypairname)
 
     def kill(self, id_to_kill):
         aws_resource = boto3.resource('ec2', region_name=self.aws_client.meta.region_name)

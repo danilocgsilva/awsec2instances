@@ -20,7 +20,6 @@ def mass_parser_arguments(arguments_group_list: list, parser):
         )
     return parser
 
-
 def main():
 
     parser = argparse.ArgumentParser()
@@ -51,9 +50,9 @@ def main():
         commands.list(args.region)
     elif args.command == "new":
         instance_id = commands.new()
+        print("The instance with id " + instance_id + " is about to be created.")
         if args.access:
             put_sg_to_instance(instance_id, args.access)
-        print("The instance with id " + instance_id + " is about to be created.")
     elif args.command == "kill":
         commands.kill(args.id_to_kill)
     elif args.command == "restart":

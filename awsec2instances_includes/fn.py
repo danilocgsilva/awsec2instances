@@ -67,14 +67,20 @@ def get_regions_data_string() -> str:
     raw_string = str(aws_client.describe_regions())
     return re.sub(r"'", "\"", raw_string)
 
-def create_new_instance(aws_resource, region: str):
+def create_new_instance(aws_resource, region: str, keypairname = None):
 
-    instances_list_to_create = aws_resource.create_instances(
-        ImageId=GetPreferredIam().getIam(region),
-        MinCount=1,
-        MaxCount=1,
-        InstanceType='t2.nano'
-    )
+    parameters = {
+        "ImageId": GetPreferredIam().getIam(region),
+        "MinCount": 1,
+        "MaxCount": 1,
+        "InstanceType": 't2.nano'
+    }
+
+    if keypairname:
+        parameters["KeyName"] = keypairname
+
+    instances_list_to_create = aws_resource.create_instances(**parameters)
+
     id_data = instances_list_to_create[0].id
     
     return id_data
@@ -93,7 +99,7 @@ def guess_profile() -> str:
         return 'default'
     return ""
 
-def put_sg_to_instance(instance_id: str, access_type: str):
+def put_sg_to_instance(instance_id: str, access_type: str) -> str:
 
     ip = Wimi().get_ip('ipv4')
 
@@ -111,4 +117,15 @@ def put_sg_to_instance(instance_id: str, access_type: str):
     sg_client.set_client(ec2).set_group_name(group_name).create_sg()
 
     sgid = sg_client.getGroupId()
-    sg_client.set_rule(sgid, 'tcp',ip,str(port))
+    sg_client.set_rule(sgid, 'tcp', ip, str(port))
+
+    return group_name
+
+def get_key_pair_name():
+
+    aws_client = boto3.client('ec2')
+    key_pairs_list = aws_client.describe_key_pairs()["KeyPairs"]
+    if len(key_pairs_list) == 1:
+        return key_pairs_list[0]["KeyName"]
+
+    return None

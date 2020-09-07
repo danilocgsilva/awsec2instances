@@ -22,12 +22,12 @@ class Commands:
 
         self.aws_client = boto3.client('ec2')
 
-    def list(self, excplit_region = None):
+    def list(self, explicit_region = None):
         talk = Talk()
         resume = Resume()
 
-        if excplit_region:
-            talk.print_data_single_region(excplit_region, getRawDataFromCli, resume)
+        if explicit_region:
+            talk.print_data_single_region(explicit_region, getRawDataFromCli, resume)
         else:
             string_region_data = get_regions_data_string()
             talk.print_data_all_regions(resume, string_region_data, getRawDataFromCli)

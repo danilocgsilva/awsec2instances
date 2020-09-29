@@ -21,6 +21,16 @@ def mass_parser_arguments(arguments_group_list: list, parser):
         )
     return parser
 
+def create_new_instance(args_access, commands):
+    access_arguments = None
+    if args_access:
+        access_arguments = args_access
+    instance_id = commands.new(access_arguments)
+    print("The instance with id " + instance_id + " is about to be created.")
+    if access_arguments:
+        print("Setting security group for instance...")
+        put_sg_to_instance(instance_id, access_arguments)
+
 def main():
 
     parser = argparse.ArgumentParser()
@@ -39,7 +49,6 @@ def main():
     if args.profile:
         profile = args.profile
     else:
-        # profile = guess_profile()
         profile = AWSGuessLocalProfile().guess()
 
     if profile == "":
@@ -51,14 +60,7 @@ def main():
     if not args.command or args.command == "list":
         commands.list(args.region)
     elif args.command == "new":
-        access_arguments = None
-        if args.access:
-            access_arguments = args.access
-        instance_id = commands.new(access_arguments)
-        print("The instance with id " + instance_id + " is about to be created.")
-        if access_arguments:
-            print("Setting security group for instance...")
-            put_sg_to_instance(instance_id, access_arguments)
+        create_new_instance(args.access, commands)
     elif args.command == "kill":
         commands.kill(args.id_to_kill)
     elif args.command == "restart":

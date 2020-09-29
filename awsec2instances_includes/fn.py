@@ -91,14 +91,6 @@ def kill_instance(aws_resource, id_to_kill):
 def restart_instance(aws_resource, id_to_restart):
     aws_resource.instances.filter(InstanceIds=[id_to_restart]).start()
 
-# def guess_profile() -> str:
-#     profile_list = boto3.session.Session().available_profiles
-#     if len(profile_list) == 1:
-#         return profile_list[0]
-#     if len(profile_list) > 1 and 'default' in profile_list:
-#         return 'default'
-#     return ""
-
 def put_sg_to_instance(instance_id: str, access_type: str) -> str:
 
     ip = Wimi().get_ip('ipv4')
@@ -148,7 +140,4 @@ def assign_sg_to_ec2(sgid: str, instance_id: str):
     instances[0].modify_attribute(Groups=[sgid], DryRun=False)
 
 def choose_between_keypairs(keypairs_result):
-    # print("There are several keypairs in the account.")
-    # print(keypairs_result)
-    # input("Choose one between them: ")
     raise Exception("Still not implemented.")

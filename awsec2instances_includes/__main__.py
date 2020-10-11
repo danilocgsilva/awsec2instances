@@ -6,6 +6,7 @@ from awsec2instances_includes.fn import \
     put_sg_to_instance,\
     get_key_pair_name
 from awsec2instances_includes.Commands import Commands
+from awsec2instances_includes.ProtocolService import ProtocolService
 from awsguesslocalprofile.AWSGuessLocalProfile import AWSGuessLocalProfile
 import sys
 import argparse
@@ -22,14 +23,12 @@ def mass_parser_arguments(arguments_group_list: list, parser):
     return parser
 
 def create_new_instance(args_access, commands):
-    access_arguments = None
-    if args_access:
-        access_arguments = args_access
-    instance_id = commands.new(access_arguments)
+    protocols = ProtocolService(args_access)
+    instance_id = commands.new(protocols)
     print("The instance with id " + instance_id + " is about to be created.")
-    if access_arguments:
+    if protocols.is_not_empty():
         print("Setting security group for instance...")
-        put_sg_to_instance(instance_id, access_arguments)
+        put_sg_to_instance(instance_id, protocols)
 
 def main():
 

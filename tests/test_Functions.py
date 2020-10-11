@@ -1,6 +1,7 @@
 import unittest
 from testsAssets.get_region_output_json_text import get_text
-from awsec2instances_includes.fn import get_region_list, extractName
+from awsec2instances_includes.fn import \
+    get_region_list, extractName, put_sg_to_instance
 
 class test_Functions(unittest.TestCase):
 
@@ -51,3 +52,4 @@ class test_Functions(unittest.TestCase):
         instanceInfos = {}
         returned_name =  extractName(instanceInfos)
         self.assertEqual("---", returned_name)
+

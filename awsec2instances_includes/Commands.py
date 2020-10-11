@@ -1,4 +1,5 @@
 from awsec2instances_includes.Talk import Talk
+from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.fn import \
     get_regions_data_string, \
     getRawDataFromCli, \
@@ -32,10 +33,9 @@ class Commands:
             string_region_data = get_regions_data_string()
             talk.print_data_all_regions(resume, string_region_data, getRawDataFromCli)
 
-    def new(self, access_arguments = None):
-
+    def new(self, protocolService: ProtocolService):
         keypairname = None
-        if access_arguments and access_arguments == "with-ssh":
+        if protocolService.is_have_ssh():
             keypairname = get_key_pair_name()
             if not keypairname:
                 raise Exception('No keypair found to assign. You need it to access through ssh.')

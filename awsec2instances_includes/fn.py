@@ -1,4 +1,5 @@
 from awsec2instances_includes.GetPreferredIam import GetPreferredIam
+from awsec2instances_includes.ProtocolService import ProtocolService
 from awssg.Client import Client
 from awssg.SGConfig import SGConfig
 from awssg.SG_Client import SG_Client
@@ -91,25 +92,20 @@ def kill_instance(aws_resource, id_to_kill):
 def restart_instance(aws_resource, id_to_restart):
     aws_resource.instances.filter(InstanceIds=[id_to_restart]).start()
 
-def put_sg_to_instance(instance_id: str, access_type: str) -> str:
+def put_sg_to_instance(instance_id: str, protocols: ProtocolService) -> str:
 
     ip = Wimi().get_ip('ipv4')
 
     group_name = 'securitygroup-for-' + instance_id + '-at-' + DcgsPythonHelpers().getHashDateFromDate(datetime.datetime.now())
-
-    if access_type == 'with-ssh':
-        port = 22
-    elif access_type == 'with-http':
-        port = 80
-    else:
-        raise Exception('Wrong value given')
 
     ec2 = Client()
     sg_client = SG_Client()
     sg_client.set_client(ec2).set_group_name(group_name).create_sg()
 
     sgid = sg_client.getGroupId()
-    sg_client.set_rule(sgid, 'tcp', ip, str(port))
+
+    for port in protocols.get_ports():
+        sg_client.set_rule(sgid, 'tcp', ip, str(port))
 
     assign_sg_to_ec2(sgid, instance_id)
 

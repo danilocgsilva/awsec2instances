@@ -30,6 +30,8 @@ def main():
         ["id-to-restart", "ir", False, "Set an existing stopped instance to restart"],
         ["access", "a", False, "Set a way to access the instance if you are creating a new one"],
         ["user-data", "u", False, "Path for user data as shell script for instance"],
+        ["name", "n", False, "Set the names's tag"],
+        ["lasts", "l", False, "Say how much time the instance will lasts to avoid unexpected costs"],
     ], parser)
 
     args = parser.parse_args()

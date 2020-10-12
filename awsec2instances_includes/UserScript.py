@@ -5,8 +5,8 @@ class UserScript:
 
     def add_scripts(self, scripts):
         if self.script == "":
-            self.script += "#!/bin/bash\n\n"
-        self.script += "\n" + scripts
+            self.script += "#!/bin/bash\n"
+        self.script += "\n" + scripts + "\n"
 
     def get_user_script(self) -> str:
         return self.script

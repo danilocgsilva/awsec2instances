@@ -25,8 +25,13 @@ class AwsClientUtils:
         raw_return = aws_client.describe_instances()
         return raw_return["Reservations"]
 
-    def create_new_instance_resource(self, aws_resource, region: str, keypairname, user_script):
-
+    def create_new_instance_resource(
+        self, 
+        aws_resource, 
+        region: str, 
+        keypairname, 
+        user_script: str
+    ):
         parameters = {
             "ImageId": GetPreferredIam().getIam(region),
             "MinCount": 1,
@@ -41,10 +46,8 @@ class AwsClientUtils:
             parameters["UserData"] = user_script
 
         instances_list_to_create = aws_resource.create_instances(**parameters)
-
-        id_data = instances_list_to_create[0].id
         
-        return id_data
+        return instances_list_to_create[0]
 
     def kill_instance(self, aws_resource, id_to_kill):
         aws_resource.instances.filter(InstanceIds=[id_to_kill]).terminate()

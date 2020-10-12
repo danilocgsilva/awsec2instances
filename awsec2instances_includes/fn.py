@@ -1,5 +1,6 @@
 from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.Commands import Commands
+from awsec2instances_includes.CreationInstanceService import CreationInstanceService
 from awsec2instances_includes.UserScript import UserScript
 from awssg.Client import Client
 from awssg.SGConfig import SGConfig
@@ -44,17 +45,27 @@ def assign_sg_to_ec2(sgid: str, instance_id: str):
 
 
 def create_new_instance(args, commands: Commands):
-    protocols = ProtocolService(args.access)
-    userScript = UserScript()
-    userScript.add_scripts("shutdown -P +5")
+    creationInstanceService, protocolsService, userScript = CreationInstanceService().getCreationServices(args.access)
+    creationInstanceService.ensureMinutesData(args.lasts)
+
     if args.user_data and args.user_data == "webserver":
         userScript.add_scripts(get_http_default_user_data())
-        protocols.ensure_port_80()
-    instance_id = commands.new(protocols, userScript.get_user_script())
-    print("The instance with id " + instance_id + " is about to be created.")
-    if protocols.is_not_empty():
+        protocolsService.ensure_port_80()
+
+    creationInstanceService.setHarakiri(userScript)
+    if creationInstanceService.needs_die_warnning:
+        print(creationInstanceService.getHarakiriMessage())
+
+    instance_data = commands.new(protocolsService, userScript.get_user_script())
+
+    print("The instance with id " + instance_data.id + " is about to be created.")
+    if protocolsService.is_not_empty():
         print("Setting security group for instance...")
-        put_sg_to_instance(instance_id, protocols)
+        put_sg_to_instance(instance_data.id, protocolsService)
+    if args.name:
+        print("Wanting to starts the instance, so I can add its name...")
+        instance_data.wait_until_running()
+        boto3.resource('ec2').create_tags(Resources=[instance_data.id], Tags=[{'Key':'Name', 'Value':args.name}])
 
 def get_http_default_user_data() -> str:
     return '''yum update -y

@@ -1,14 +1,9 @@
-from awsec2instances_includes.fn import \
-    extractInstanceType, \
-    extractInstanceId, \
-    extractPublicIpAddress, \
-    extractName, \
-    extracState
-
+from awsec2instances_includes.Formatter import Formatter
 
 class DataIterator:
 
     def __init__(self):
+        self.formatter = Formatter()
         self.allow_stopped = True
 
 
@@ -24,7 +19,7 @@ class DataIterator:
         for instance in instances:
             instanceInfos = instance["Instances"][0]
 
-            status = extracState(instanceInfos)
+            status = self.formatter.extracState(instanceInfos)
             if not self.allow_stopped and status == 'stopped':
                 continue
 
@@ -39,10 +34,10 @@ class DataIterator:
     def __build_dataInfo_entry__(self, list: list, count: int, status: str):
         dataInfo = {}
         dataInfo['count'] = count
-        dataInfo['id'] = extractInstanceId(list)
-        dataInfo['type'] = extractInstanceType(list)
-        dataInfo['ip'] = extractPublicIpAddress(list)
-        dataInfo['name'] = extractName(list)
+        dataInfo['id'] = self.formatter.extractInstanceId(list)
+        dataInfo['type'] = self.formatter.extractInstanceType(list)
+        dataInfo['ip'] = self.formatter.extractPublicIpAddress(list)
+        dataInfo['name'] = self.formatter.extractName(list)
         dataInfo['status'] = status
 
         return dataInfo

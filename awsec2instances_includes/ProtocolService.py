@@ -18,8 +18,14 @@ class ProtocolService:
     def is_have_ssh(self) -> bool:
         return 22 in self.ports
 
+    def is_have_http(self) -> bool:
+        return 80 in self.ports
+
     def is_not_empty(self) -> bool:
         if len(self.ports) == 0:
             return False
         return True
             
+    def ensure_port_80(self):
+        if not 80 in self.ports:
+            self.ports.append(80)

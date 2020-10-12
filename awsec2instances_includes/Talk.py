@@ -1,8 +1,6 @@
-from awsec2instances_includes.DataIterator import DataIterator
-from awsec2instances_includes.fn import get_region_list,\
-    get_regions_data_string
 from awsec2instances_includes.Resume import Resume
-
+from awsec2instances_includes.DataIterator import DataIterator
+from awsec2instances_includes.Formatter import Formatter
 
 class Talk:
 
@@ -30,7 +28,7 @@ class Talk:
         self.printData()
 
     def print_data_all_regions(self, resume: Resume, string_region_data, getRawDataFromCli):
-        for region in get_region_list(string_region_data):
+        for region in Formatter().extractRegions(string_region_data):
             self.print_data_single_region(region, getRawDataFromCli, resume)
 
     def print_data_single_region(self, region, getRawDataFromCli, resume):

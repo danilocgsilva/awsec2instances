@@ -1,5 +1,4 @@
 from testsAssets.get_mocked_raw_data import get_mocked_raw_data
-from awsec2instances_includes.fn import getRawDataFromCli
 from awsec2instances_includes.DataIterator import DataIterator
 import unittest
 

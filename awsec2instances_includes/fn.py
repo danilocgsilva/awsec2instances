@@ -48,10 +48,15 @@ def create_new_instance(args, commands: Commands):
     creationInstanceService, protocolsService, userScript = CreationInstanceService().getCreationServices(args.access)
     creationInstanceService.ensureMinutesData(args.lasts)
 
-    if args.user_data and args.user_data == "webserver":
-        userScript.add_scripts(get_http_default_user_data())
-        protocolsService.ensure_port_80()
-
+    if args.user_data:
+        if args.user_data == "webserver":
+            userScript.add_scripts(get_http_default_user_data())
+            protocolsService.ensure_port_80()
+        elif args.user_data == "wordpress":
+            userScript.add_scripts(get_http_default_user_data())
+            userScript.add_scripts(get_php_installing())
+            protocolsService.ensure_port_80()
+    
     creationInstanceService.setHarakiri(userScript)
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())
@@ -73,6 +78,9 @@ yum install httpd -y
 chkconfig httpd on
 service httpd start
 '''
+
+def get_php_installing() -> str:
+    return "amazon-linux-extras install php7.4\nservice httpd restart"
 
 def init_user_script() -> str:
     return "#!/bin/bash\n\n"

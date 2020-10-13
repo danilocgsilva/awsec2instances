@@ -49,17 +49,21 @@ def create_new_instance(args, commands: Commands):
     creationInstanceService.ensureMinutesData(args.lasts)
 
     if args.user_data:
+        userScript.add_scripts(get_bootstrap_startup_mark())
         if args.user_data == "webserver":
             userScript.add_scripts(get_http_default_user_data())
             protocolsService.ensure_port_80()
         elif args.user_data == "wordpress":
             userScript.add_scripts(get_http_default_user_data())
             userScript.add_scripts(get_php_installing())
+            userScript.add_scripts(get_composer_scripts_download())
             protocolsService.ensure_port_80()
     
     creationInstanceService.setHarakiri(userScript)
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())
+
+    userScript.add_scripts(get_bootstrap_log_end_mark())
 
     instance_data = commands.new(protocolsService, userScript.get_user_script())
 
@@ -80,7 +84,35 @@ service httpd start
 '''
 
 def get_php_installing() -> str:
-    return "amazon-linux-extras install php7.4\nservice httpd restart"
+    string_to_return = "echo Starting php installation at $(date) >> " + get_bootstrap_log_addres() + "\n"
+    string_to_return += "amazon-linux-extras install php7.4\nservice httpd restart"
+    return string_to_return
+
+def get_bootstrap_log_end_mark() -> str:
+    return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres()
+
+def get_composer_scripts_download() -> str:
+    string_to_return = "echo The composer.phar will be installed here: $(pwd) >> " + get_bootstrap_log_addres() + "\n"
+    string_to_return += '''php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('sha384', 'composer-setup.php') === '795f976fe0ebd8b75f26a6dd68f78fd3453ce79f32ecb33e7fd087d39bfeb978342fb73ac986cd4f54edd0dc902601dc') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"'''
+    return string_to_return
+
+def get_enlarge_swap() -> str:
+    return '''mkdir -p /var/_swap_
+cd /var/_swap_
+dd if=/dev/zero of=swapfile bs=1M count=2000
+mkswap swapfile
+swapon swapfile
+chmod 600 swapfile
+echo "/var/_swap_/swapfile none swap sw 0 0" >> /etc/fstab'''
+
+def get_bootstrap_startup_mark() -> str:
+    return "echo Bootstrap script starting at $(date) >> " + get_bootstrap_log_addres()
 
 def init_user_script() -> str:
     return "#!/bin/bash\n\n"
+
+def get_bootstrap_log_addres() -> str:
+    return "/home/ec2-user/log-bootstrap.txt"

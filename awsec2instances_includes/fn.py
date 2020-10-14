@@ -54,9 +54,11 @@ def create_new_instance(args, commands: Commands):
             userScript.add_scripts(get_http_default_user_data())
             protocolsService.ensure_port_80()
         elif args.user_data == "wordpress":
+            userScript.add_scripts("echo Updating os, and installing webserver and installing at $(data) >> " + get_bootstrap_log_addres())
             userScript.add_scripts(get_http_default_user_data())
             userScript.add_scripts(get_php_installing())
             userScript.add_scripts(get_composer_scripts_download())
+            userScript.add_scripts(get_wordpress_installation())
             protocolsService.ensure_port_80()
     
     creationInstanceService.setHarakiri(userScript)
@@ -80,8 +82,7 @@ def get_http_default_user_data() -> str:
     return '''yum update -y
 yum install httpd -y
 chkconfig httpd on
-service httpd start
-'''
+service httpd start'''
 
 def get_php_installing() -> str:
     string_to_return = "echo Starting php installation at $(date) >> " + get_bootstrap_log_addres() + "\n"
@@ -92,11 +93,9 @@ def get_bootstrap_log_end_mark() -> str:
     return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres()
 
 def get_composer_scripts_download() -> str:
-    string_to_return = "echo The composer.phar will be installed here: $(pwd) >> " + get_bootstrap_log_addres() + "\n"
-    string_to_return += '''php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('sha384', 'composer-setup.php') === '795f976fe0ebd8b75f26a6dd68f78fd3453ce79f32ecb33e7fd087d39bfeb978342fb73ac986cd4f54edd0dc902601dc') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-php composer-setup.php
-php -r "unlink('composer-setup.php');"'''
+    string_to_return = '''curl -sS https://getcomposer.org/installer | sudo php
+mv composer.phar /usr/local/bin/composer
+chmod +x /usr/local/bin/composer'''
     return string_to_return
 
 def get_enlarge_swap() -> str:
@@ -107,6 +106,13 @@ mkswap swapfile
 swapon swapfile
 chmod 600 swapfile
 echo "/var/_swap_/swapfile none swap sw 0 0" >> /etc/fstab'''
+
+def get_wordpress_installation() -> str:
+    string_to_return = '''
+cd /var/www/html
+/usr/local/bin/composer create-project johnpbloch/wordpress .
+'''
+    return string_to_return
 
 def get_bootstrap_startup_mark() -> str:
     return "echo Bootstrap script starting at $(date) >> " + get_bootstrap_log_addres()

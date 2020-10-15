@@ -1,7 +1,6 @@
 from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.Talk import Talk
 from awsec2instances_includes.Resume import Resume
-from awsec2instances_includes.DataExtractor import DataExtractor
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
 import boto3
 import os

@@ -1,5 +1,4 @@
 from awsec2instances_includes.Resume import Resume
-from awsec2instances_includes.DataIterator import DataIterator
 from awsec2instances_includes.Formatter import Formatter
 
 class Talk:

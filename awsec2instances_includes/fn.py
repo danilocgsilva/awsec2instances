@@ -54,10 +54,21 @@ def create_new_instance(args, commands: Commands):
             userScript.add_scripts(get_http_default_user_data())
             protocolsService.ensure_port_80()
         elif args.user_data == "wordpress":
-            userScript.add_scripts("echo Updating os and installing webserver at $(date) >> " + get_bootstrap_log_addres())
+
+            userScript.add_scripts("echo Updating OS and installing webserver at $(date) >> " + get_bootstrap_log_addres())
             userScript.add_scripts(get_http_default_user_data())
+
+            userScript.add_scripts("echo Installing PHP at $(date) >> " + get_bootstrap_log_addres())
             userScript.add_scripts(get_php_installing())
+
+            userScript.add_scripts("echo Installing Composer at $(date) >> " + get_bootstrap_log_addres())
             userScript.add_scripts(get_composer_scripts_download())
+
+            userScript.add_scripts("echo Start sleep for 10 seconds at $(date) >> " + get_bootstrap_log_addres())
+            userScript.add_scripts("sleep 10")
+            userScript.add_scripts("echo /usr/local/bin directory content: $(ls /usr/local/bin) >> " + get_bootstrap_log_addres())
+            userScript.add_scripts("echo Installing WordPress at $(date) >> " + get_bootstrap_log_addres())
+            userScript.add_scripts("echo The composer version is $(/usr/local/bin/composer --version) >> " + get_bootstrap_log_addres())
             userScript.add_scripts(get_wordpress_installation())
             protocolsService.ensure_port_80()
     
@@ -85,8 +96,7 @@ chkconfig httpd on
 service httpd start'''
 
 def get_php_installing() -> str:
-    string_to_return = "echo Starting php installation at $(date) >> " + get_bootstrap_log_addres() + "\n"
-    string_to_return += "amazon-linux-extras install php7.4 -y\nservice httpd restart"
+    string_to_return = "amazon-linux-extras install php7.4 -y\nservice httpd restart"
     return string_to_return
 
 def get_bootstrap_log_end_mark() -> str:

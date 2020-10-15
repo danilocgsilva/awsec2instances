@@ -32,6 +32,7 @@ def main():
         ["user-data", "u", False, "Path for user data as shell script for instance"],
         ["name", "n", False, "Set the names's tag"],
         ["lasts", "l", False, "Say how much time the instance will lasts to avoid unexpected costs"],
+        ["status-filter", "s", False, "Filter instance by status"],
     ], parser)
 
     args = parser.parse_args()
@@ -49,6 +50,12 @@ def main():
 
     if not args.command or args.command == "list":
         commands.list(args.region)
+        # if args.region:
+        #     print(commands.list(args.region))
+        # else:
+        #     for region in AwsClientUtils().get_regions_name():
+        #         print("Content for region " + region)
+        #         print(commands.list(region))
     elif args.command == "new":
         create_new_instance(args, commands)
     elif args.command == "kill":

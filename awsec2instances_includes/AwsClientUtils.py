@@ -5,24 +5,45 @@ from awsec2instances_includes.GetPreferredIam import GetPreferredIam
 
 class AwsClientUtils:
 
+    def get_regions_name(self) -> list:
+        aws_client = boto3.client('ec2')
+        region_names = []
+        for region_name in aws_client.describe_regions()["Regions"]:
+            region_names.append(region_name["RegionName"])
+        return region_names
+
     def get_regions_data_string(self) -> str:
         aws_client = boto3.client('ec2')
         raw_string = str(aws_client.describe_regions())
         return re.sub(r"'", "\"", raw_string)
 
-    def getRawDataFromCli(self, region = None) -> dict:
-        return self.getRawData(None, region)
+    def getRawDataFromCli(self, filterstatus = None, region = None) -> dict:
+        return self.getRawData(None, region=region, filterstatus=filterstatus)
 
-    def getRawData(self, profile = None, region = None) -> dict:
+    def getRawData(self, filterstatus, profile = None, region = None) -> dict:
 
         if profile:
             os.environ['AWS_PROFILE'] = profile
+
+        print("----region " + region)
 
         if region:
             os.environ['AWS_DEFAULT_REGION'] = region
         
         aws_client = boto3.client('ec2')
-        raw_return = aws_client.describe_instances()
+
+        if filterstatus:
+            raw_return = aws_client.describe_instances(Filters=[
+                {
+                    'Name': 'state',
+                    'Values': [
+                        filterstatus,
+                    ]
+                },
+            ])
+        else:
+            raw_return = aws_client.describe_instances()
+
         return raw_return["Reservations"]
 
     def create_new_instance_resource(
@@ -69,3 +90,12 @@ class AwsClientUtils:
 
     def choose_between_keypairs(self, keypairs_result):
         raise Exception("Still not implemented.")
+
+    def listInstanceData(self, region) -> list:
+        os.environ['AWS_DEFAULT_REGION'] = region
+        instancesData = []
+        for instanceData in boto3.client('ec2').describe_instances()["Reservations"]:
+            instancesData.append(instanceData["Instances"][0])
+        return instancesData
+        
+

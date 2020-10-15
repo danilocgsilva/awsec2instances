@@ -1,6 +1,7 @@
 from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.Talk import Talk
 from awsec2instances_includes.Resume import Resume
+from awsec2instances_includes.DataExtractor import DataExtractor
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
 import boto3
 import os
@@ -16,16 +17,15 @@ class Commands:
 
         self.aws_client = boto3.client('ec2')
 
-    def list(self, explicit_region = None):
-        talk = Talk()
-        resume = Resume()
+    def list(self, region):
         awsClientUtils = AwsClientUtils()
-
-        if explicit_region:
-            talk.print_data_single_region(explicit_region, awsClientUtils.getRawDataFromCli, resume)
+        if region:
+            rawInstanceData = awsClientUtils.listInstanceData(region)
         else:
-            string_region_data = awsClientUtils.get_regions_data_string()
-            talk.print_data_all_regions(resume, string_region_data, awsClientUtils.getRawDataFromCli)
+            for region in awsClientUtils.get_regions_name():
+                print("Content for region " + region)
+                instancesData = awsClientUtils.listInstanceData(region)
+                print(instancesData)
 
     def new(self, protocolService: ProtocolService, user_script: str):
         awsClientUtils = AwsClientUtils()

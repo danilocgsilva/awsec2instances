@@ -27,11 +27,11 @@ class Talk:
         self.get_instance_data(data_instances)
         self.printData()
 
-    def print_data_all_regions(self, resume: Resume, string_region_data, getRawDataFromCli):
+    def print_data_all_regions(self, resume: Resume, string_region_data, getRawDataFromCli, statusfilter):
         for region in Formatter().extractRegions(string_region_data):
-            self.print_data_single_region(region, getRawDataFromCli, resume)
+            self.print_data_single_region(region, getRawDataFromCli, resume, statusfilter)
 
-    def print_data_single_region(self, region, getRawDataFromCli, resume):
-        instances = getRawDataFromCli(region)
+    def print_data_single_region(self, region, getRawDataFromCli, resume, statusfilter):
+        instances = getRawDataFromCli(region, statusfilter)
         resume.add_instances_data(instances)
         self.print_region_data(region, instances)

@@ -50,12 +50,6 @@ def main():
 
     if not args.command or args.command == "list":
         commands.list(args.region)
-        # if args.region:
-        #     print(commands.list(args.region))
-        # else:
-        #     for region in AwsClientUtils().get_regions_name():
-        #         print("Content for region " + region)
-        #         print(commands.list(region))
     elif args.command == "new":
         create_new_instance(args, commands)
     elif args.command == "kill":

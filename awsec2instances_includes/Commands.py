@@ -17,9 +17,12 @@ class Commands:
         self.aws_client = boto3.client('ec2')
 
     def list(self, region):
+        talk = Talk()
         awsClientUtils = AwsClientUtils()
         if region:
-            rawInstanceData = awsClientUtils.listInstanceData(region)
+            rawInstancesData = awsClientUtils.listInstanceData(region)
+            talk.setInstanceData(rawInstancesData)
+            talk.printData()
         else:
             for region in awsClientUtils.get_regions_name():
                 print("Content for region " + region)

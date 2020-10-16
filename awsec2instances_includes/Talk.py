@@ -1,20 +1,22 @@
 from awsec2instances_includes.Resume import Resume
 from awsec2instances_includes.Formatter import Formatter
+from awsec2instances_includes.InstanceInterpreter import InstanceInterpreter
 
 class Talk:
 
-    def get_instance_data(self, instance_data):
-        self.instance_data = instance_data
+    def setInstanceData(self, instances_data: list):
+        self.instances_data = instances_data
 
     def printData(self):
-        for instanceSingle in self.instance_data:
+        instanceInterpreter = InstanceInterpreter()
+        for instance_raw in self.instances_data:
+            instanceInterpreter.setInstanceData(instance_raw)
             print('---')
-            print('Instance counting: ' + str(instanceSingle['count']))
-            print('Id: ' + instanceSingle['id'])
-            print('Name: ' + instanceSingle['name'])
-            print('Status: ' + instanceSingle['status'])
-            print('Type: ' + instanceSingle['type'])
-            print('Ip: ' + instanceSingle['ip'])
+            print('Id: ' + instanceInterpreter.getInstanceId())
+            print('Name: ' + instanceInterpreter.getInstanceName())
+            # print('Status: ' + instanceSingle['status'])
+            # print('Type: ' + instanceSingle['type'])
+            # print('Ip: ' + instanceSingle['ip'])
 
     def print_region_data(self, region, instances):
 
@@ -30,7 +32,7 @@ class Talk:
         for region in Formatter().extractRegions(string_region_data):
             self.print_data_single_region(region, getRawDataFromCli, resume, statusfilter)
 
-    def print_data_single_region(self, region, getRawDataFromCli, resume, statusfilter):
-        instances = getRawDataFromCli(region, statusfilter)
-        resume.add_instances_data(instances)
-        self.print_region_data(region, instances)
+    # def print_data_single_region(self, region, getRawDataFromCli, resume, statusfilter):
+    #     instances = getRawDataFromCli(region, statusfilter)
+    #     resume.add_instances_data(instances)
+    #     self.print_region_data(region, instances)

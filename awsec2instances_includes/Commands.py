@@ -26,8 +26,7 @@ class Commands:
         else:
             for region in awsClientUtils.get_regions_name():
                 print("Content for region " + region)
-                instancesData = awsClientUtils.listInstanceData(region)
-                print(instancesData)
+                rawInstancesData = awsClientUtils.listInstanceData(region)
                 talk.setInstanceData(rawInstancesData)
                 talk.printData()
 

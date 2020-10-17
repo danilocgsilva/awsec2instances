@@ -2,6 +2,7 @@ from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.Talk import Talk
 from awsec2instances_includes.Resume import Resume
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
+from awsec2instances_includes.fn import print_instances_single_region
 import boto3
 import os
 
@@ -20,15 +21,11 @@ class Commands:
         talk = Talk()
         awsClientUtils = AwsClientUtils()
         if region:
-            rawInstancesData = awsClientUtils.listInstanceData(region)
-            talk.setInstanceData(rawInstancesData)
-            talk.printData()
+            print_instances_single_region(region)
         else:
             for region in awsClientUtils.get_regions_name():
                 print("Content for region " + region)
-                rawInstancesData = awsClientUtils.listInstanceData(region)
-                talk.setInstanceData(rawInstancesData)
-                talk.printData()
+                print_instances_single_region(region)
 
     def new(self, protocolService: ProtocolService, user_script: str):
         awsClientUtils = AwsClientUtils()

@@ -2,6 +2,8 @@ from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.Commands import Commands
 from awsec2instances_includes.CreationInstanceService import CreationInstanceService
 from awsec2instances_includes.UserScript import UserScript
+from awsec2instances_includes.AwsClientUtils import AwsClientUtils
+from awsec2instances_includes.Talk import Talk
 from awssg.Client import Client
 from awssg.SGConfig import SGConfig
 from awssg.SG_Client import SG_Client
@@ -132,3 +134,10 @@ def init_user_script() -> str:
 
 def get_bootstrap_log_addres() -> str:
     return "/home/ec2-user/log-bootstrap.txt"
+
+
+def print_instances_single_region(region):
+    talk = Talk()
+    rawInstancesData = AwsClientUtils().listInstanceData(region)
+    talk.setInstanceData(rawInstancesData)
+    talk.printData()

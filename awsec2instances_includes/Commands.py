@@ -17,15 +17,14 @@ class Commands:
 
         self.aws_client = boto3.client('ec2')
 
-    def list(self, region):
-        talk = Talk()
+    def list(self, region, filter_status = None):
         awsClientUtils = AwsClientUtils()
         if region:
-            print_instances_single_region(region)
+            print_instances_single_region(region, filter_status)
         else:
             for region in awsClientUtils.get_regions_name():
                 print("Content for region " + region)
-                print_instances_single_region(region)
+                print_instances_single_region(region, filter_status)
 
     def new(self, protocolService: ProtocolService, user_script: str):
         awsClientUtils = AwsClientUtils()

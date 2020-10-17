@@ -23,16 +23,17 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser = mass_parser_arguments([
-        ["region", "r", False, "Restrict search just for a single region"],
-        ["command", "c", False, "Defines a specific action"],
-        ["id-to-kill", "ik", False, "Set an instance id to terminate"],
-        ["profile", "p", False, "Set the aws cli profile, if needed"],
-        ["id-to-restart", "ir", False, "Set an existing stopped instance to restart"],
         ["access", "a", False, "Set a way to access the instance if you are creating a new one"],
-        ["user-data", "u", False, "Path for user data as shell script for instance"],
+        ["command", "c", False, "Defines a specific action"],
+        ["filter-status", "f", False, "A status filter if desired"],
+        ["region", "r", False, "Restrict search just for a single region"],
         ["name", "n", False, "Set the names's tag"],
+        ["id-to-kill", "ik", False, "Set an instance id to terminate"],
+        ["id-to-restart", "ir", False, "Set an existing stopped instance to restart"],
         ["lasts", "l", False, "Say how much time the instance will lasts to avoid unexpected costs"],
+        ["profile", "p", False, "Set the aws cli profile, if needed"],
         ["status-filter", "s", False, "Filter instance by status"],
+        ["user-data", "u", False, "Path for user data as shell script for instance"],
     ], parser)
 
     args = parser.parse_args()
@@ -49,7 +50,7 @@ def main():
     commands = Commands(profile, args.region)
 
     if not args.command or args.command == "list":
-        commands.list(args.region)
+        commands.list(args.region, args.filter_status)
     elif args.command == "new":
         create_new_instance(args, commands)
     elif args.command == "kill":

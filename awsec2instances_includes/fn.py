@@ -1,5 +1,5 @@
 from awsec2instances_includes.ProtocolService import ProtocolService
-from awsec2instances_includes.Commands import Commands
+# from awsec2instances_includes.Commands import Commands
 from awsec2instances_includes.CreationInstanceService import CreationInstanceService
 from awsec2instances_includes.UserScript import UserScript
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
@@ -46,7 +46,8 @@ def assign_sg_to_ec2(sgid: str, instance_id: str):
     instances[0].modify_attribute(Groups=[sgid], DryRun=False)
 
 
-def create_new_instance(args, commands: Commands):
+# def create_new_instance(args, commands: Commands):
+def create_new_instance(args, commands):
     creationInstanceService, protocolsService, userScript = CreationInstanceService().getCreationServices(args.access)
     creationInstanceService.ensureMinutesData(args.lasts)
 
@@ -136,8 +137,8 @@ def get_bootstrap_log_addres() -> str:
     return "/home/ec2-user/log-bootstrap.txt"
 
 
-def print_instances_single_region(region):
+def print_instances_single_region(region, filter_status):
     talk = Talk()
-    rawInstancesData = AwsClientUtils().listInstanceData(region)
+    rawInstancesData = AwsClientUtils().listInstanceData(region, filter_status)
     talk.setInstanceData(rawInstancesData)
     talk.printData()

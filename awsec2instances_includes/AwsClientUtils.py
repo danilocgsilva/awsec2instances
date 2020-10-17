@@ -91,10 +91,24 @@ class AwsClientUtils:
     def choose_between_keypairs(self, keypairs_result):
         raise Exception("Still not implemented.")
 
-    def listInstanceData(self, region) -> list:
+    def listInstanceData(self, region, filter_status) -> list:
         os.environ['AWS_DEFAULT_REGION'] = region
         instancesData = []
-        for instanceData in boto3.client('ec2').describe_instances()["Reservations"]:
+
+        if filter_status:
+            instance_filter_status_list = [
+                {
+                    'Name': 'instance-state-name',
+                    'Values': [
+                        filter_status,
+                    ]
+                },
+            ]
+        else:
+            instance_filter_status_list = []
+
+        ec2Data = boto3.client('ec2').describe_instances(Filters=instance_filter_status_list)
+        for instanceData in ec2Data["Reservations"]:
             instancesData.append(instanceData["Instances"][0])
         return instancesData
         

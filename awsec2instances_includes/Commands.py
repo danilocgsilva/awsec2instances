@@ -28,6 +28,8 @@ class Commands:
                 print("Content for region " + region)
                 instancesData = awsClientUtils.listInstanceData(region)
                 print(instancesData)
+                talk.setInstanceData(rawInstancesData)
+                talk.printData()
 
     def new(self, protocolService: ProtocolService, user_script: str):
         awsClientUtils = AwsClientUtils()

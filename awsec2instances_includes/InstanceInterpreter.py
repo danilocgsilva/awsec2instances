@@ -19,3 +19,13 @@ class InstanceInterpreter:
             return "---"
         return "---"
 
+    def getStatus(self) -> str:
+        return self.instanceData["State"]["Name"]
+
+    def getInstanceType(self):
+        return self.instanceData["InstanceType"]
+
+    def getInstanceIp(self):
+        if "PublicIpAddress" in self.instanceData:
+            return self.instanceData["PublicIpAddress"]
+        return "---"

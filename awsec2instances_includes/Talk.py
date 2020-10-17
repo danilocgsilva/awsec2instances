@@ -14,19 +14,19 @@ class Talk:
             print('---')
             print('Id: ' + instanceInterpreter.getInstanceId())
             print('Name: ' + instanceInterpreter.getInstanceName())
-            # print('Status: ' + instanceSingle['status'])
-            # print('Type: ' + instanceSingle['type'])
-            # print('Ip: ' + instanceSingle['ip'])
+            print('Status: ' + instanceInterpreter.getStatus())
+            print('Type: ' + instanceInterpreter.getInstanceType())
+            print('Ip: ' + instanceInterpreter.getInstanceIp())
 
-    def print_region_data(self, region, instances):
+    # def print_region_data(self, region, instances):
 
-        print("Getting data from region " + region)
+    #     print("Getting data from region " + region)
 
-        di = DataIterator()
-        data_instances = di.getInstancesInfos(instances)
+    #     di = DataIterator()
+    #     data_instances = di.getInstancesInfos(instances)
 
-        self.get_instance_data(data_instances)
-        self.printData()
+    #     self.get_instance_data(data_instances)
+    #     self.printData()
 
     def print_data_all_regions(self, resume: Resume, string_region_data, getRawDataFromCli, statusfilter):
         for region in Formatter().extractRegions(string_region_data):

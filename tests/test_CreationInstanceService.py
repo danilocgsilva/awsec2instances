@@ -1,6 +1,6 @@
 import unittest
 import sys
-sys.path.insert(1, "")
+sys.path.insert(1, "..")
 from awsec2instances_includes.CreationInstanceService import CreationInstanceService
 
 class test_CreationInstanceService(unittest.TestCase):

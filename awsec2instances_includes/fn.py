@@ -52,24 +52,20 @@ def create_new_instance(args, commands):
     creationInstanceService.ensureMinutesData(args.lasts)
 
     if args.user_data:
-        userScript.add_scripts(get_bootstrap_startup_mark())
+        userScript.add_scripts(get_update_system_bash_script())
         if args.user_data == "webserver":
             userScript.add_scripts(get_http_default_user_data())
             protocolsService.ensure_port_80()
         elif args.user_data == "wordpress":
-
-            userScript.add_scripts("echo Updating OS and installing webserver at $(date) >> " + get_bootstrap_log_addres())
             userScript.add_scripts(get_http_default_user_data())
-            userScript.add_scripts("echo Installing PHP at $(date) >> " + get_bootstrap_log_addres())
             userScript.add_scripts(get_php_installing())
-            userScript.add_scripts("echo Installing Composer at $(date) >> " + get_bootstrap_log_addres())
             userScript.add_scripts(get_composer_scripts_download())
-            userScript.add_scripts("echo The composer version is $(/usr/local/bin/composer --version) >> " + get_bootstrap_log_addres())
-            userScript.add_scripts("echo Installing Wordpress. Time: $(date) >> " + get_bootstrap_log_addres())
             userScript.add_scripts(get_wordpress_installation())
-            userScript.add_scripts("echo Finsihed WordPress installation at $(date) >> " + get_bootstrap_log_addres())
             protocolsService.ensure_port_80()
-    
+        elif args.user_data == "database":
+            protocolsService.ensure_port_3306()
+            userScript.add_scripts(installs_database_script())
+
     creationInstanceService.setHarakiri(userScript)
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())
@@ -87,9 +83,11 @@ def create_new_instance(args, commands):
         instance_data.wait_until_running()
         boto3.resource('ec2').create_tags(Resources=[instance_data.id], Tags=[{'Key':'Name', 'Value':args.name}])
 
+def get_update_system_bash_script() -> str:
+    return "yum update -y"
+
 def get_http_default_user_data() -> str:
-    return '''yum update -y
-yum install httpd -y
+    return '''yum install httpd -y
 chkconfig httpd on
 service httpd start'''
 
@@ -101,7 +99,8 @@ def get_bootstrap_log_end_mark() -> str:
     return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres()
 
 def get_composer_scripts_download() -> str:
-    string_to_return = '''curl -sS https://getcomposer.org/installer | sudo php
+    string_to_return = '''export HOME=/root
+    curl -sS https://getcomposer.org/installer | sudo php
 mv composer.phar /usr/local/bin/composer
 chmod +x /usr/local/bin/composer'''
     return string_to_return
@@ -137,3 +136,6 @@ def print_instances_single_region(region, filter_status):
     rawInstancesData = AwsClientUtils().listInstanceData(region, filter_status)
     talk.setInstanceData(rawInstancesData)
     talk.printData()
+
+def installs_database_script() -> str:
+    return "exit"

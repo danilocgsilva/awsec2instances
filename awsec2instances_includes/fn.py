@@ -50,6 +50,7 @@ def assign_sg_to_ec2(sgid: str, instance_id: str):
 def create_new_instance(args, commands):
     creationInstanceService, protocolsService, userScript = CreationInstanceService().getCreationServices(args.access)
     creationInstanceService.ensureMinutesData(args.lasts)
+    # creationInstanceService.setHarakiri(userScript)
 
     if args.user_data:
         userScript.add_scripts(get_update_system_bash_script())
@@ -64,9 +65,11 @@ def create_new_instance(args, commands):
             protocolsService.ensure_port_80()
         elif args.user_data == "database":
             protocolsService.ensure_port_3306()
+            userScript.add_scripts(get_adds_mariadb_updated_to_os_repository())
+            userScript.add_scripts("yum makecache")
             userScript.add_scripts(installs_database_script())
+            userScript.add_scripts("systemctl enable --now mariadb")
 
-    creationInstanceService.setHarakiri(userScript)
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())
 
@@ -137,5 +140,14 @@ def print_instances_single_region(region, filter_status):
     talk.setInstanceData(rawInstancesData)
     talk.printData()
 
+def get_adds_mariadb_updated_to_os_repository() -> str:
+    return '''tee /etc/yum.repos.d/mariadb.repo<<EOF
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.5/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+EOF'''
+
 def installs_database_script() -> str:
-    return "exit"
+    return '''yum install MariaDB-server MariaDB-client -y'''

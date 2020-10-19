@@ -13,7 +13,6 @@ class InstanceInterpreter:
     def getInstanceName(self):
         if "Tags" in self.instanceData:
             for tagData in self.instanceData["Tags"]:
-                print(tagData)
                 if tagData["Key"] == "Name":
                     return tagData["Value"]
             return "---"

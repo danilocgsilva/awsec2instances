@@ -46,28 +46,24 @@ def assign_sg_to_ec2(sgid: str, instance_id: str):
     instances[0].modify_attribute(Groups=[sgid], DryRun=False)
 
 
-# def create_new_instance(args, commands: Commands):
 def create_new_instance(args, commands):
     creationInstanceService, protocolsService, userScript = CreationInstanceService().getCreationServices(args.access)
     creationInstanceService.ensureMinutesData(args.lasts)
-    # creationInstanceService.setHarakiri(userScript)
+    creationInstanceService.setHarakiri(userScript)
+    userScript.add_scripts(get_update_system_bash_script())
 
     if args.user_data:
-        userScript.add_scripts(get_update_system_bash_script())
         if args.user_data == "webserver":
-            userScript.add_scripts(get_http_default_user_data())
+            userScript.add_scripts(get_shell_install_httpd())
+            userScript.add_scripts(get_httpd_enable())
             protocolsService.ensure_port_80()
         elif args.user_data == "wordpress":
-            userScript.add_scripts(get_http_default_user_data())
-            userScript.add_scripts(get_php_installing())
-            userScript.add_scripts(get_composer_scripts_download())
-            userScript.add_scripts(get_wordpress_installation())
+            set_wordpress(userScript)
+            set_database(userScript)
             protocolsService.ensure_port_80()
         elif args.user_data == "database":
             protocolsService.ensure_port_3306()
-            userScript.add_scripts(get_adds_mariadb_updated_to_os_repository())
-            userScript.add_scripts("yum makecache")
-            userScript.add_scripts(installs_database_script())
+            set_database(userScript)
             userScript.add_scripts("systemctl enable --now mariadb")
 
     if creationInstanceService.needs_die_warnning:
@@ -89,10 +85,12 @@ def create_new_instance(args, commands):
 def get_update_system_bash_script() -> str:
     return "yum update -y"
 
-def get_http_default_user_data() -> str:
-    return '''yum install httpd -y
-chkconfig httpd on
+def get_httpd_enable() -> str:
+    return '''chkconfig httpd on
 service httpd start'''
+
+def get_shell_install_httpd() -> str:
+    return "yum install httpd -y"
 
 def get_php_installing() -> str:
     string_to_return = "amazon-linux-extras install php7.4 -y\nservice httpd restart"
@@ -133,7 +131,6 @@ def init_user_script() -> str:
 def get_bootstrap_log_addres() -> str:
     return "/home/ec2-user/log-bootstrap.txt"
 
-
 def print_instances_single_region(region, filter_status):
     talk = Talk()
     rawInstancesData = AwsClientUtils().listInstanceData(region, filter_status)
@@ -150,4 +147,18 @@ gpgcheck=1
 EOF'''
 
 def installs_database_script() -> str:
-    return '''yum install MariaDB-server MariaDB-client -y'''
+    return "yum install MariaDB-server MariaDB-client -y"
+
+def set_wordpress(userScript: UserScript):
+    userScript.add_scripts(get_shell_install_httpd())
+    userScript.add_scripts(get_httpd_enable())
+    userScript.add_scripts(get_php_installing())
+    userScript.add_scripts(get_composer_scripts_download())
+    userScript.add_scripts(get_wordpress_installation())
+
+def set_database(userScript: UserScript):
+    userScript.add_scripts(get_adds_mariadb_updated_to_os_repository())
+    userScript.add_scripts("yum makecache")
+    userScript.add_scripts(installs_database_script())
+    userScript.add_scripts("systemctl enable --now mariadb")
+

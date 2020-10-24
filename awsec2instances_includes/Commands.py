@@ -2,6 +2,7 @@ from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.Talk import Talk
 from awsec2instances_includes.Resume import Resume
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
+from awsutils.AWSUtils import AWSUtils
 from awsec2instances_includes.fn import print_instances_single_region
 import boto3
 import os
@@ -18,25 +19,26 @@ class Commands:
         self.aws_client = boto3.client('ec2')
 
     def list(self, region, filter_status = None):
-        awsClientUtils = AwsClientUtils()
+        # awsClientUtils = AwsClientUtils()
         if region:
             print_instances_single_region(region, filter_status)
         else:
-            for region in awsClientUtils.get_regions_name():
+            for region in AWSUtils().get_regions_name():
                 print("Content for region " + region)
                 print_instances_single_region(region, filter_status)
 
     def new(self, protocolService: ProtocolService, user_script: str):
-        awsClientUtils = AwsClientUtils()
+        # awsClientUtils = AwsClientUtils()
         keypairname = None
         if protocolService.is_have_ssh():
-            keypairname = awsClientUtils.get_key_pair_name()
+            # keypairname = awsClientUtils.get_key_pair_name()
+            keypairname = AWSUtils().get_key_pair_name()
             if not keypairname:
                 raise Exception('No keypair found to assign. You need it to access through ssh.')
         
         region = self.aws_client.meta.region_name
         aws_resource = boto3.resource('ec2', region_name=region)
-        return awsClientUtils.create_new_instance_resource(aws_resource, region, keypairname, user_script)
+        return AwsClientUtils().create_new_instance_resource(aws_resource, region, keypairname, user_script)
 
     def kill(self, id_to_kill):
         aws_resource = boto3.resource('ec2', region_name=self.aws_client.meta.region_name)

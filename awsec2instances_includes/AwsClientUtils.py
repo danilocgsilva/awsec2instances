@@ -5,12 +5,12 @@ from awsec2instances_includes.GetPreferredIam import GetPreferredIam
 
 class AwsClientUtils:
 
-    def get_regions_name(self) -> list:
-        aws_client = boto3.client('ec2')
-        region_names = []
-        for region_name in aws_client.describe_regions()["Regions"]:
-            region_names.append(region_name["RegionName"])
-        return region_names
+    # def get_regions_name(self) -> list:
+    #     aws_client = boto3.client('ec2')
+    #     region_names = []
+    #     for region_name in aws_client.describe_regions()["Regions"]:
+    #         region_names.append(region_name["RegionName"])
+    #     return region_names
 
     def get_regions_data_string(self) -> str:
         aws_client = boto3.client('ec2')
@@ -76,20 +76,20 @@ class AwsClientUtils:
     def restart_instance(self, aws_resource, id_to_restart):
         aws_resource.instances.filter(InstanceIds=[id_to_restart]).start()
 
-    def get_key_pair_name(self):
+    # def get_key_pair_name(self):
 
-        aws_client = boto3.client('ec2')
-        key_pairs_list = aws_client.describe_key_pairs()["KeyPairs"]
+    #     aws_client = boto3.client('ec2')
+    #     key_pairs_list = aws_client.describe_key_pairs()["KeyPairs"]
 
-        if len(key_pairs_list) == 0:
-            return None
-        elif len(key_pairs_list) == 1:
-            return key_pairs_list[0]["KeyName"]
-        else:
-            return self.choose_between_keypairs(key_pairs_list)
+    #     if len(key_pairs_list) == 0:
+    #         return None
+    #     elif len(key_pairs_list) == 1:
+    #         return key_pairs_list[0]["KeyName"]
+    #     else:
+    #         return self.choose_between_keypairs(key_pairs_list)
 
-    def choose_between_keypairs(self, keypairs_result):
-        raise Exception("Still not implemented.")
+    # def choose_between_keypairs(self, keypairs_result):
+    #     raise Exception("Still not implemented.")
 
     def listInstanceData(self, region, filter_status) -> list:
         os.environ['AWS_DEFAULT_REGION'] = region

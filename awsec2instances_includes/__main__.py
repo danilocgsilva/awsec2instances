@@ -3,7 +3,8 @@
 from awsec2instances_includes.fn import create_new_instance
 from awsec2instances_includes.Commands import Commands
 from awsec2instances_includes.ProtocolService import ProtocolService
-from awsguesslocalprofile.AWSGuessLocalProfile import AWSGuessLocalProfile
+# from awsguesslocalprofile.AWSGuessLocalProfile import AWSGuessLocalProfile
+from awsutils.AWSUtils import AWSUtils
 import sys
 import argparse
 
@@ -41,7 +42,7 @@ def main():
     if args.profile:
         profile = args.profile
     else:
-        profile = AWSGuessLocalProfile().guess()
+        profile = AWSUtils().guessLocalProfile()
 
     if profile == "":
         print("I cound not guess credentials, sorry. Explicitly set a profile name using -p or --profile or set in the aws configuration using the command: \"aws configure --profile <your_profile>\".")

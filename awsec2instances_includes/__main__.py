@@ -26,14 +26,15 @@ def main():
     parser = mass_parser_arguments([
         ["access", "a", False, "Set a way to access the instance if you are creating a new one"],
         ["command", "c", False, "Defines a specific action"],
-        ["filter-status", "f", False, "A status filter if desired"],
+        ["filter-status", "fs", False, "A status filter if desired"],
+        ["filter-name", "fn", False, "Search for instance with the tag name"],
         ["region", "r", False, "Restrict search just for a single region"],
         ["name", "n", False, "Set the names's tag"],
         ["id-to-kill", "ik", False, "Set an instance id to terminate"],
         ["id-to-restart", "ir", False, "Set an existing stopped instance to restart"],
         ["lasts", "l", False, "Say how much time the instance will lasts to avoid unexpected costs"],
         ["profile", "p", False, "Set the aws cli profile, if needed"],
-        ["status-filter", "s", False, "Filter instance by status"],
+        ["status-filter", "sf", False, "Filter instance by status"],
         ["user-data", "u", False, "Path for user data as shell script for instance"],
     ], parser)
 
@@ -51,7 +52,7 @@ def main():
     commands = Commands(profile, args.region)
 
     if not args.command or args.command == "list":
-        commands.list(args.region, args.status_filter)
+        commands.list(args.region, args.filter_status, args.filter_name)
     elif args.command == "new":
         create_new_instance(args, commands)
     elif args.command == "kill":

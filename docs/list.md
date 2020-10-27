@@ -24,3 +24,8 @@ Would you like to filter the listing instance by its status? Then use:
 awsec2 -c list -r <your_region> --filter-status running
 ```
 Then only running instances will be listed.
+
+Wanna list by tag?
+```
+awsec2 -c list -r <your_region> --filter-name <tags-with-uppercase-Name>
+```

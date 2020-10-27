@@ -18,13 +18,13 @@ class Commands:
 
         self.aws_client = boto3.client('ec2')
 
-    def list(self, region, filter_status = None):
+    def list(self, region, filter_status = None, filter_name = None):
         if region:
-            print_instances_single_region(region, filter_status)
+            print_instances_single_region(region, filter_status, filter_name)
         else:
             for region in AWSUtils().get_regions_name():
                 print("Content for region " + region)
-                print_instances_single_region(region, filter_status)
+                print_instances_single_region(region, filter_status, filter_name)
 
     def new(self, protocolService: ProtocolService, user_script: str):
         keypairname = None

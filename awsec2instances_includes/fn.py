@@ -58,13 +58,23 @@ def create_new_instance(args, commands):
             userScript.add_scripts(get_httpd_enable())
             protocolsService.ensure_port_80()
         elif args.user_data == "wordpress":
-            set_wordpress(userScript)
+            scripts_httpd(userScript)
+            userScript.add_scripts(get_php_installing())
+            userScript.add_scripts(get_composer_scripts_download())
+            userScript.add_scripts(get_wordpress_installation())
             set_database(userScript)
             protocolsService.ensure_port_80()
         elif args.user_data == "database":
             protocolsService.ensure_port_3306()
             set_database(userScript)
             userScript.add_scripts("systemctl enable --now mariadb")
+        elif args.user_data == "laravel":
+            scripts_httpd(userScript)
+            userScript.add_scripts(get_php_installing())
+            userScript.add_scripts("yum install php-mbstring -y")
+            userScript.add_scripts("yum install php-dom -y")
+            userScript.add_scripts(get_composer_scripts_download())
+            protocolsService.ensure_port_80()
 
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())
@@ -134,9 +144,9 @@ def init_user_script() -> str:
 def get_bootstrap_log_addres() -> str:
     return "/home/ec2-user/log-bootstrap.txt"
 
-def print_instances_single_region(region, filter_status):
+def print_instances_single_region(region, filter_status, filter_name):
     talk = Talk()
-    rawInstancesData = AwsClientUtils().listInstanceData(region, filter_status)
+    rawInstancesData = AwsClientUtils().listInstanceData(region, filter_status, filter_name)
     talk.setInstanceData(rawInstancesData)
     talk.printData()
 
@@ -152,12 +162,13 @@ EOF'''
 def installs_database_script() -> str:
     return "yum install MariaDB-server MariaDB-client -y"
 
-def set_wordpress(userScript: UserScript):
+def scripts_httpd(userScript: UserScript):
     userScript.add_scripts(get_shell_install_httpd())
     userScript.add_scripts(get_httpd_enable())
-    userScript.add_scripts(get_php_installing())
-    userScript.add_scripts(get_composer_scripts_download())
-    userScript.add_scripts(get_wordpress_installation())
+
+# def set_wordpress(userScript: UserScript):
+    # userScript.add_scripts(get_composer_scripts_download())
+    # userScript.add_scripts(get_wordpress_installation())
 
 def set_database(userScript: UserScript):
     userScript.add_scripts(get_adds_mariadb_updated_to_os_repository())

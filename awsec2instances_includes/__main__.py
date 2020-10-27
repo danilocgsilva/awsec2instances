@@ -51,7 +51,7 @@ def main():
     commands = Commands(profile, args.region)
 
     if not args.command or args.command == "list":
-        commands.list(args.region, args.filter_status)
+        commands.list(args.region, args.status_filter)
     elif args.command == "new":
         create_new_instance(args, commands)
     elif args.command == "kill":

@@ -100,7 +100,10 @@ def get_bootstrap_log_end_mark() -> str:
     return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres()
 
 def get_composer_scripts_download() -> str:
-    string_to_return = '''export HOME=/root
+    string_to_return = '''container_commands:
+  installyum:
+    command: "yum -y install htop"
+export HOME=/root
     curl -sS https://getcomposer.org/installer | sudo php
 mv composer.phar /usr/local/bin/composer
 chmod +x /usr/local/bin/composer'''

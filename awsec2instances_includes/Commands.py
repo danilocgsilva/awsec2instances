@@ -19,7 +19,6 @@ class Commands:
         self.aws_client = boto3.client('ec2')
 
     def list(self, region, filter_status = None):
-        # awsClientUtils = AwsClientUtils()
         if region:
             print_instances_single_region(region, filter_status)
         else:
@@ -28,10 +27,8 @@ class Commands:
                 print_instances_single_region(region, filter_status)
 
     def new(self, protocolService: ProtocolService, user_script: str):
-        # awsClientUtils = AwsClientUtils()
         keypairname = None
         if protocolService.is_have_ssh():
-            # keypairname = awsClientUtils.get_key_pair_name()
             keypairname = AWSUtils().get_key_pair_name()
             if not keypairname:
                 raise Exception('No keypair found to assign. You need it to access through ssh.')

@@ -1,3 +1,4 @@
 -e git+https://github.com/danilocgsilva/AWSUtils.git@master#egg=awsutils
 -e git+https://github.com/danilocgsilva/aws-sg.git@master#egg=awssg
+-e git+https://github.com/danilocgsilva/danilocgsilvamepythonhelpers.git@master#egg=danilocgsilvame_python_helpers
 boto3

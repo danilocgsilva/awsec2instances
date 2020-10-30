@@ -80,6 +80,7 @@ def create_new_instance(args, commands):
             userScript.add_scripts('sed -i /config/a"\\ \\ \\ \\ \\ \\ \\ \\ \\"platform-check\\":\\ false," /var/www/laravel/composer.json')
             userScript.add_scripts('cd /var/www/laravel')
             userScript.add_scripts('cp .env.example .env')
+            userScript.add_scripts('php artisan key:generate --ansi')
             userScript.add_scripts('/usr/local/bin/composer install')
             userScript.add_scripts('chown -Rv apache /var/www/laravel/storage')
             protocolsService.ensure_port_80()

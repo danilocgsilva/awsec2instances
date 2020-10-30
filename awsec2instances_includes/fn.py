@@ -74,10 +74,13 @@ def create_new_instance(args, commands):
             userScript.add_scripts("yum install php-mbstring -y")
             userScript.add_scripts("yum install php-dom -y")
             userScript.add_scripts(get_composer_scripts_download())
-            userScript.add_scripts(get_install_laravel_ami_script())
+            userScript.add_scripts(prepare_laravel_aws())
             userScript.add_scripts("rm -r /var/www/html")
             userScript.add_scripts("ln -s /var/www/laravel/public /var/www/html")
             userScript.add_scripts('sed -i /config/a"\\ \\ \\ \\ \\ \\ \\ \\ \\"platform-check\\":\\ false," /var/www/laravel/composer.json')
+            userScript.add_scripts('cd /var/www/laravel')
+            userScript.add_scripts('cp .env.example .env')
+            userScript.add_scripts('/usr/local/bin/composer install')
             protocolsService.ensure_port_80()
 
     if creationInstanceService.needs_die_warnning:
@@ -120,9 +123,18 @@ mv composer.phar /usr/local/bin/composer
 chmod +x /usr/local/bin/composer'''
     return string_to_return
 
-def get_install_laravel_ami_script() -> str:
+# def get_install_laravel_ami_script() -> str:
+#     string_to_return = '''cd /var/www
+# /usr/local/bin/composer create-project laravel/laravel'''
+
+def prepare_laravel_aws() -> str:
     string_to_return = '''cd /var/www
-/usr/local/bin/composer create-project laravel/laravel'''
+curl -Ls -o laravel-master.zip https://github.com/laravel/laravel/archive/master.zip
+unzip laravel-master.zip
+rm laravel-master.zip
+mv laravel-master laravel
+cd laravel
+/usr/local/bin/composer install'''
 
     return string_to_return
 

@@ -74,6 +74,10 @@ def create_new_instance(args, commands):
             userScript.add_scripts("yum install php-mbstring -y")
             userScript.add_scripts("yum install php-dom -y")
             userScript.add_scripts(get_composer_scripts_download())
+            userScript.add_scripts(get_install_laravel_ami_script())
+            userScript.add_scripts("rm -r /var/www/html")
+            userScript.add_scripts("ln -s /var/www/laravel/public /var/www/html")
+            userScript.add_scripts('sed -i /config/a"\\ \\ \\ \\ \\ \\ \\ \\ \\"platform-check\\":\\ false," /var/www/laravel/composer.json')
             protocolsService.ensure_port_80()
 
     if creationInstanceService.needs_die_warnning:
@@ -110,13 +114,16 @@ def get_bootstrap_log_end_mark() -> str:
     return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres()
 
 def get_composer_scripts_download() -> str:
-    string_to_return = '''container_commands:
-  installyum:
-    command: "yum -y install htop"
-export HOME=/root
-    curl -sS https://getcomposer.org/installer | sudo php
+    string_to_return = '''export HOME=/root
+curl -sS https://getcomposer.org/installer | sudo php
 mv composer.phar /usr/local/bin/composer
 chmod +x /usr/local/bin/composer'''
+    return string_to_return
+
+def get_install_laravel_ami_script() -> str:
+    string_to_return = '''cd /var/www
+/usr/local/bin/composer create-project laravel/laravel'''
+
     return string_to_return
 
 def get_enlarge_swap() -> str:

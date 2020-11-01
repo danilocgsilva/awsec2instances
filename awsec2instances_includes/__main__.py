@@ -3,7 +3,6 @@
 from awsec2instances_includes.fn import create_new_instance
 from awsec2instances_includes.Commands import Commands
 from awsec2instances_includes.ProtocolService import ProtocolService
-# from awsguesslocalprofile.AWSGuessLocalProfile import AWSGuessLocalProfile
 from awsutils.AWSUtils import AWSUtils
 import sys
 import argparse

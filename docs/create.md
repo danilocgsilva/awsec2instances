@@ -33,9 +33,9 @@ You may need a webserver. In this case, type:
 awsec2 --command new --user-data webserver
 ```
 Then after the new instance is created, you will be able to reach it by web, typing its ip in the browser.
-```
 
 Want a better identification your just created instance? The use:
+
 ```
 awsec2 --command new --name my-favourite-vm
 ```
@@ -49,7 +49,6 @@ You may need an instance to be up for longer time. To do so, just type:
 awsec2 --command new --lasts 60
 ```
 Then you set 60 minutes to stay alive. If you really want very long time, there are other values to put as parameter:
-
 ```
 awsec2 --command new --lasts for-ten-minutes
 awsec2 --command new --lasts for-an-hour
@@ -59,3 +58,4 @@ awsec2 --command new --lasts for-a-month
 awsec2 --command new --lasts for-an-year
 awsec2 --command new --lasts forever
 ```
+

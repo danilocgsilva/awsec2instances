@@ -1,9 +1,9 @@
 from awsec2instances_includes.ProtocolService import ProtocolService
-# from awsec2instances_includes.Commands import Commands
 from awsec2instances_includes.CreationInstanceService import CreationInstanceService
 from awsec2instances_includes.UserScript import UserScript
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
 from awsec2instances_includes.Talk import Talk
+from awsec2instances_includes.ScriptService import ScriptService
 from awssg.Client import Client
 from awssg.SGConfig import SGConfig
 from awssg.SG_Client import SG_Client
@@ -53,16 +53,24 @@ def create_new_instance(args, commands):
     userScript.add_scripts(get_update_system_bash_script())
 
     if args.user_data:
+
+        scriptService = ScriptService().setUserScript(userScript)
+
         if args.user_data == "webserver":
-            userScript.add_scripts(get_shell_install_httpd())
-            userScript.add_scripts(get_httpd_enable())
+            scriptService.install_httpd().enable_httpd()
+            # userScript.add_scripts(get_shell_install_httpd())
+            # userScript.add_scripts(get_httpd_enable())
             protocolsService.ensure_port_80()
         elif args.user_data == "wordpress":
-            scripts_httpd(userScript)
+            # scripts_httpd(userScript)
+            scriptService.install_httpd().enable_httpd()
             userScript.add_scripts(get_php_installing())
             userScript.add_scripts(get_composer_scripts_download())
             userScript.add_scripts(get_wordpress_installation())
+            userScript.add_scripts("rm -r html")
+            userScript.add_scripts("ln -s /var/www/wordpress/wordpress html")
             set_database(userScript)
+            userScript.add_scripts(set_basic_and_unsecure_wordpress_database_config())
             protocolsService.ensure_port_80()
         elif args.user_data == "database":
             protocolsService.ensure_port_3306()
@@ -151,8 +159,9 @@ echo "/var/_swap_/swapfile none swap sw 0 0" >> /etc/fstab'''
 
 def get_wordpress_installation() -> str:
     string_to_return = '''
-cd /var/www/html
-/usr/local/bin/composer create-project johnpbloch/wordpress .
+cd /var/www
+/usr/local/bin/composer create-project johnpbloch/wordpress
+chown apache wordpress/wordpress
 '''
     return string_to_return
 
@@ -197,3 +206,10 @@ def set_database(userScript: UserScript):
     userScript.add_scripts(installs_database_script())
     userScript.add_scripts("systemctl enable --now mariadb")
 
+def set_basic_and_unsecure_wordpress_database_config() -> str:
+    string_to_return = '''mysql -uroot -e "CREATE USER username@localhost identified by 'password'"
+mysql -uroot -e "CREATE DATABASE wordpress"
+mysql -uroot -e "GRANT ALL PRIVILEGES ON wordpress.* TO username@localhost"
+mysql -uroot -e "FLUSH PRIVILEGES"
+'''
+    return string_to_return

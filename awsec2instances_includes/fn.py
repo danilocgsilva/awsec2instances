@@ -60,30 +60,28 @@ def create_new_instance(args, commands):
             scriptService.install_httpd().enable_httpd()
             protocolsService.ensure_port_80()
         elif args.user_data == "wordpress":
-            scriptService.install_httpd().enable_httpd().install_php_ami_aws()
-            # userScript.add_scripts(get_php_installing())
+            scriptService.\
+                install_httpd().\
+                enable_httpd().\
+                install_php_ami_aws()
             userScript.add_scripts(get_composer_scripts_download())
             userScript.add_scripts(get_wordpress_installation())
             userScript.add_scripts("rm -r html")
             userScript.add_scripts("ln -s /var/www/wordpress/wordpress html")
-            set_database(userScript)
+            scriptService.database()
             userScript.add_scripts(set_basic_and_unsecure_wordpress_database_config())
             protocolsService.ensure_port_80()
         elif args.user_data == "database":
             protocolsService.ensure_port_3306()
-            set_database(userScript)
+            scriptService.database()
             userScript.add_scripts("systemctl enable --now mariadb")
         elif args.user_data == "laravel":
-            # scripts_httpd(userScript)
             scriptService.\
                 install_httpd().\
                 enable_httpd().\
                 install_php_ami_aws().\
                 install_php_mbstring().\
                 install_php_dom()
-            # userScript.add_scripts(get_php_installing())
-            # userScript.add_scripts("yum install php-mbstring -y")
-            # userScript.add_scripts("yum install php-dom -y")
             userScript.add_scripts(get_composer_scripts_download())
             userScript.add_scripts(prepare_laravel_aws())
             userScript.add_scripts("rm -r /var/www/html")
@@ -115,16 +113,8 @@ def create_new_instance(args, commands):
 def get_update_system_bash_script() -> str:
     return "yum update -y"
 
-def get_httpd_enable() -> str:
-    return '''chkconfig httpd on
-service httpd start'''
-
 def get_shell_install_httpd() -> str:
     return "yum install httpd -y"
-
-# def get_php_installing() -> str:
-#     string_to_return = "amazon-linux-extras install php7.4 -y\nservice httpd restart"
-#     return string_to_return
 
 def get_bootstrap_log_end_mark() -> str:
     return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres()
@@ -187,23 +177,6 @@ baseurl = http://yum.mariadb.org/10.5/centos7-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 EOF'''
-
-def installs_database_script() -> str:
-    return "yum install MariaDB-server MariaDB-client -y"
-
-def scripts_httpd(userScript: UserScript):
-    userScript.add_scripts(get_shell_install_httpd())
-    userScript.add_scripts(get_httpd_enable())
-
-# def set_wordpress(userScript: UserScript):
-    # userScript.add_scripts(get_composer_scripts_download())
-    # userScript.add_scripts(get_wordpress_installation())
-
-def set_database(userScript: UserScript):
-    userScript.add_scripts(get_adds_mariadb_updated_to_os_repository())
-    userScript.add_scripts("yum makecache")
-    userScript.add_scripts(installs_database_script())
-    userScript.add_scripts("systemctl enable --now mariadb")
 
 def set_basic_and_unsecure_wordpress_database_config() -> str:
     string_to_return = '''mysql -uroot -e "CREATE USER username@localhost identified by 'password'"

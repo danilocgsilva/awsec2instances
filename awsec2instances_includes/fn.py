@@ -58,13 +58,10 @@ def create_new_instance(args, commands):
 
         if args.user_data == "webserver":
             scriptService.install_httpd().enable_httpd()
-            # userScript.add_scripts(get_shell_install_httpd())
-            # userScript.add_scripts(get_httpd_enable())
             protocolsService.ensure_port_80()
         elif args.user_data == "wordpress":
-            # scripts_httpd(userScript)
-            scriptService.install_httpd().enable_httpd()
-            userScript.add_scripts(get_php_installing())
+            scriptService.install_httpd().enable_httpd().install_php_ami_aws()
+            # userScript.add_scripts(get_php_installing())
             userScript.add_scripts(get_composer_scripts_download())
             userScript.add_scripts(get_wordpress_installation())
             userScript.add_scripts("rm -r html")
@@ -77,10 +74,16 @@ def create_new_instance(args, commands):
             set_database(userScript)
             userScript.add_scripts("systemctl enable --now mariadb")
         elif args.user_data == "laravel":
-            scripts_httpd(userScript)
-            userScript.add_scripts(get_php_installing())
-            userScript.add_scripts("yum install php-mbstring -y")
-            userScript.add_scripts("yum install php-dom -y")
+            # scripts_httpd(userScript)
+            scriptService.\
+                install_httpd().\
+                enable_httpd().\
+                install_php_ami_aws().\
+                install_php_mbstring().\
+                install_php_dom()
+            # userScript.add_scripts(get_php_installing())
+            # userScript.add_scripts("yum install php-mbstring -y")
+            # userScript.add_scripts("yum install php-dom -y")
             userScript.add_scripts(get_composer_scripts_download())
             userScript.add_scripts(prepare_laravel_aws())
             userScript.add_scripts("rm -r /var/www/html")
@@ -119,9 +122,9 @@ service httpd start'''
 def get_shell_install_httpd() -> str:
     return "yum install httpd -y"
 
-def get_php_installing() -> str:
-    string_to_return = "amazon-linux-extras install php7.4 -y\nservice httpd restart"
-    return string_to_return
+# def get_php_installing() -> str:
+#     string_to_return = "amazon-linux-extras install php7.4 -y\nservice httpd restart"
+#     return string_to_return
 
 def get_bootstrap_log_end_mark() -> str:
     return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres()
@@ -132,10 +135,6 @@ curl -sS https://getcomposer.org/installer | sudo php
 mv composer.phar /usr/local/bin/composer
 chmod +x /usr/local/bin/composer'''
     return string_to_return
-
-# def get_install_laravel_ami_script() -> str:
-#     string_to_return = '''cd /var/www
-# /usr/local/bin/composer create-project laravel/laravel'''
 
 def prepare_laravel_aws() -> str:
     string_to_return = '''cd /var/www

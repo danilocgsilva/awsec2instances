@@ -104,7 +104,8 @@ def create_new_instance(args, commands):
     print("The instance with id " + instance_data.id + " is about to be created.")
     if protocolsService.is_not_empty():
         print("Setting security group for instance...")
-        put_sg_to_instance(instance_data.id, protocolsService)
+        security_group_name = put_sg_to_instance(instance_data.id, protocolsService)
+        print("The new security group name is " + security_group_name)
     if args.name:
         print("Wanting to starts the instance, so I can add its name...")
         instance_data.wait_until_running()

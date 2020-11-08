@@ -93,6 +93,8 @@ def create_new_instance(args, commands):
             userScript.add_scripts('/usr/local/bin/composer install')
             userScript.add_scripts('chown -Rv apache /var/www/laravel/storage')
             protocolsService.ensure_port_80()
+        elif args.user_data == "desktop":
+            protocolsService.ensure_port_3389()
 
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())

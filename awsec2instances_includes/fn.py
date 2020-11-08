@@ -2,6 +2,7 @@ from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.CreationInstanceService import CreationInstanceService
 from awsec2instances_includes.UserScript import UserScript
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
+from awsec2instances_includes.InstanceInterpreter import InstanceInterpreter
 from awsec2instances_includes.Talk import Talk
 from awsec2instances_includes.ScriptService import ScriptService
 from awssg.Client import Client
@@ -14,6 +15,7 @@ import datetime
 import os
 import re
 import sys, json, subprocess
+import time
 
 def put_sg_to_instance(instance_id: str, protocols: ProtocolService) -> str:
 
@@ -112,6 +114,18 @@ def create_new_instance(args, commands):
         print("Wanting to starts the instance, so I can add its name...")
         instance_data.wait_until_running()
         boto3.resource('ec2').create_tags(Resources=[instance_data.id], Tags=[{'Key':'Name', 'Value':args.name}])
+    instance_interpreter = InstanceInterpreter()
+
+    instance_is_running = False
+    print("Waiting the stance be ready...")
+    while not instance_is_running:
+        instance_interpreter.loadById(instance_data.id)
+        if not instance_interpreter.getStatus() == "running":
+            print("Stil waiting...")
+            time.sleep(1)
+        else:
+            instance_is_running = True
+    print("Your instance is running! Have a nice devops.")
 
 def get_update_system_bash_script() -> str:
     return "yum update -y"

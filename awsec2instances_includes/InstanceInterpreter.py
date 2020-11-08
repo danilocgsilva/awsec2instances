@@ -1,3 +1,5 @@
+import boto3
+
 class InstanceInterpreter:
 
     def __init__(self):
@@ -28,3 +30,10 @@ class InstanceInterpreter:
         if "PublicIpAddress" in self.instanceData:
             return self.instanceData["PublicIpAddress"]
         return "---"
+
+    def loadById(self, instance_id: str):
+        client = boto3.client("ec2")
+        request_data = self.instanceData = client.describe_instances(
+            InstanceIds=[instance_id]
+        )
+        self.instanceData = request_data["Reservations"][0]["Instances"][0]

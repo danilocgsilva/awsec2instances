@@ -47,8 +47,8 @@ def assign_sg_to_ec2(sgid: str, instance_id: str):
     instances = list(ec2.instances.filter(Filters=custom_filter))
     instances[0].modify_attribute(Groups=[sgid], DryRun=False)
 
-
 def create_new_instance(args, commands):
+
     creationInstanceService, protocolsService, userScript = CreationInstanceService().getCreationServices(args.access)
     creationInstanceService.ensureMinutesData(args.lasts)
     creationInstanceService.setHarakiri(userScript)
@@ -103,7 +103,7 @@ def create_new_instance(args, commands):
 
     userScript.add_scripts(get_bootstrap_log_end_mark())
 
-    instance_data = commands.new(protocolsService, userScript.get_user_script())
+    instance_data = commands.new(protocolsService, userScript.get_user_script(), args.distro)
 
     print("The instance with id " + instance_data.id + " is about to be created.")
     if protocolsService.is_not_empty():
@@ -126,6 +126,8 @@ def create_new_instance(args, commands):
         else:
             instance_is_running = True
     print("Your instance is running! Have a nice devops.")
+    if protocolsService.is_have_ssh() or protocolsService.is_have_http():
+        print("You can access your instance by the ip: " + instance_interpreter.getInstanceIp())
 
 def get_update_system_bash_script() -> str:
     return "yum update -y"

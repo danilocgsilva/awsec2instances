@@ -25,14 +25,15 @@ def main():
     parser = mass_parser_arguments([
         ["access", "a", False, "Set a way to access the instance if you are creating a new one"],
         ["command", "c", False, "Defines a specific action"],
-        ["filter-status", "fs", False, "A status filter if desired"],
+        ["distro", "d", False, "A name of a distribuition, if required a specific one"],
         ["filter-name", "fn", False, "Search for instance with the tag name"],
-        ["region", "r", False, "Restrict search just for a single region"],
-        ["name", "n", False, "Set the names's tag"],
+        ["filter-status", "fs", False, "A status filter if desired"],
         ["id-to-kill", "ik", False, "Set an instance id to terminate"],
         ["id-to-restart", "ir", False, "Set an existing stopped instance to restart"],
         ["lasts", "l", False, "Say how much time the instance will lasts to avoid unexpected costs"],
+        ["name", "n", False, "Set the names's tag"],
         ["profile", "p", False, "Set the aws cli profile, if needed"],
+        ["region", "r", False, "Restrict search just for a single region"],
         ["status-filter", "sf", False, "Filter instance by status"],
         ["user-data", "u", False, "Path for user data as shell script for instance"],
     ], parser)

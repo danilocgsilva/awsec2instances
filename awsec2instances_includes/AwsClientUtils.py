@@ -51,10 +51,11 @@ class AwsClientUtils:
         aws_resource, 
         region: str, 
         keypairname, 
-        user_script: str
+        user_script: str,
+        distro = None
     ):
         parameters = {
-            "ImageId": GetPreferredIam().getIam(region),
+            "ImageId": GetPreferredIam().getIam(region, distro),
             "MinCount": 1,
             "MaxCount": 1,
             "InstanceType": 't2.nano'
@@ -75,21 +76,6 @@ class AwsClientUtils:
 
     def restart_instance(self, aws_resource, id_to_restart):
         aws_resource.instances.filter(InstanceIds=[id_to_restart]).start()
-
-    # def get_key_pair_name(self):
-
-    #     aws_client = boto3.client('ec2')
-    #     key_pairs_list = aws_client.describe_key_pairs()["KeyPairs"]
-
-    #     if len(key_pairs_list) == 0:
-    #         return None
-    #     elif len(key_pairs_list) == 1:
-    #         return key_pairs_list[0]["KeyName"]
-    #     else:
-    #         return self.choose_between_keypairs(key_pairs_list)
-
-    # def choose_between_keypairs(self, keypairs_result):
-    #     raise Exception("Still not implemented.")
 
     def listInstanceData(self, region, filter_status, filter_name) -> list:
         os.environ['AWS_DEFAULT_REGION'] = region

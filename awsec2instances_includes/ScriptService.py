@@ -1,43 +1,50 @@
-class ScriptService:
-    
+from awsec2instances_includes.ScriptServiceAwsami import ScriptServiceAwsami
+from awsec2instances_includes.ScriptServiceUbuntu import ScriptServiceUbuntu
+from awsec2instances_includes.ScriptServiceInterface import ScriptServiceInterface
+
+class ScriptService(ScriptServiceInterface):
+
+    def __init__(self, distro = None):
+
+        if distro == None:
+            self.scriptService = ScriptServiceAwsami()
+        elif distro == "ubuntu":
+            self.scriptService = ScriptServiceUbuntu()
+        else:
+            raise Exception("The provided distro parameter " + distro + " is not known.")
+
+    def firstUpdate(self):
+        self.scriptService.firstUpdate()
+        return self
+
     def setUserScript(self, userStript):
-        self.userScript = userStript
+        self.scriptService.setUserScript(userStript)
         return self
 
     def install_httpd(self):
-        self.userScript.add_scripts("yum install httpd -y")
+        self.scriptService.install_httpd()
         return self
 
     def install_php_ami_aws(self):
-        self.userScript.add_scripts("amazon-linux-extras install php7.4 -y")
-        self.userScript.add_scripts("service httpd restart")
+        self.scriptService.install_php_ami_aws()
         return self
 
     def install_php_mbstring(self):
-        self.userScript.add_scripts("yum install php-mbstring -y")
+        self.scriptService.install_php_mbstring()
         return self
 
     def install_php_dom(self):
-        self.userScript.add_scripts("yum install php-dom -y")
+        self.scriptService.install_php_dom()
         return self
 
     def enable_httpd(self):
-        self.userScript.add_scripts("chkconfig httpd on")
-        self.userScript.add_scripts("service httpd start")
+        self.scriptService.enable_httpd()
         return self
 
     def database(self):
-        self.adds_mariadb_updated_to_os_repository()
-        self.userScript.add_scripts("yum makecache")
-        self.userScript.add_scripts("yum install MariaDB-server MariaDB-client -y")
-        self.userScript.add_scripts("systemctl enable --now mariadb")
+        self.scriptService.database()
         return self
 
     def adds_mariadb_updated_to_os_repository(self):
-        self.userScript.add_scripts('''tee /etc/yum.repos.d/mariadb.repo << EOF
-[mariadb]
-name = MariaDB
-baseurl = http://yum.mariadb.org/10.5/centos7-amd64
-gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-gpgcheck=1
-EOF''')
+        self.scriptService.adds_mariadb_updated_to_os_repository()
+        return self

@@ -48,18 +48,16 @@ def assign_sg_to_ec2(sgid: str, instance_id: str):
     instances[0].modify_attribute(Groups=[sgid], DryRun=False)
 
 def create_new_instance(args, commands):
-
     creationInstanceService, protocolsService, userScript = CreationInstanceService().getCreationServices(args.access)
     creationInstanceService.ensureMinutesData(args.lasts)
     creationInstanceService.setHarakiri(userScript)
-    userScript.add_scripts(get_update_system_bash_script())
+    scriptService = ScriptService(args.distro).setUserScript(userScript)
+    scriptService.firstUpdate()
 
     if args.user_data:
 
-        scriptService = ScriptService().setUserScript(userScript)
-
         if args.user_data == "webserver":
-            scriptService.install_httpd().enable_httpd()
+            scriptService.install_httpd()
             protocolsService.ensure_port_80()
         elif args.user_data == "wordpress":
             scriptService.\
@@ -121,7 +119,7 @@ def create_new_instance(args, commands):
     while not instance_is_running:
         instance_interpreter.loadById(instance_data.id)
         if not instance_interpreter.getStatus() == "running":
-            print("Stil waiting...")
+            print("Still waiting...")
             time.sleep(1)
         else:
             instance_is_running = True
@@ -129,8 +127,8 @@ def create_new_instance(args, commands):
     if protocolsService.is_have_ssh() or protocolsService.is_have_http():
         print("You can access your instance by the ip: " + instance_interpreter.getInstanceIp())
 
-def get_update_system_bash_script() -> str:
-    return "yum update -y"
+# def get_update_system_bash_script() -> str:
+#     return "yum update -y"
 
 def get_shell_install_httpd() -> str:
     return "yum install httpd -y"

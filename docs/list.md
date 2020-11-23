@@ -18,12 +18,14 @@ awsec2 --region <your_region>
 or
 ```
 awsec2 -r <your_region>
+```
 
 Would you like to filter the listing instance by its status? Then use:
 ```
 awsec2 -c list -r <your_region> --filter-status running
 ```
 Then only running instances will be listed.
+```
 
 Wanna list by tag?
 ```

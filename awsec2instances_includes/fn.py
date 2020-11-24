@@ -62,7 +62,6 @@ def create_new_instance(args, commands):
         elif args.user_data == "wordpress":
             scriptService.\
                 install_httpd().\
-                enable_httpd().\
                 install_php_ami_aws()
             userScript.add_scripts(get_composer_scripts_download())
             userScript.add_scripts(get_wordpress_installation())
@@ -78,7 +77,6 @@ def create_new_instance(args, commands):
         elif args.user_data == "laravel":
             scriptService.\
                 install_httpd().\
-                enable_httpd().\
                 install_php_ami_aws().\
                 install_php_mbstring().\
                 install_php_dom()

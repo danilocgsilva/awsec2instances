@@ -73,6 +73,18 @@ awsec2 --command new --user-data database
 awsec2 --command new --user-data desktop
 ```
 
+Other options for specific role:
+
+```
+awsec2 --command new --user-data wordpress
+```
+Creates an AWS instance with Wordpress installed.
+
+```
+awsec2 --command new --user-data laravel
+```
+Creates an AWS instance with Laravel installed
+
 ## Setting instances to live more than just 5 minutes
 
 By default, for shrinks the risk of setting an useless instance in mistake, the instance just created will be setted to lasts for just 5 minutes.

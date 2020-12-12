@@ -4,6 +4,7 @@ class ProtocolService:
         self.allowed_ones_with_protocol = {
             "with-ssh": 22, 
             "with-http": 80,
+            "with-https": 443,
             "with-database": 3306,
             "with-desktop": 3389
         }
@@ -49,3 +50,10 @@ class ProtocolService:
     def ensure_port_3389(self):
         if not 3389 in self.ports:
             self.ports.append(3389)
+
+    def ensure_port_443(self):
+        if not 443 in self.ports:
+            self.ports.append(443)
+
+    def is_have_https(self):
+        return 443 in self.ports

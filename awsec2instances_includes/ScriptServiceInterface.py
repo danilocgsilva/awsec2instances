@@ -1,11 +1,12 @@
 import abc
+from awsec2instances_includes.UserScript import UserScript
 
 class ScriptServiceInterface(abc.ABC):
 
     # The dump object that will lists all commands for the VM must be
     #   injected in the class before anything to be done
     @abc.abstractmethod
-    def setUserScript(self, userStript):
+    def setUserScript(self, userStript: UserScript):
         pass
 
     # The VM may be outdated, so this is a convenient method to update
@@ -16,12 +17,14 @@ class ScriptServiceInterface(abc.ABC):
     def firstUpdate(self):
         pass
 
+    # Prepare VM to manage http responses
     @abc.abstractmethod
     def install_httpd(self):
         pass
 
+    # Enables web server to handle secure http
     @abc.abstractmethod
-    def install_httpds(self):
+    def install_https(self):
         pass
 
     @abc.abstractmethod

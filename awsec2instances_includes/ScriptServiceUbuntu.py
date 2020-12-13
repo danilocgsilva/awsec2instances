@@ -15,6 +15,9 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
         self.userScript.add_scripts("apt install apache2 -y")
         return self
 
+    def install_https(self):
+        return self
+
     def install_php_ami_aws(self):
         self.userScript.add_scripts("apt install php7.4 -y")
         self.userScript.add_scripts("service httpd restart")
@@ -32,6 +35,8 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
         self.userScript.add_scripts("chkconfig httpd on")
         self.userScript.add_scripts("service httpd start")
         return self
+
+    
 
     def database(self):
         self.adds_mariadb_updated_to_os_repository()

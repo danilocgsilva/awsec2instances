@@ -7,3 +7,4 @@ testsAssets/__pycache__/*.pyc
 .vscode/
 *egg-info*
 build/**/*
+src/*

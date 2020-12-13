@@ -2,6 +2,8 @@ from awsec2instances_includes.ScriptServiceAwsami import ScriptServiceAwsami
 from awsec2instances_includes.ScriptServiceUbuntu import ScriptServiceUbuntu
 from awsec2instances_includes.ScriptServiceInterface import ScriptServiceInterface
 
+# Brings more inteligent methods to handle ScriptServiceInterface
+#   implementation.
 class ScriptService(ScriptServiceInterface):
 
     def __init__(self, distro = None):

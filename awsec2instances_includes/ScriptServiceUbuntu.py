@@ -16,6 +16,8 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
         return self
 
     def install_https(self):
+        self.userScript.add_scripts("a2enmod ssl")
+        self.userScript.add_scripts("systemctl restart apache2")
         return self
 
     def install_php(self):

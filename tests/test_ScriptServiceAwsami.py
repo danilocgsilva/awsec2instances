@@ -56,3 +56,12 @@ class test_ScriptServiceAwsami(unittest.TestCase):
 
         self.assertEqual(expected_result, self.userScript.get_user_script())
 
+    def testInstall_https(self):
+        expected_result = "#!/bin/bash\n\n"
+        expected_result += "yum -y install httpd mod_ssl\n"
+        
+        self.scriptService.install_https()
+
+        self.assertEqual(expected_result, self.userScript.get_user_script())
+
+

@@ -56,3 +56,12 @@ class test_ScriptServiceUbuntu(unittest.TestCase):
 
         self.assertEqual(expected_result, self.userScript.get_user_script())
 
+    def testInstall_https(self):
+        expected_result = "#!/bin/bash\n\n"
+        expected_result += "a2enmod ssl\n\n"
+        expected_result += "systemctl restart apache2\n"
+        
+        self.scriptService.install_https()
+
+        self.assertEqual(expected_result, self.userScript.get_user_script())
+

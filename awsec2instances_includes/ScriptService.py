@@ -51,6 +51,6 @@ class ScriptService(ScriptServiceInterface):
         self.scriptService.database()
         return self
 
-    def adds_mariadb_updated_to_os_repository(self):
-        self.scriptService.adds_mariadb_updated_to_os_repository()
-        return self
+    # def adds_mariadb_updated_to_os_repository(self):
+    #     self.scriptService.adds_mariadb_updated_to_os_repository()
+    #     return self

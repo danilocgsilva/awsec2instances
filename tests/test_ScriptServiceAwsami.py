@@ -15,11 +15,16 @@ class test_ScriptServiceAwsami(unittest.TestCase):
         self.assertEqual(expected_script, self.userScript.get_user_script())
 
     def testFirstUpdate(self):
-        self.assertTrue(False)
+        expected_result = "#!/bin/bash\n\n"
+        expected_result += "yum update -y\n"
+
+        self.scriptService.firstUpdate()
+        
+        self.assertEqual(expected_result, self.userScript.get_user_script())
 
     def testInstall_httpd(self):
         expected_result = "#!/bin/bash\n\n"
-        expected_result += "yum install httpd -y\n"
+        expected_result += "yum install httpd -y\n\n"
         expected_result += "chkconfig httpd on\n\n"
         expected_result += "service httpd start\n"
 

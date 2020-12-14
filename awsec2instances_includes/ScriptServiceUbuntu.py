@@ -18,8 +18,8 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
     def install_https(self):
         return self
 
-    def install_php_ami_aws(self):
-        self.userScript.add_scripts("apt install php7.4 -y")
+    def install_php(self):
+        self.userScript.add_scripts("apt install php7.4 php7.4-mysql -y")
         self.userScript.add_scripts("service httpd restart")
         return self
 
@@ -35,20 +35,19 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
         self.userScript.add_scripts("chkconfig httpd on")
         self.userScript.add_scripts("service httpd start")
         return self
-
     
 
     def database(self):
-        self.adds_mariadb_updated_to_os_repository()
-        self.userScript.add_scripts("apt install MariaDB-server MariaDB-client -y")
+        # self.adds_mariadb_updated_to_os_repository()
+        self.userScript.add_scripts("apt install mariadb-server mariadb-client -y")
         self.userScript.add_scripts("systemctl enable --now mariadb")
         return self
 
-    def adds_mariadb_updated_to_os_repository(self):
-        self.userScript.add_scripts('''tee /etc/yum.repos.d/mariadb.repo << EOF
-[mariadb]
-name = MariaDB
-baseurl = http://yum.mariadb.org/10.5/centos7-amd64
-gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-gpgcheck=1
-EOF''')
+#     def adds_mariadb_updated_to_os_repository(self):
+#         self.userScript.add_scripts('''tee /etc/yum.repos.d/mariadb.repo << EOF
+# [mariadb]
+# name = MariaDB
+# baseurl = http://yum.mariadb.org/10.5/centos7-amd64
+# gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+# gpgcheck=1
+# EOF''')

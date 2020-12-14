@@ -19,7 +19,7 @@ class ScriptServiceAwsami(ScriptServiceInterface):
         self.userScript.add_scripts("yum -y install httpd mod_ssl")
         return self
 
-    def install_php_ami_aws(self):
+    def install_php(self):
         self.userScript.add_scripts("amazon-linux-extras install php7.4 -y")
         self.userScript.add_scripts("service httpd restart")
         return self
@@ -34,13 +34,13 @@ class ScriptServiceAwsami(ScriptServiceInterface):
 
 
     def database(self):
-        self.adds_mariadb_updated_to_os_repository()
+        self.__adds_mariadb_updated_to_os_repository()
         self.userScript.add_scripts("yum makecache")
         self.userScript.add_scripts("yum install MariaDB-server MariaDB-client -y")
         self.userScript.add_scripts("systemctl enable --now mariadb")
         return self
 
-    def adds_mariadb_updated_to_os_repository(self):
+    def __adds_mariadb_updated_to_os_repository(self):
         self.userScript.add_scripts('''tee /etc/yum.repos.d/mariadb.repo << EOF
 [mariadb]
 name = MariaDB

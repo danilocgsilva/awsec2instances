@@ -20,14 +20,27 @@ class test_ScriptServiceUbuntu(unittest.TestCase):
     def testInstall_httpd(self):
         self.assertTrue(False)
 
-    def testInstall_php_ami_aws(self):
+    def testInstall_php(self):
         self.assertTrue(False)
 
     def testInstall_php_mbstring(self):
-        self.assertTrue(False)
+        expected_result = "#!/bin/bash\n\n"
+        expected_result += "yum install php-mbstring -y"
+        
+        self.assertEqual(expected_result, self.userScript.get_user_script())
 
     def testInstall_php_dom(self):
         self.assertTrue(False)
 
     def testAdds_mariadb_updated_to_os_repository(self):
-        self.assertTrue(False)
+        expected_value = "#!/bin/bash\n\n"
+        expected_value += "tee /etc/yum.repos.d/mariadb.repo << EOF"
+        expected_value += "\n[mariadb]"
+        expected_value += "\nname = MariaDB"
+        expected_value += "\nbaseurl = http://yum.mariadb.org/10.5/centos7-amd64"
+        expected_value += "\ngpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB"
+        expected_value += "\ngpgcheck=1"
+
+        self.scriptService.adds_mariadb_updated_to_os_repository()
+
+        self.assertEqual(expected_value, self.userScript.get_user_script())

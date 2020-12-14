@@ -62,7 +62,7 @@ def create_new_instance(args, commands):
         elif args.user_data == "wordpress":
             scriptService.\
                 install_httpd().\
-                install_php_ami_aws()
+                install_php()
             userScript.add_scripts(get_composer_scripts_download())
             userScript.add_scripts(get_wordpress_installation())
             userScript.add_scripts("rm -r html")
@@ -77,7 +77,7 @@ def create_new_instance(args, commands):
         elif args.user_data == "laravel":
             scriptService.\
                 install_httpd().\
-                install_php_ami_aws().\
+                install_php().\
                 install_php_mbstring().\
                 install_php_dom()
             userScript.add_scripts(get_composer_scripts_download())
@@ -97,7 +97,7 @@ def create_new_instance(args, commands):
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())
 
-    userScript.add_scripts(get_bootstrap_log_end_mark())
+    userScript.add_scripts(get_bootstrap_log_end_mark(args.distro))
 
     instance_data = commands.new(protocolsService, userScript.get_user_script(), args.distro)
 
@@ -125,14 +125,12 @@ def create_new_instance(args, commands):
     if protocolsService.is_have_ssh() or protocolsService.is_have_http():
         print("You can access your instance by the ip: " + instance_interpreter.getInstanceIp())
 
-# def get_update_system_bash_script() -> str:
-#     return "yum update -y"
 
 def get_shell_install_httpd() -> str:
     return "yum install httpd -y"
 
-def get_bootstrap_log_end_mark() -> str:
-    return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres()
+def get_bootstrap_log_end_mark(distro = None) -> str:
+    return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres(distro)
 
 def get_composer_scripts_download() -> str:
     string_to_return = '''export HOME=/root
@@ -169,14 +167,17 @@ chown apache wordpress/wordpress
 '''
     return string_to_return
 
-def get_bootstrap_startup_mark() -> str:
-    return "echo Bootstrap script starting at $(date) >> " + get_bootstrap_log_addres()
+def get_bootstrap_startup_mark(distro = None) -> str:
+    return "echo Bootstrap script starting at $(date) >> " + get_bootstrap_log_addres(distro)
 
 def init_user_script() -> str:
     return "#!/bin/bash\n\n"
 
-def get_bootstrap_log_addres() -> str:
-    return "/home/ec2-user/log-bootstrap.txt"
+def get_bootstrap_log_addres(distro = None) -> str:
+    if distro == "ubuntu":
+        return "/home/ubuntu/log-bootstrap.txt"
+    else:
+        return "/home/ec2-user/log-bootstrap.txt"
 
 def print_instances_single_region(region, filter_status, filter_name):
     talk = Talk()

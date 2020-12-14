@@ -20,7 +20,7 @@ class test_ScriptServiceAwsami(unittest.TestCase):
     def testInstall_httpd(self):
         self.assertTrue(False)
 
-    def testInstall_php_ami_aws(self):
+    def testInstall_php(self):
         self.assertTrue(False)
 
     def testInstall_php_mbstring(self):

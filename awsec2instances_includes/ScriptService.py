@@ -27,8 +27,12 @@ class ScriptService(ScriptServiceInterface):
         self.scriptService.install_httpd()
         return self
 
-    def install_php_ami_aws(self):
-        self.scriptService.install_php_ami_aws()
+    def install_https(self):
+        self.scriptService.install_https()
+        return self
+
+    def install_php(self):
+        self.scriptService.install_php()
         return self
 
     def install_php_mbstring(self):

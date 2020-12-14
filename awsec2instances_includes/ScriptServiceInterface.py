@@ -28,7 +28,7 @@ class ScriptServiceInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def install_php_ami_aws(self):
+    def install_php(self):
         pass
 
     @abc.abstractmethod
@@ -43,6 +43,3 @@ class ScriptServiceInterface(abc.ABC):
     def database(self):
         pass
 
-    @abc.abstractmethod
-    def adds_mariadb_updated_to_os_repository(self):
-        pass

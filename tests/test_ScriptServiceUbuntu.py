@@ -1,33 +1,58 @@
 import unittest
 import sys
 sys.path.insert(1, "..")
-from awsec2instances_includes.ScriptServiceAwsami import ScriptServiceAwsami
+from awsec2instances_includes.ScriptServiceUbuntu import ScriptServiceUbuntu
 from awsec2instances_includes.UserScript import UserScript
 
-class test_ScriptServiceAwsami(unittest.TestCase):
+class test_ScriptServiceUbuntu(unittest.TestCase):
 
     def setUp(self):
         self.userScript = UserScript()
-        self.scriptService = ScriptServiceAwsami().setUserScript(self.userScript)
+        self.scriptService = ScriptServiceUbuntu().setUserScript(self.userScript)
 
     def testFirstEverScript(self):
         expected_script = "#!/bin/bash\n"
         self.assertEqual(expected_script, self.userScript.get_user_script())
 
     def testFirstUpdate(self):
-        self.assertTrue(False)
+        expected_result = "#!/bin/bash\n\n"
+        expected_result += "apt update -y\n\n"
+        expected_result += "apt upgrade -y\n"
+
+        self.scriptService.firstUpdate()
+        
+        self.assertEqual(expected_result, self.userScript.get_user_script())
 
     def testInstall_httpd(self):
-        self.assertTrue(False)
+        expected_result = "#!/bin/bash\n\n"
+        expected_result += "apt install apache2 -y\n"
+
+        self.scriptService.install_httpd()
+        
+        self.assertEqual(expected_result, self.userScript.get_user_script())
 
     def testInstall_php(self):
-        self.assertTrue(False)
+        expected_result = "#!/bin/bash\n\n"
+        expected_result += "apt install php7.4 php7.4-mysql -y\n\n"
+        expected_result += "service httpd restart\n"
+
+        self.scriptService.install_php()
+        
+        self.assertEqual(expected_result, self.userScript.get_user_script())
 
     def testInstall_php_mbstring(self):
-        self.assertTrue(False)
+        expected_result = "#!/bin/bash\n\n"
+        expected_result += "apt install php-mbstring -y\n"
+
+        self.scriptService.install_php_mbstring()
+        
+        self.assertEqual(expected_result, self.userScript.get_user_script())
 
     def testInstall_php_dom(self):
-        self.assertTrue(False)
+        expected_result = "#!/bin/bash\n\n"
+        expected_result += "apt install php-dom -y\n"
+        
+        self.scriptService.install_php_dom()
 
-    def testAdds_mariadb_updated_to_os_repository(self):
-        self.assertTrue(False)
+        self.assertEqual(expected_result, self.userScript.get_user_script())
+

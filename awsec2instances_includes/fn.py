@@ -59,6 +59,8 @@ def create_new_instance(args, commands):
         if args.user_data == "webserver":
             scriptService.install_httpd()
             protocolsService.ensure_port_80()
+            if protocolsService.is_have_https:
+                scriptService.install_https()
         elif args.user_data == "wordpress":
             scriptService.\
                 install_httpd().\

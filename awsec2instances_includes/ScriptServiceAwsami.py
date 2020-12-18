@@ -17,6 +17,7 @@ class ScriptServiceAwsami(ScriptServiceInterface):
 
     def install_https(self):
         self.userScript.add_scripts("yum -y install httpd mod_ssl")
+        self.userScript.add_scripts("service httpd restart")
         return self
 
     def install_php(self):

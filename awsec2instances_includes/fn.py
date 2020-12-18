@@ -14,6 +14,7 @@ import boto3
 import datetime
 import os
 import re
+import requests
 import sys, json, subprocess
 import time
 
@@ -115,17 +116,33 @@ def create_new_instance(args, commands):
     instance_interpreter = InstanceInterpreter()
 
     instance_is_running = False
-    print("Waiting the stance be ready...")
+    print("Waiting the instance be ready...")
     while not instance_is_running:
         instance_interpreter.loadById(instance_data.id)
         if not instance_interpreter.getStatus() == "running":
             print("Still waiting...")
-            time.sleep(1)
+            time.sleep(4)
         else:
             instance_is_running = True
     print("Your instance is running! Have a nice devops.")
     if protocolsService.is_have_ssh() or protocolsService.is_have_http():
         print("You can access your instance by the ip: " + instance_interpreter.getInstanceIp())
+    if protocolsService.is_have_http():
+        print("Right now, the http server still is not ready, but in a moment, it will be ready. I will check till it is ready...")
+        http_is_on = False
+        trials = 0
+        while not http_is_on and trials < 20:
+            try:
+                requests.get('http://' + instance_interpreter.getInstanceIp())
+                http_is_on = True
+            except Exception:
+                print("Waiting http to be ready...")
+            trials = trials + 1
+            time.sleep(12)
+        if trials == 20:
+            print("Oops! May the server is taking too long to restart or something nasty really hapenned... Anyway, tries to access in the browser the ip " + instance_interpreter.getInstanceIp() + " some few times by a while. If not, something wrong really hapenned... :(.")
+        else:
+            print("Woah! The wait is over! Access the address type the ip in the address: " + instance_interpreter.getInstanceIp())
 
 
 def get_shell_install_httpd() -> str:

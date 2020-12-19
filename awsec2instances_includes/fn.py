@@ -96,6 +96,8 @@ def create_new_instance(args, commands):
             protocolsService.ensure_port_80()
         elif args.user_data == "desktop":
             protocolsService.ensure_port_3389()
+        else:
+            raise Exception("Sorry! I don't know this option for user data pattern.")
 
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())

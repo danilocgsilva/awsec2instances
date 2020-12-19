@@ -5,6 +5,7 @@ from awsec2instances_includes.AwsClientUtils import AwsClientUtils
 from awsec2instances_includes.InstanceInterpreter import InstanceInterpreter
 from awsec2instances_includes.Talk import Talk
 from awsec2instances_includes.ScriptService import ScriptService
+from awsec2instances_includes.UserDataProcess import UserDataProcess
 from awssg.Client import Client
 from awssg.SGConfig import SGConfig
 from awssg.SG_Client import SG_Client
@@ -57,48 +58,20 @@ def create_new_instance(args, commands):
 
     if args.user_data:
 
+        userDataProcess = UserDataProcess(scriptService, protocolsService)
+
         if args.user_data == "webserver":
-            scriptService.install_httpd()
-            protocolsService.ensure_port_80()
-            if protocolsService.is_have_https:
-                scriptService.install_https()
+            userDataProcess.processWebserver()
         elif args.user_data == "wordpress":
-            scriptService.\
-                install_httpd().\
-                install_php()
-            userScript.add_scripts(get_composer_scripts_download())
-            userScript.add_scripts(get_wordpress_installation())
-            userScript.add_scripts("rm -r html")
-            userScript.add_scripts("ln -s /var/www/wordpress/wordpress html")
-            scriptService.database()
-            userScript.add_scripts(set_basic_and_unsecure_wordpress_database_config())
-            protocolsService.ensure_port_80()
+            userDataProcess.processWordPress()
         elif args.user_data == "database":
-            protocolsService.ensure_port_3306()
-            scriptService.database()
-            userScript.add_scripts("systemctl enable --now mariadb")
+            userDataProcess.processDatabase(userScript)
         elif args.user_data == "laravel":
-            scriptService.\
-                install_httpd().\
-                install_php().\
-                install_php_mbstring().\
-                install_php_dom()
-            userScript.add_scripts(get_composer_scripts_download())
-            userScript.add_scripts(prepare_laravel_aws())
-            userScript.add_scripts("rm -r /var/www/html")
-            userScript.add_scripts("ln -s /var/www/laravel/public /var/www/html")
-            userScript.add_scripts('sed -i /config/a"\\ \\ \\ \\ \\ \\ \\ \\ \\"platform-check\\":\\ false," /var/www/laravel/composer.json')
-            userScript.add_scripts('cd /var/www/laravel')
-            userScript.add_scripts('cp .env.example .env')
-            userScript.add_scripts('php artisan key:generate --ansi')
-            userScript.add_scripts('/usr/local/bin/composer install')
-            userScript.add_scripts('chown -Rv apache /var/www/laravel/storage')
-            protocolsService.ensure_port_80()
+            userDataProcess.processLaravel(userScript)
         elif args.user_data == "desktop":
-            protocolsService.ensure_port_3389()
+            userDataProcess.processDesktop()
         elif args.user_data == "webserver-here":
-            print("WIP")
-            exit()
+            userDataProcess.processWebserverHere()
         else:
             raise Exception("Sorry! I don't know this option for user data pattern.")
 
@@ -156,12 +129,12 @@ def get_shell_install_httpd() -> str:
 def get_bootstrap_log_end_mark(distro = None) -> str:
     return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres(distro)
 
-def get_composer_scripts_download() -> str:
-    string_to_return = '''export HOME=/root
-curl -sS https://getcomposer.org/installer | sudo php
-mv composer.phar /usr/local/bin/composer
-chmod +x /usr/local/bin/composer'''
-    return string_to_return
+# def get_composer_scripts_download() -> str:
+#     string_to_return = '''export HOME=/root
+# curl -sS https://getcomposer.org/installer | sudo php
+# mv composer.phar /usr/local/bin/composer
+# chmod +x /usr/local/bin/composer'''
+#     return string_to_return
 
 def prepare_laravel_aws() -> str:
     string_to_return = '''cd /var/www
@@ -183,13 +156,6 @@ swapon swapfile
 chmod 600 swapfile
 echo "/var/_swap_/swapfile none swap sw 0 0" >> /etc/fstab'''
 
-def get_wordpress_installation() -> str:
-    string_to_return = '''
-cd /var/www
-/usr/local/bin/composer create-project johnpbloch/wordpress
-chown apache wordpress/wordpress
-'''
-    return string_to_return
 
 def get_bootstrap_startup_mark(distro = None) -> str:
     return "echo Bootstrap script starting at $(date) >> " + get_bootstrap_log_addres(distro)
@@ -209,19 +175,4 @@ def print_instances_single_region(region, filter_status, filter_name):
     talk.setInstanceData(rawInstancesData)
     talk.printData()
 
-def get_adds_mariadb_updated_to_os_repository() -> str:
-    return '''tee /etc/yum.repos.d/mariadb.repo<<EOF
-[mariadb]
-name = MariaDB
-baseurl = http://yum.mariadb.org/10.5/centos7-amd64
-gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-gpgcheck=1
-EOF'''
 
-def set_basic_and_unsecure_wordpress_database_config() -> str:
-    string_to_return = '''mysql -uroot -e "CREATE USER username@localhost identified by 'password'"
-mysql -uroot -e "CREATE DATABASE wordpress"
-mysql -uroot -e "GRANT ALL PRIVILEGES ON wordpress.* TO username@localhost"
-mysql -uroot -e "FLUSH PRIVILEGES"
-'''
-    return string_to_return

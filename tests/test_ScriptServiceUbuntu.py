@@ -59,6 +59,7 @@ class test_ScriptServiceUbuntu(unittest.TestCase):
     def testInstall_https(self):
         expected_result = "#!/bin/bash\n\n"
         expected_result += "a2enmod ssl\n\n"
+        expected_result += "a2ensite default-ssl.conf\n\n"
         expected_result += "systemctl restart apache2\n"
         
         self.scriptService.install_https()

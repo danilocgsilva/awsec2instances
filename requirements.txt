@@ -1,5 +1,6 @@
 -e git+https://github.com/danilocgsilva/AWSUtils.git@master#egg=awsutils
 -e git+https://github.com/danilocgsilva/aws-sg.git@master#egg=awssg
+-e git+https://github.com/danilocgsilva/aws-data-mock.git@master#egg=awsapimock
 -e git+https://github.com/danilocgsilva/danilocgsilvamepythonhelpers.git@master#egg=danilocgsilvame_python_helpers
 -e git+https://github.com/danilocgsilva/wimi-api.git@master#egg=wimiapi
 boto3

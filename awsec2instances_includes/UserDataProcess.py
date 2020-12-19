@@ -1,6 +1,7 @@
 from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.ScriptService import ScriptService
 from awsec2instances_includes.UserScript import UserScript
+import os
 
 class UserDataProcess:
 
@@ -11,7 +12,7 @@ class UserDataProcess:
     def processWebserver(self):
             self.scriptService.install_httpd()
             self.protocolService.ensure_port_80()
-            if self.protocoService.is_have_https:
+            if self.protocolService.is_have_https:
                 self.scriptService.install_https()
         
     def processWordPress(self, userScript: UserScript):
@@ -38,7 +39,7 @@ class UserDataProcess:
             install_php_mbstring().\
             install_php_dom()
         userScript.add_scripts(self.__get_composer_scripts_download())
-        userScript.add_scripts(prepare_laravel_aws())
+        userScript.add_scripts(self.__prepare_laravel_aws())
         userScript.add_scripts("rm -r /var/www/html")
         userScript.add_scripts("ln -s /var/www/laravel/public /var/www/html")
         userScript.add_scripts('sed -i /config/a"\\ \\ \\ \\ \\ \\ \\ \\ \\"platform-check\\":\\ false," /var/www/laravel/composer.json')
@@ -53,8 +54,20 @@ class UserDataProcess:
         self.protocolService.ensure_port_3389()
 
     def processWebserverHere(self):
+        self.processWebserver()
+        self.protocolService.ensure_port_22()
+        self.__askLocalPem()
         print("WIP")
         exit()
+
+    def __askLocalPem(self):
+        local_pem = input("Where is the local pem file? ")
+        if not os.path.isfile(local_pem):
+            print("The givel local pem is not a file.")
+            exit()
+        for file in os.listdir():
+            self.__sendToWww(file)
+        return local_pem
 
     def __get_composer_scripts_download(self) -> str:
         string_to_return = '''export HOME=/root
@@ -78,3 +91,17 @@ cd /var/www
 chown apache wordpress/wordpress
 '''
         return string_to_return
+
+    def __prepare_laravel_aws(self) -> str:
+        string_to_return = '''cd /var/www
+curl -Ls -o laravel-master.zip https://github.com/laravel/laravel/archive/master.zip
+unzip laravel-master.zip
+rm laravel-master.zip
+mv laravel-master laravel
+cd laravel
+/usr/local/bin/composer install'''
+
+        return string_to_return
+
+    def __sendToWww(self, file: str):
+        print("WIP")

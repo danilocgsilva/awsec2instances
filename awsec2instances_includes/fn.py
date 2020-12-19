@@ -129,24 +129,6 @@ def get_shell_install_httpd() -> str:
 def get_bootstrap_log_end_mark(distro = None) -> str:
     return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres(distro)
 
-# def get_composer_scripts_download() -> str:
-#     string_to_return = '''export HOME=/root
-# curl -sS https://getcomposer.org/installer | sudo php
-# mv composer.phar /usr/local/bin/composer
-# chmod +x /usr/local/bin/composer'''
-#     return string_to_return
-
-def prepare_laravel_aws() -> str:
-    string_to_return = '''cd /var/www
-curl -Ls -o laravel-master.zip https://github.com/laravel/laravel/archive/master.zip
-unzip laravel-master.zip
-rm laravel-master.zip
-mv laravel-master laravel
-cd laravel
-/usr/local/bin/composer install'''
-
-    return string_to_return
-
 def get_enlarge_swap() -> str:
     return '''mkdir -p /var/_swap_
 cd /var/_swap_
@@ -174,5 +156,3 @@ def print_instances_single_region(region, filter_status, filter_name):
     rawInstancesData = AwsClientUtils().listInstanceData(region, filter_status, filter_name)
     talk.setInstanceData(rawInstancesData)
     talk.printData()
-
-

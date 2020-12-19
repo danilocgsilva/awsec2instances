@@ -96,6 +96,9 @@ def create_new_instance(args, commands):
             protocolsService.ensure_port_80()
         elif args.user_data == "desktop":
             protocolsService.ensure_port_3389()
+        elif args.user_data == "webserver-here":
+            print("WIP")
+            exit()
         else:
             raise Exception("Sorry! I don't know this option for user data pattern.")
 

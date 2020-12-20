@@ -43,3 +43,7 @@ class ScriptServiceInterface(abc.ABC):
     def database(self):
         pass
 
+    @abc.abstractmethod
+    def assingWwwPermissionToLocalUser(self):
+        pass
+

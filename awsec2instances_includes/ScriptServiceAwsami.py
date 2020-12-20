@@ -41,6 +41,11 @@ class ScriptServiceAwsami(ScriptServiceInterface):
         self.userScript.add_scripts("systemctl enable --now mariadb")
         return self
 
+    def assingWwwPermissionToLocalUser(self):
+        self.userScript.add_scripts("chmod 775 /var/www/html")
+        self.userScript.add_scripts("chgrp ec2-user /var/www/html")
+        return self
+
     def __adds_mariadb_updated_to_os_repository(self):
         self.userScript.add_scripts('''tee /etc/yum.repos.d/mariadb.repo << EOF
 [mariadb]

@@ -15,6 +15,10 @@ class UserDataProcess:
         if self.protocolService.is_have_https:
             self.scriptService.install_https()
         return []
+
+    def processWebserverPhp(self) -> list:
+        self.processWebserver()
+        self.scriptService.install_php()
         
     def processWordPress(self, userScript: UserScript) -> list:
         self.scriptService.\
@@ -60,6 +64,7 @@ class UserDataProcess:
 
     def processWebserverHere(self) -> list:
         self.processWebserver()
+        self.scriptService.assingWwwPermissionToLocalUser()
         self.protocolService.ensure_port_22()
         local_pem = self.__askLocalPem()
         return self.__postScriptList(local_pem)

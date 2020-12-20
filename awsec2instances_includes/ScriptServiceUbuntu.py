@@ -41,16 +41,11 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
     
 
     def database(self):
-        # self.adds_mariadb_updated_to_os_repository()
         self.userScript.add_scripts("apt install mariadb-server mariadb-client -y")
         self.userScript.add_scripts("systemctl enable --now mariadb")
         return self
 
-#     def adds_mariadb_updated_to_os_repository(self):
-#         self.userScript.add_scripts('''tee /etc/yum.repos.d/mariadb.repo << EOF
-# [mariadb]
-# name = MariaDB
-# baseurl = http://yum.mariadb.org/10.5/centos7-amd64
-# gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-# gpgcheck=1
-# EOF''')
+    def assingWwwPermissionToLocalUser(self):
+        self.userScript.add_scripts("chmod 775 /var/www/html")
+        self.userScript.add_scripts("chgrp ubuntu /var/www/html")
+        return self

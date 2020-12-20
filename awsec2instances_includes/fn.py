@@ -58,6 +58,8 @@ def create_new_instance(args, commands):
         
         if args.user_data == "webserver":
             userDataProcess.processWebserver()
+        elif args.user_data == "webserver-php":
+            userDataProcess.processWebserverPhp()
         elif args.user_data == "wordpress":
             userDataProcess.processWordPress()
         elif args.user_data == "database":

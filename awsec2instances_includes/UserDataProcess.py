@@ -9,13 +9,14 @@ class UserDataProcess:
         self.scriptService = scriptService
         self.protocolService = protocolService
 
-    def processWebserver(self):
-            self.scriptService.install_httpd()
-            self.protocolService.ensure_port_80()
-            if self.protocolService.is_have_https:
-                self.scriptService.install_https()
+    def processWebserver(self) -> list:
+        self.scriptService.install_httpd()
+        self.protocolService.ensure_port_80()
+        if self.protocolService.is_have_https:
+            self.scriptService.install_https()
+        return []
         
-    def processWordPress(self, userScript: UserScript):
+    def processWordPress(self, userScript: UserScript) -> list:
         self.scriptService.\
             install_httpd().\
             install_php()
@@ -26,13 +27,15 @@ class UserDataProcess:
         self.scriptService.database()
         userScript.add_scripts(self.__set_basic_and_unsecure_wordpress_database_config())
         self.protocolService.ensure_port_80()
+        return []
         
-    def processDatabase(self, userScript: UserScript):
+    def processDatabase(self, userScript: UserScript) -> list:
         self.protocolService.ensure_port_3306()
         self.scriptService.database()
         userScript.add_scripts("systemctl enable --now mariadb")
+        return []
 
-    def processLaravel(self, userScript: UserScript):
+    def processLaravel(self, userScript: UserScript) -> list:
         self.scriptService.\
             install_httpd().\
             install_php().\
@@ -49,24 +52,23 @@ class UserDataProcess:
         userScript.add_scripts('/usr/local/bin/composer install')
         userScript.add_scripts('chown -Rv apache /var/www/laravel/storage')
         self.protocolService.ensure_port_80()
+        return []
 
-    def processDesktop(self):
+    def processDesktop(self) -> list:
         self.protocolService.ensure_port_3389()
+        return []
 
-    def processWebserverHere(self):
+    def processWebserverHere(self) -> list:
         self.processWebserver()
         self.protocolService.ensure_port_22()
-        self.__askLocalPem()
-        print("WIP")
-        exit()
+        local_pem = self.__askLocalPem()
+        return self.__postScriptList(local_pem)
 
     def __askLocalPem(self):
         local_pem = input("Where is the local pem file? ")
         if not os.path.isfile(local_pem):
             print("The givel local pem is not a file.")
             exit()
-        for file in os.listdir():
-            self.__sendToWww(file)
         return local_pem
 
     def __get_composer_scripts_download(self) -> str:
@@ -103,5 +105,8 @@ cd laravel
 
         return string_to_return
 
-    def __sendToWww(self, file: str):
-        print("WIP")
+    def __postScriptList(self, local_pem: str):
+        list_to_execute = []
+        for file in os.listdir():
+            list_to_execute.append("scp -i " + local_pem + " " + file + " ec2-user@{0}://var/www/html")
+        return list_to_execute

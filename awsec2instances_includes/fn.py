@@ -1,23 +1,17 @@
-from awsec2instances_includes.ProtocolService import ProtocolService
-from awsec2instances_includes.CreationInstanceService import CreationInstanceService
-from awsec2instances_includes.UserScript import UserScript
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
+from awsec2instances_includes.CreationInstanceService import CreationInstanceService
+from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.InstanceInterpreter import InstanceInterpreter
-from awsec2instances_includes.Talk import Talk
 from awsec2instances_includes.ScriptService import ScriptService
+from awsec2instances_includes.Talk import Talk
 from awsec2instances_includes.UserDataProcess import UserDataProcess
+from awsec2instances_includes.UserScript import UserScript
 from awssg.Client import Client
-from awssg.SGConfig import SGConfig
 from awssg.SG_Client import SG_Client
+from awssg.SGConfig import SGConfig
 from danilocgsilvame_python_helpers.DcgsPythonHelpers import DcgsPythonHelpers
 from wimiapi.Wimi import Wimi
-import boto3
-import datetime
-import os
-import re
-import requests
-import sys, json, subprocess
-import time
+import boto3, datetime, requests, subprocess, sys, json, time
 
 def put_sg_to_instance(instance_id: str, protocols: ProtocolService) -> str:
 
@@ -56,10 +50,12 @@ def create_new_instance(args, commands):
     scriptService = ScriptService(args.distro).setUserScript(userScript)
     scriptService.firstUpdate()
 
+    post_execution_lines = []
+
     if args.user_data:
 
         userDataProcess = UserDataProcess(scriptService, protocolsService)
-
+        
         if args.user_data == "webserver":
             userDataProcess.processWebserver()
         elif args.user_data == "wordpress":
@@ -71,9 +67,13 @@ def create_new_instance(args, commands):
         elif args.user_data == "desktop":
             userDataProcess.processDesktop()
         elif args.user_data == "webserver-here":
-            userDataProcess.processWebserverHere()
+            post_execution_lines = userDataProcess.processWebserverHere()
         else:
             raise Exception("Sorry! I don't know this option for user data pattern.")
+
+        userScript.add_scripts("echo \"#!/bin/bash\n\ntouch one.txt\" > /home/ec2-user/exec1.sh")
+        userScript.add_scripts("chmod +x /home/ec2-user/exec1.sh")
+        userScript.add_scripts("/home/ec2-user/exec1.sh")
 
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())
@@ -106,22 +106,12 @@ def create_new_instance(args, commands):
     if protocolsService.is_have_ssh() or protocolsService.is_have_http():
         print("You can access your instance by the ip: " + instance_interpreter.getInstanceIp())
     if protocolsService.is_have_http():
-        print("Right now, the http server still is not ready, but in a moment, it will be ready. I will check till it is ready...")
-        http_is_on = False
-        trials = 0
-        while not http_is_on and trials < 20:
-            try:
-                requests.get('http://' + instance_interpreter.getInstanceIp())
-                http_is_on = True
-            except Exception:
-                print("Waiting http to be ready...")
-            trials = trials + 1
-            time.sleep(12)
-        if trials == 20:
-            print("Oops! May the server is taking too long to restart or something nasty really hapenned... Anyway, tries to access in the browser the ip " + instance_interpreter.getInstanceIp() + " some few times by a while. If not, something wrong really hapenned... :(.")
-        else:
-            print("Woah! The wait is over! Access the address type the ip in the address: " + instance_interpreter.getInstanceIp())
-
+        wait_http(instance_interpreter.getInstanceIp())
+        for line_execute in post_execution_lines:
+            line_with_server = line_execute.format(instance_interpreter.getInstanceIp())
+            line_array_execute = line_with_server.split(" ")
+            print(line_array_execute)
+            subprocess.call(line_array_execute)
 
 def get_shell_install_httpd() -> str:
     return "yum install httpd -y"
@@ -156,3 +146,20 @@ def print_instances_single_region(region, filter_status, filter_name):
     rawInstancesData = AwsClientUtils().listInstanceData(region, filter_status, filter_name)
     talk.setInstanceData(rawInstancesData)
     talk.printData()
+
+def wait_http(instance_ip: str):
+    print("Right now, the http server still is not ready, but in a moment, it will be ready. I will check till it is ready...")
+    http_is_on = False
+    trials = 0
+    while not http_is_on and trials < 20:
+        try:
+            requests.get('http://' + instance_ip)
+            http_is_on = True
+        except Exception:
+            print("Waiting http to be ready...")
+        trials = trials + 1
+        time.sleep(12)
+    if trials == 20:
+        print("Oops! May the server is taking too long to restart or something nasty really hapenned... Anyway, tries to access in the browser the ip " + instance_ip + " some few times by a while. If not, something wrong really hapenned... :(.")
+    else:
+        print("Woah! The wait is over! Access the address type the ip in the address: " + instance_ip)

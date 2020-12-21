@@ -111,9 +111,9 @@ def create_new_instance(args, commands):
         wait_http(instance_interpreter.getInstanceIp())
         for line_execute in post_execution_lines:
             line_with_server = line_execute.format(instance_interpreter.getInstanceIp())
-            line_array_execute = line_with_server.split(" ")
-            print(line_array_execute)
-            subprocess.call(line_array_execute)
+            subprocess.Popen(line_with_server, universal_newlines=True, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            # print("---" + line_with_server + "---")
+            
 
 def get_shell_install_httpd() -> str:
     return "yum install httpd -y"
@@ -129,7 +129,6 @@ mkswap swapfile
 swapon swapfile
 chmod 600 swapfile
 echo "/var/_swap_/swapfile none swap sw 0 0" >> /etc/fstab'''
-
 
 def get_bootstrap_startup_mark(distro = None) -> str:
     return "echo Bootstrap script starting at $(date) >> " + get_bootstrap_log_addres(distro)

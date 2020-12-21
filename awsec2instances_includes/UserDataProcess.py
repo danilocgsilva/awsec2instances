@@ -111,7 +111,13 @@ cd laravel
         return string_to_return
 
     def __postScriptList(self, local_pem: str):
-        list_to_execute = []
+        list_to_execute = self.__noCheckServerTemplate()
         for file in os.listdir():
             list_to_execute.append("scp -i " + local_pem + " " + file + " ec2-user@{0}://var/www/html")
         return list_to_execute
+
+    def __noCheckServerTemplate(self) -> list:
+        return [
+            "echo Host {0} >> ~/.ssh/config",
+            "echo \"  StrictHostKeyChecking no\" >> ~/.ssh/config"
+        ]

@@ -7,7 +7,6 @@ from awsutils.AWSUtils import AWSUtils
 import sys
 import argparse
 
-
 def mass_parser_arguments(arguments_group_list: list, parser):
     for argument_list in arguments_group_list:
         parser.add_argument(

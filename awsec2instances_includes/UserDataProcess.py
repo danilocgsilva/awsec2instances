@@ -124,5 +124,5 @@ cd laravel
     def noCheckServerTemplate(self) -> list:
         return [
             "echo Host {0} >> " + os.path.join(str(Path.home()), ".ssh", "config"),
-            "echo \"  StrictHostKeyChecking no\" >> " + os.path.join(str(Path.home()), ".ssh", "config")
+            "echo   StrictHostKeyChecking no >> " + os.path.join(str(Path.home()), ".ssh", "config")
         ]

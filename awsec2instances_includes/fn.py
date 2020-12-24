@@ -111,7 +111,8 @@ def create_new_instance(args, commands):
         wait_http(instance_interpreter.getInstanceIp())
         for line_execute in post_execution_lines:
             line_with_server = line_execute.format(instance_interpreter.getInstanceIp())
-            subprocess.Popen(line_with_server, universal_newlines=True, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            process = subprocess.Popen(line_with_server, universal_newlines=True, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            process.communicate()
 
 def get_shell_install_httpd() -> str:
     return "yum install httpd -y"

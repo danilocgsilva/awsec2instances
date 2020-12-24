@@ -1,7 +1,10 @@
 from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.ScriptService import ScriptService
 from awsec2instances_includes.UserScript import UserScript
+from pathlib import Path
+import unittest
 import os
+import sys
 
 class UserDataProcess:
 
@@ -66,7 +69,9 @@ class UserDataProcess:
         self.processWebserver()
         self.scriptService.assingWwwPermissionToLocalUser()
         self.protocolService.ensure_port_22()
+
         local_pem = self.__askLocalPem()
+
         return self.__postScriptList(local_pem)
 
     def __askLocalPem(self):
@@ -111,13 +116,13 @@ cd laravel
         return string_to_return
 
     def __postScriptList(self, local_pem: str):
-        list_to_execute = self.__noCheckServerTemplate()
+        list_to_execute = self.noCheckServerTemplate()
         for file in os.listdir():
             list_to_execute.append("scp -i " + local_pem + " " + file + " ec2-user@{0}://var/www/html")
         return list_to_execute
 
-    def __noCheckServerTemplate(self) -> list:
+    def noCheckServerTemplate(self) -> list:
         return [
-            "echo Host {0} >> ~/.ssh/config",
-            "echo \"  StrictHostKeyChecking no\" >> ~/.ssh/config"
+            "echo Host {0} >> " + os.path.join(str(Path.home()), ".ssh", "config"),
+            "echo \"  StrictHostKeyChecking no\" >> " + os.path.join(str(Path.home()), ".ssh", "config")
         ]

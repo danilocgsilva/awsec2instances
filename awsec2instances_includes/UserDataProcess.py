@@ -70,9 +70,9 @@ class UserDataProcess:
         self.scriptService.assingWwwPermissionToLocalUser()
         self.protocolService.ensure_port_22()
 
-        local_pem = self.__askLocalPem()
+        return self.__askLocalPem()
 
-        return self.__postScriptList(local_pem)
+        # return self.__postScriptList(local_pem)
 
     def __askLocalPem(self):
         local_pem = input("Where is the local pem file? ")
@@ -115,14 +115,14 @@ cd laravel
 
         return string_to_return
 
-    def __postScriptList(self, local_pem: str):
-        list_to_execute = self.noCheckServerTemplate()
-        for file in os.listdir():
-            list_to_execute.append("scp -i " + local_pem + " " + file + " ec2-user@{0}://var/www/html")
-        return list_to_execute
+    # def __postScriptList(self, local_pem: str):
+    #     list_to_execute = self.noCheckServerTemplate()
+    #     for file in os.listdir():
+    #         list_to_execute.append("scp -i " + local_pem + " " + file + " ec2-user@{0}://var/www/html")
+    #     return list_to_execute
 
-    def noCheckServerTemplate(self) -> list:
-        return [
-            "echo Host {0} >> " + os.path.join(str(Path.home()), ".ssh", "config"),
-            "echo   StrictHostKeyChecking no >> " + os.path.join(str(Path.home()), ".ssh", "config")
-        ]
+    # def noCheckServerTemplate(self) -> list:
+    #     return [
+    #         "echo Host {0} >> " + os.path.join(str(Path.home()), ".ssh", "config"),
+    #         "echo   StrictHostKeyChecking no >> " + os.path.join(str(Path.home()), ".ssh", "config")
+    #     ]

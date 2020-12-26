@@ -5,13 +5,6 @@ from awsec2instances_includes.GetPreferredIam import GetPreferredIam
 
 class AwsClientUtils:
 
-    # def get_regions_name(self) -> list:
-    #     aws_client = boto3.client('ec2')
-    #     region_names = []
-    #     for region_name in aws_client.describe_regions()["Regions"]:
-    #         region_names.append(region_name["RegionName"])
-    #     return region_names
-
     def get_regions_data_string(self) -> str:
         aws_client = boto3.client('ec2')
         raw_string = str(aws_client.describe_regions())

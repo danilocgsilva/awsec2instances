@@ -110,9 +110,9 @@ def create_new_instance(args, commands):
         print("You can access your instance by the ip: " + instance_interpreter.getInstanceIp())
     if protocolsService.is_have_http():
         wait_http(instance_interpreter.getInstanceIp())
-        self.__writeSshSkip(instance_interpreter.getInstanceIp())
+        __writeSshSkip(instance_interpreter.getInstanceIp())
         for file in os.listdir():
-            self.__sendFile(file, pem_file_path, instance_interpreter.getInstanceIp())
+            __sendFile(file, pem_file_path, instance_interpreter.getInstanceIp())
 
 def get_shell_install_httpd() -> str:
     return "yum install httpd -y"
@@ -164,21 +164,21 @@ def wait_http(instance_ip: str):
     else:
         print("Woah! The wait is over! Access the address type the ip in the address: " + instance_ip)
 
-    def __writeSshSkip(serverAddress: str):
-        path_config_ssh = os.path.join(str(Path.home()), ".ssh", "config")
-        f = open(path_config_ssh, "a")
-        f.write("Host " + serverAddress)
-        f.write("  StrictHostKeyChecking no")
-        f.close()
+def __writeSshSkip(serverAddress: str):
+    path_config_ssh = os.path.join(str(Path.home()), ".ssh", "config")
+    f = open(path_config_ssh, "a")
+    f.write("Host " + serverAddress + "\n")
+    f.write("  StrictHostKeyChecking no")
+    f.close()
 
-    def __sendFile(file: str, pem_file_path: str, serveraddress: str):
-        pemKey = paramiko.RSAKey.from_private_key_file(pem_file_path)
-        ssh = paramiko.SSHClient()
-        ssh.load_system_host_keys()
-        ssh.connect(
-            hostname=serveraddress,
-            username="ec2-user",
-            pkey=pem_file_path
-        )
-        scp = SCPClient(ssh.get_transport())
-        scp.put(file, file)
+def __sendFile(file: str, pem_file_path: str, serveraddress: str):
+    pemKey = paramiko.RSAKey.from_private_key_file(pem_file_path)
+    ssh = paramiko.SSHClient()
+    ssh.load_system_host_keys()
+    ssh.connect(
+        hostname=serveraddress,
+        username="ec2-user",
+        pkey=pem_file_path
+    )
+    scp = SCPClient(ssh.get_transport())
+    scp.put(file, file)

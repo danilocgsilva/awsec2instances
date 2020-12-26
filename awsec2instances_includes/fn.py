@@ -71,7 +71,7 @@ def create_new_instance(args, commands):
         elif args.user_data == "desktop":
             userDataProcess.processDesktop()
         elif args.user_data == "webserver-here":
-            pem_file_path = userDataProcess.processWebserverHere()
+            pem_file_path, filelist = userDataProcess.processWebserverHere()
         else:
             raise Exception("Sorry! I don't know this option for user data pattern.")
 
@@ -111,9 +111,10 @@ def create_new_instance(args, commands):
         print("You can access your instance by the ip: " + instance_interpreter.getInstanceIp())
     if protocolsService.is_have_http():
         wait_http(instance_interpreter.getInstanceIp())
-        __writeSshSkip(instance_interpreter.getInstanceIp())
-        for file in os.listdir():
-            __sendFile(file, pem_file_path, instance_interpreter.getInstanceIp())
+        if args.user_data == "webserver-here":
+            __writeSshSkip(instance_interpreter.getInstanceIp())
+            for file in filelist:
+                __sendFile(file, pem_file_path, instance_interpreter.getInstanceIp())
 
 def get_shell_install_httpd() -> str:
     return "yum install httpd -y"
@@ -183,4 +184,4 @@ def __sendFile(file: str, pem_file_path: str, serveraddress: str):
         pkey=pemKey
     )
     scp = SCPClient(ssh.get_transport())
-    scp.put(file, file)
+    scp.put(file, remote_path="/var/www/html/" + file)

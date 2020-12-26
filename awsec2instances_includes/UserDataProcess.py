@@ -1,10 +1,8 @@
 from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.ScriptService import ScriptService
 from awsec2instances_includes.UserScript import UserScript
-from pathlib import Path
-import unittest
 import os
-import sys
+import re
 
 class UserDataProcess:
 
@@ -12,12 +10,11 @@ class UserDataProcess:
         self.scriptService = scriptService
         self.protocolService = protocolService
 
-    def processWebserver(self) -> list:
+    def processWebserver(self):
         self.scriptService.install_httpd()
         self.protocolService.ensure_port_80()
         if self.protocolService.is_have_https:
             self.scriptService.install_https()
-        return []
 
     def processWebserverPhp(self) -> list:
         self.processWebserver()
@@ -65,14 +62,20 @@ class UserDataProcess:
         self.protocolService.ensure_port_3389()
         return []
 
-    def processWebserverHere(self) -> list:
+    def processWebserverHere(self):
         self.processWebserver()
         self.scriptService.assingWwwPermissionToLocalUser()
         self.protocolService.ensure_port_22()
 
-        return self.__askLocalPem()
+        filelist = os.listdir()
+        install_php = False
+        for file in filelist:
+            if re.search(".php$", file):
+                install_php = True
+        if install_php:
+            self.scriptService.install_php()
 
-        # return self.__postScriptList(local_pem)
+        return self.__askLocalPem(), filelist
 
     def __askLocalPem(self):
         local_pem = input("Where is the local pem file? ")

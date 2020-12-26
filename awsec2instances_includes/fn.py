@@ -10,6 +10,7 @@ from awssg.Client import Client
 from awssg.SG_Client import SG_Client
 from awssg.SGConfig import SGConfig
 from danilocgsilvame_python_helpers.DcgsPythonHelpers import DcgsPythonHelpers
+from scp import SCPClient
 from pathlib import Path
 from wimiapi.Wimi import Wimi
 import boto3, datetime, json, os, paramiko, requests, scp, subprocess, sys, time
@@ -167,18 +168,19 @@ def wait_http(instance_ip: str):
 def __writeSshSkip(serverAddress: str):
     path_config_ssh = os.path.join(str(Path.home()), ".ssh", "config")
     f = open(path_config_ssh, "a")
-    f.write("Host " + serverAddress + "\n")
-    f.write("  StrictHostKeyChecking no")
+    f.write(os.linesep + "Host " + serverAddress + os.linesep)
+    f.write("  StrictHostKeyChecking no" + os.linesep)
     f.close()
 
 def __sendFile(file: str, pem_file_path: str, serveraddress: str):
     pemKey = paramiko.RSAKey.from_private_key_file(pem_file_path)
     ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.load_system_host_keys()
     ssh.connect(
         hostname=serveraddress,
         username="ec2-user",
-        pkey=pem_file_path
+        pkey=pemKey
     )
     scp = SCPClient(ssh.get_transport())
     scp.put(file, file)

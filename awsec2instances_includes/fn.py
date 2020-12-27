@@ -77,14 +77,11 @@ def create_new_instance(args, commands):
         else:
             raise Exception("Sorry! I don't know this option for user data pattern.")
 
-        userScript.add_scripts("echo \"#!/bin/bash\n\ntouch one.txt\" > /home/ec2-user/exec1.sh")
-        userScript.add_scripts("chmod +x /home/ec2-user/exec1.sh")
-        userScript.add_scripts("/home/ec2-user/exec1.sh")
-
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())
 
-    userScript.add_scripts(get_bootstrap_log_end_mark(args.distro))
+    # userScript.add_scripts(get_bootstrap_log_end_mark(args.distro))
+    scriptService.checkpointType("Finished!")
 
     instance_data = commands.new(protocolsService, userScript.get_user_script(), args.distro)
 
@@ -121,8 +118,8 @@ def create_new_instance(args, commands):
 def get_shell_install_httpd() -> str:
     return "yum install httpd -y"
 
-def get_bootstrap_log_end_mark(distro = None) -> str:
-    return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres(distro)
+# def get_bootstrap_log_end_mark(distro = None) -> str:
+#     return "echo Bootstrap finished at $(date) >> " + get_bootstrap_log_addres(distro)
 
 def get_enlarge_swap() -> str:
     return '''mkdir -p /var/_swap_
@@ -139,11 +136,11 @@ def get_bootstrap_startup_mark(distro = None) -> str:
 def init_user_script() -> str:
     return "#!/bin/bash\n\n"
 
-def get_bootstrap_log_addres(distro = None) -> str:
-    if distro == "ubuntu":
-        return "/home/ubuntu/log-bootstrap.txt"
-    else:
-        return "/home/ec2-user/log-bootstrap.txt"
+# def get_bootstrap_log_addres(distro = None) -> str:
+#     if distro == "ubuntu":
+#         return "/home/ubuntu/log-bootstrap.txt"
+#     else:
+#         return "/home/ec2-user/log-bootstrap.txt"
 
 def print_instances_single_region(region, filter_status, filter_name):
     talk = Talk()

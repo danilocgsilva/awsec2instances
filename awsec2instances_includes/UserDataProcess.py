@@ -1,12 +1,16 @@
 from awsec2instances_includes.ProtocolService import ProtocolService
-from awsec2instances_includes.ScriptService import ScriptService
+# from awsec2instances_includes.ScriptService import ScriptService
 from awsec2instances_includes.UserScript import UserScript
 import os
 import re
 
 class UserDataProcess:
 
-    def __init__(self, scriptService: ScriptService, protocolService: ProtocolService):
+    # def __init__(self, scriptService: ScriptService, protocolService: ProtocolService):
+    #     self.scriptService = scriptService
+    #     self.protocolService = protocolService
+
+    def __init__(self, scriptService, protocolService: ProtocolService):
         self.scriptService = scriptService
         self.protocolService = protocolService
 
@@ -21,6 +25,7 @@ class UserDataProcess:
         self.scriptService.install_php()
         
     def processWordPress(self, userScript: UserScript):
+        self.scriptService.checkpointType("Starting WordPress processing...")
         self.scriptService.\
             install_httpd().\
             install_php()
@@ -31,8 +36,11 @@ class UserDataProcess:
         self.scriptService.database()
         userScript.add_scripts(self.__set_basic_and_unsecure_local_database_config("wordpress"))
         self.protocolService.ensure_port_80()
+        self.scriptService.checkpointType("Finished WordPress processing!")
+
         
     def processDrupal(self, userScript: UserScript):
+        self.scriptService.checkpointType("Starting Drupal processing preparations...")
         self.scriptService.\
             install_httpd().\
             install_php().\
@@ -40,13 +48,16 @@ class UserDataProcess:
             install_php_dom().\
             install_php_gd()
         userScript.add_scripts(self.__get_composer_scripts_download())
+        self.scriptService.checkpointType("Composer installed with success.")
         userScript.add_scripts(self.__get_drupal_installation())
+        self.scriptService.checkpointType("Drupal created from composer with success.")
         userScript.add_scripts("rm -r html")
         userScript.add_scripts("ln -s /var/www/drupal/web html")
         userScript.add_scripts("chown www-data html/sites/default")
         self.scriptService.database()
         userScript.add_scripts(self.__set_basic_and_unsecure_local_database_config("drupal"))
         self.protocolService.ensure_port_80()
+        self.scriptService.checkpointType("Finished Drupal processing!")
         
     def processDatabase(self, userScript: UserScript) -> list:
         self.protocolService.ensure_port_3306()

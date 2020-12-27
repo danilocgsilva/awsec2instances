@@ -1,6 +1,10 @@
 from awsec2instances_includes.ScriptServiceInterface import ScriptServiceInterface
+import os
 
 class ScriptServiceAwsami(ScriptServiceInterface):
+
+    def __init__(self):
+        self.home_directory = "/home/ec2-user"
         
     def setUserScript(self, userStript):
         self.userScript = userStript
@@ -61,4 +65,8 @@ EOF''')
     def __enable_httpd(self):
         self.userScript.add_scripts("chkconfig httpd on")
         self.userScript.add_scripts("service httpd start")
+        return self
+
+    def checkpointType(self, message: str):
+        self.userScript.add_scripts("echo $(date \"+%Y%m%d %Hh%Mm%Ss\") " + message + " >> " + os.path.join(self.home_directory, "bootstrap.log"))
         return self

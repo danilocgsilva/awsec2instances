@@ -1,6 +1,11 @@
+from awsec2instances_includes.UserDataProcess import UserDataProcess
 from awsec2instances_includes.ScriptServiceInterface import ScriptServiceInterface
+import os
 
 class ScriptServiceUbuntu(ScriptServiceInterface):
+
+    def __init__(self):
+        self.home_directory = "/home/ubuntu"
 
     def setUserScript(self, userStript):
         self.userScript = userStript
@@ -52,4 +57,8 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
     def assingWwwPermissionToLocalUser(self):
         self.userScript.add_scripts("chmod 775 /var/www/html")
         self.userScript.add_scripts("chgrp ubuntu /var/www/html")
+        return self
+
+    def checkpointType(self, message: str):
+        self.userScript.add_scripts("echo $(date \"+%Y%m%d %Hh%Mm%Ss\") " + message + " >> " + os.path.join(self.home_directory, "bootstrap.log"))
         return self

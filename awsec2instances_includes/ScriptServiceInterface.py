@@ -51,3 +51,7 @@ class ScriptServiceInterface(abc.ABC):
     def assingWwwPermissionToLocalUser(self):
         pass
 
+    @abc.abstractmethod
+    def checkpointType(self, message: str):
+        pass
+

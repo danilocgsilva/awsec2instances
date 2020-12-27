@@ -58,3 +58,7 @@ class ScriptService(ScriptServiceInterface):
     def assingWwwPermissionToLocalUser(self):
         self.scriptService.assingWwwPermissionToLocalUser()
         return self
+
+    def checkpointType(self, message: str):
+        self.scriptService.checkpointType(message)
+        return self

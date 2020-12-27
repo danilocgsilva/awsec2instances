@@ -63,7 +63,9 @@ def create_new_instance(args, commands):
         elif args.user_data == "webserver-php":
             userDataProcess.processWebserverPhp()
         elif args.user_data == "wordpress":
-            userDataProcess.processWordPress()
+            userDataProcess.processWordPress(userScript)
+        elif args.user_data == "drupal":
+            userDataProcess.processDrupal(userScript)
         elif args.user_data == "database":
             userDataProcess.processDatabase(userScript)
         elif args.user_data == "laravel":

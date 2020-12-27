@@ -20,7 +20,7 @@ class UserDataProcess:
         self.processWebserver()
         self.scriptService.install_php()
         
-    def processWordPress(self, userScript: UserScript) -> list:
+    def processWordPress(self, userScript: UserScript):
         self.scriptService.\
             install_httpd().\
             install_php()
@@ -29,9 +29,20 @@ class UserDataProcess:
         userScript.add_scripts("rm -r html")
         userScript.add_scripts("ln -s /var/www/wordpress/wordpress html")
         self.scriptService.database()
-        userScript.add_scripts(self.__set_basic_and_unsecure_wordpress_database_config())
+        userScript.add_scripts(self.__set_basic_and_unsecure_local_database_config("wordpress"))
         self.protocolService.ensure_port_80()
-        return []
+        
+    def processDrupal(self, userScript: UserScript):
+        self.scriptService.\
+            install_httpd().\
+            install_php()
+        userScript.add_scripts(self.__get_composer_scripts_download())
+        userScript.add_scripts(self.__get_drupal_installation())
+        userScript.add_scripts("rm -r html")
+        userScript.add_scripts("ln -s /var/www/drupal/web html")
+        self.scriptService.database()
+        userScript.add_scripts(self.__set_basic_and_unsecure_local_database_config("drupal"))
+        self.protocolService.ensure_port_80()
         
     def processDatabase(self, userScript: UserScript) -> list:
         self.protocolService.ensure_port_3306()
@@ -91,19 +102,26 @@ mv composer.phar /usr/local/bin/composer
 chmod +x /usr/local/bin/composer'''
         return string_to_return
 
-    def __set_basic_and_unsecure_wordpress_database_config(self) -> str:
+    def __set_basic_and_unsecure_local_database_config(self, database_name: str) -> str:
         string_to_return = '''mysql -uroot -e "CREATE USER username@localhost identified by 'password'"
-mysql -uroot -e "CREATE DATABASE wordpress"
+mysql -uroot -e "CREATE DATABASE {0}"
 mysql -uroot -e "GRANT ALL PRIVILEGES ON wordpress.* TO username@localhost"
 mysql -uroot -e "FLUSH PRIVILEGES"
 '''
-        return string_to_return
+        return string_to_return.format(database_name)
 
     def __get_wordpress_installation(self) -> str:
         string_to_return = '''
 cd /var/www
 /usr/local/bin/composer create-project johnpbloch/wordpress
 chown apache wordpress/wordpress
+'''
+        return string_to_return
+
+    def __get_drupal_installation(self) -> str:
+        string_to_return = '''cd /var/www
+/usr/local/bin/composer create-project drupal/recommended-project drupal
+chown apache drupal/web
 '''
         return string_to_return
 

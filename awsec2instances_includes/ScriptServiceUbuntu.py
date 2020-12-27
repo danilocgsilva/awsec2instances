@@ -23,7 +23,7 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
 
     def install_php(self):
         self.userScript.add_scripts("apt install php7.4 php7.4-mysql -y")
-        self.userScript.add_scripts("service httpd restart")
+        self.userScript.add_scripts("service apache2 restart")
         return self
 
     def install_php_mbstring(self):

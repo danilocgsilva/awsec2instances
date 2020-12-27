@@ -39,6 +39,10 @@ class ScriptService(ScriptServiceInterface):
         self.scriptService.install_php_mbstring()
         return self
 
+    def install_php_gd(self):
+        self.scriptService.install_php_gd()
+        return self
+
     def install_php_dom(self):
         self.scriptService.install_php_dom()
         return self

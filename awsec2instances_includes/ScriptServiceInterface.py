@@ -40,6 +40,10 @@ class ScriptServiceInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def install_php_gd(self):
+        pass
+
+    @abc.abstractmethod
     def database(self):
         pass
 

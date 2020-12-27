@@ -35,11 +35,15 @@ class UserDataProcess:
     def processDrupal(self, userScript: UserScript):
         self.scriptService.\
             install_httpd().\
-            install_php()
+            install_php().\
+            install_php_mbstring().\
+            install_php_dom().\
+            install_php_gd()
         userScript.add_scripts(self.__get_composer_scripts_download())
         userScript.add_scripts(self.__get_drupal_installation())
         userScript.add_scripts("rm -r html")
         userScript.add_scripts("ln -s /var/www/drupal/web html")
+        userScript.add_scripts("chown apache html/sites/default")
         self.scriptService.database()
         userScript.add_scripts(self.__set_basic_and_unsecure_local_database_config("drupal"))
         self.protocolService.ensure_port_80()
@@ -135,15 +139,3 @@ cd laravel
 /usr/local/bin/composer install'''
 
         return string_to_return
-
-    # def __postScriptList(self, local_pem: str):
-    #     list_to_execute = self.noCheckServerTemplate()
-    #     for file in os.listdir():
-    #         list_to_execute.append("scp -i " + local_pem + " " + file + " ec2-user@{0}://var/www/html")
-    #     return list_to_execute
-
-    # def noCheckServerTemplate(self) -> list:
-    #     return [
-    #         "echo Host {0} >> " + os.path.join(str(Path.home()), ".ssh", "config"),
-    #         "echo   StrictHostKeyChecking no >> " + os.path.join(str(Path.home()), ".ssh", "config")
-    #     ]

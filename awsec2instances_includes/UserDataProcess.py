@@ -43,7 +43,7 @@ class UserDataProcess:
         userScript.add_scripts(self.__get_drupal_installation())
         userScript.add_scripts("rm -r html")
         userScript.add_scripts("ln -s /var/www/drupal/web html")
-        userScript.add_scripts("chown apache html/sites/default")
+        userScript.add_scripts("chown www-data html/sites/default")
         self.scriptService.database()
         userScript.add_scripts(self.__set_basic_and_unsecure_local_database_config("drupal"))
         self.protocolService.ensure_port_80()
@@ -125,7 +125,7 @@ chown apache wordpress/wordpress
     def __get_drupal_installation(self) -> str:
         string_to_return = '''cd /var/www
 /usr/local/bin/composer create-project drupal/recommended-project drupal
-chown apache drupal/web
+chown www-data drupal/web
 '''
         return string_to_return
 

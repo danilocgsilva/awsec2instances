@@ -5,6 +5,7 @@
 * [Accessing new created instance](Accessing-new-created-instance)
 * [Creating an instance by some common role](#Creating-an-instance-by-some-common-role)
 * [Setting instances to live more than just 5 minutes](#Setting-instances-to-live-more-than-just-5-minutes)
+* [Give a name to the instance](#Give-a-name-to-the-instance)
 
 ## Creating new instance
 
@@ -105,3 +106,11 @@ awsec2 --command new --lasts for-an-year
 awsec2 --command new --lasts forever
 ```
 
+
+## Give a name to the instance
+
+You can set a tag to your instance with the key *name*, so it is easier so you can set a more friendly name to identify the instance.
+
+```
+awsec2 -n my-instance-with-web-application
+```

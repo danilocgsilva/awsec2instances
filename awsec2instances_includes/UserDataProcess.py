@@ -49,6 +49,8 @@ class UserDataProcess:
             install_php_gd()
         userScript.add_scripts(self.__get_composer_scripts_download())
         self.scriptService.checkpointType("Composer installed with success.")
+        userScript.add_scripts("COMPOSER_MEMORY_LIMIT=-1 composer install")
+        userScript.add_scripts(self.__enlargeGitTollerance())
         userScript.add_scripts(self.__get_drupal_installation())
         self.scriptService.checkpointType("Drupal created from composer with success.")
         userScript.add_scripts("rm -r html")
@@ -149,4 +151,11 @@ mv laravel-master laravel
 cd laravel
 /usr/local/bin/composer install'''
 
+        return string_to_return
+
+    def __enlargeGitTollerance(self):
+        string_to_return = '''git config --global pack.windowMemory "100m"
+git config --global pack.packSizeLimit "100m"
+git config --global pack.threads "1"
+'''
         return string_to_return

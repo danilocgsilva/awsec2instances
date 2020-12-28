@@ -62,3 +62,10 @@ class ScriptService(ScriptServiceInterface):
     def checkpointType(self, message: str):
         self.scriptService.checkpointType(message)
         return self
+
+    def get_http_user(self):
+        return self.scriptService.get_http_user()
+
+    def httpd_restart(self):
+        self.scriptService.httpd_restart()
+        return self

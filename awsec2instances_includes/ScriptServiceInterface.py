@@ -55,3 +55,10 @@ class ScriptServiceInterface(abc.ABC):
     def checkpointType(self, message: str):
         pass
 
+    @abc.abstractmethod
+    def get_http_user(self):
+        pass
+
+    @abc.abstractmethod
+    def httpd_restart(self):
+        pass

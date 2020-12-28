@@ -6,10 +6,6 @@ import re
 
 class UserDataProcess:
 
-    # def __init__(self, scriptService: ScriptService, protocolService: ProtocolService):
-    #     self.scriptService = scriptService
-    #     self.protocolService = protocolService
-
     def __init__(self, scriptService, protocolService: ProtocolService):
         self.scriptService = scriptService
         self.protocolService = protocolService
@@ -42,20 +38,24 @@ class UserDataProcess:
     def processDrupal(self, userScript: UserScript):
         self.scriptService.checkpointType("Starting Drupal processing preparations...")
         self.scriptService.\
-            install_httpd().\
+            install_httpd()
+        # userScript.add_scripts("rm /var/www/html/index.html")
+        self.scriptService.\
             install_php().\
             install_php_mbstring().\
             install_php_dom().\
-            install_php_gd()
+            install_php_gd().\
+            httpd_restart()
         userScript.add_scripts(self.__get_composer_scripts_download())
         self.scriptService.checkpointType("Composer installed with success.")
-        userScript.add_scripts("COMPOSER_MEMORY_LIMIT=-1 composer install")
         userScript.add_scripts(self.__enlargeGitTollerance())
         userScript.add_scripts(self.__get_drupal_installation())
         self.scriptService.checkpointType("Drupal created from composer with success.")
         userScript.add_scripts("rm -r html")
         userScript.add_scripts("ln -s /var/www/drupal/web html")
-        userScript.add_scripts("chown www-data html/sites/default")
+        userScript.add_scripts("chown {0} html/sites/default".format(self.scriptService.get_http_user()))
+        userScript.add_scripts("cp html/sites/default/default.settings.php html/sites/default/settings.php")
+        userScript.add_scripts("chown {0} html/sites/default/settings.php".format(self.scriptService.get_http_user()))
         self.scriptService.database()
         userScript.add_scripts(self.__set_basic_and_unsecure_local_database_config("drupal"))
         self.protocolService.ensure_port_80()
@@ -154,8 +154,8 @@ cd laravel
         return string_to_return
 
     def __enlargeGitTollerance(self):
-        string_to_return = '''git config --global pack.windowMemory "100m"
-git config --global pack.packSizeLimit "100m"
+        string_to_return = '''git config --global pack.windowMemory "256m"
+git config --global pack.packSizeLimit "256m"
 git config --global pack.threads "1"
 '''
         return string_to_return

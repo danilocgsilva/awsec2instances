@@ -6,6 +6,7 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
 
     def __init__(self):
         self.home_directory = "/home/ubuntu"
+        self.http_user = "www-data"
 
     def setUserScript(self, userStript):
         self.userScript = userStript
@@ -60,5 +61,12 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
         return self
 
     def checkpointType(self, message: str):
-        self.userScript.add_scripts("echo $(date \"+%Y%m%d %Hh%Mm%Ss\") " + message + " >> " + os.path.join(self.home_directory, "bootstrap.log"))
+        self.userScript.add_scripts("echo $(date \"+%Y%m%d %Hh%Mm%Ss\") " + message + " >> " + self.home_directory + "/bootstrap.log")
+        return self
+
+    def get_http_user(self):
+        return self.http_user
+
+    def httpd_restart(self):
+        self.userScript.add_scripts("service apache2 restart")
         return self

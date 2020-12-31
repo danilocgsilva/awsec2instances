@@ -48,7 +48,7 @@ def main():
         print("I cound not guess credentials, sorry. Explicitly set a profile name using -p or --profile or set in the aws configuration using the command: \"aws configure --profile <your_profile>\".")
         exit()
 
-    if not AwsClientUtils().region_exists(args.region):
+    if args.region != None and not AwsClientUtils().region_exists(args.region):
         print("The given region does not exists. Exiting.")
         exit()
 

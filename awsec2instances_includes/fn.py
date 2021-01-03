@@ -17,34 +17,34 @@ from pathlib import Path
 from wimiapi.Wimi import Wimi
 import boto3, datetime, json, os, paramiko, requests, scp, subprocess, sys, time
 
-def put_sg_to_instance(instance_id: str, protocols: ProtocolService) -> str:
+# def put_sg_to_instance(instance_id: str, protocols: ProtocolService) -> str:
 
-    ip = Wimi().get_ip('ipv4')
+#     ip = Wimi().get_ip('ipv4')
 
-    group_name = 'securitygroup-for-' + instance_id + '-at-' + DcgsPythonHelpers().getHashDateFromDate(datetime.datetime.now())
+#     group_name = 'securitygroup-for-' + instance_id + '-at-' + DcgsPythonHelpers().getHashDateFromDate(datetime.datetime.now())
 
-    ec2 = Client()
-    sg_client = SG_Client()
-    sg_client.set_client(ec2).set_group_name(group_name)
-    if sg_client.is_multiples_vpcs():
-        ask = Ask( sg_client.fetch_vpcs_list_names() )
-        vpc_choosed = None
-        try:
-            vpc_choosed = ask.ask("Which vpc do you would like to setup the security group?:")
-        except AskException:
-            print("You choosed an invalid option. Quiting, nothing done.")
-            exit()
-        sg_client.set_vpc(vpc_choosed)
-    sg_client.create_default_sg()
+#     ec2 = Client()
+#     sg_client = SG_Client()
+#     sg_client.set_client(ec2).set_group_name(group_name)
+#     if sg_client.is_multiples_vpcs():
+#         ask = Ask( sg_client.fetch_vpcs_list_names() )
+#         vpc_choosed = None
+#         try:
+#             vpc_choosed = ask.ask("Which vpc do you would like to setup the security group?:")
+#         except AskException:
+#             print("You choosed an invalid option. Quiting, nothing done.")
+#             exit()
+#         sg_client.set_vpc(vpc_choosed)
+#     sg_client.create_default_sg()
 
-    sgid = sg_client.getGroupId()
+#     sgid = sg_client.getGroupId()
 
-    for port in protocols.get_ports():
-        sg_client.set_rule(sgid, 'tcp', ip, str(port))
+#     for port in protocols.get_ports():
+#         sg_client.set_rule(sgid, 'tcp', ip, str(port))
 
-    assign_sg_to_ec2(sgid, instance_id)
+#     assign_sg_to_ec2(sgid, instance_id)
 
-    return group_name
+#     return group_name
 
 def assign_sg_to_ec2(sgid: str, instance_id: str):
 
@@ -96,19 +96,25 @@ def create_new_instance(args, commands):
 
     userScript.add_scripts(get_bootstrap_log_end_mark(args.distro))
 
+    security_group_name = None
+    if protocolsService.is_not_empty():
+        print("Setting security group...")
+        security_group_name = create_security_group()
+        # security_group_name = put_sg_to_instance(instance_data.id, protocolsService)
+        print("The new security group name is " + security_group_name)
+
     instance_data = commands.new(protocolsService, userScript.get_user_script(), args.distro)
+    if security_group_name != None:
+        put_sg_to_instance(instance_data.id, security_group_name)
 
     print("The instance with id " + instance_data.id + " is about to be created.")
-    if protocolsService.is_not_empty():
-        print("Setting security group for instance...")
-        security_group_name = put_sg_to_instance(instance_data.id, protocolsService)
-        print("The new security group name is " + security_group_name)
+
     if args.name:
         print("Wanting to starts the instance, so I can add its name...")
         instance_data.wait_until_running()
         boto3.resource('ec2').create_tags(Resources=[instance_data.id], Tags=[{'Key':'Name', 'Value':args.name}])
-    instance_interpreter = InstanceInterpreter()
 
+    instance_interpreter = InstanceInterpreter()
     instance_is_running = False
     print("Waiting the instance be ready...")
     while not instance_is_running:
@@ -177,6 +183,10 @@ def wait_http(instance_ip: str):
         print("Oops! May the server is taking too long to restart or something nasty really hapenned... Anyway, tries to access in the browser the ip " + instance_ip + " some few times by a while. If not, something wrong really hapenned... :(.")
     else:
         print("Woah! The wait is over! Access the address type the ip in the address: " + instance_ip)
+
+def create_security_group():
+    ip = Wimi().get_ip('ipv4')
+    group_name = 'securitygroup-for-' + instance_id + '-at-' + DcgsPythonHelpers().getHashDateFromDate(datetime.datetime.now())
 
 def __writeSshSkip(serverAddress: str):
     path_config_ssh = os.path.join(str(Path.home()), ".ssh", "config")

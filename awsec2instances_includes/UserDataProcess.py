@@ -39,7 +39,6 @@ class UserDataProcess:
         self.scriptService.checkpointType("Starting Drupal processing preparations...")
         self.scriptService.\
             install_httpd()
-        # userScript.add_scripts("rm /var/www/html/index.html")
         self.scriptService.\
             install_php().\
             install_php_mbstring().\

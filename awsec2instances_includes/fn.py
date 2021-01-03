@@ -23,7 +23,7 @@ def put_sg_to_instance(instance_id: str, protocols: ProtocolService) -> str:
 
     ec2 = Client()
     sg_client = SG_Client()
-    sg_client.set_client(ec2).set_group_name(group_name).create_sg()
+    sg_client.set_client(ec2).set_group_name(group_name).create_default_sg()
 
     sgid = sg_client.getGroupId()
 

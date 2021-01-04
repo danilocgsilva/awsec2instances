@@ -198,7 +198,7 @@ def create_security_group(protocolsService) -> str:
             print("You choosed an invalid option. Quiting, nothing done.")
             exit()
         sg_client.set_vpc(vpc_choosed)
-    results_creation = sg_client.create_default_sg()
+    sg_client.create_default_sg()
     sgid = sg_client.getGroupId()
     for port in protocolsService.get_ports():
         sg_client.set_rule(sgid, 'tcp', ip, str(port))

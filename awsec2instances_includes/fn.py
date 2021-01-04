@@ -100,13 +100,10 @@ def create_new_instance(args, commands):
     if protocolsService.is_not_empty():
         print("Setting security group...")
         security_group_name, sgid = create_security_group(protocolsService)
-        # security_group_name = put_sg_to_instance(instance_data.id, protocolsService)
         print("The new security group name is " + security_group_name)
 
     instance_data = commands.new(protocolsService, userScript.get_user_script(), args.distro)
     if security_group_name != None:
-        # put_sg_to_instance(instance_data.id, security_group_name)
-        print("Lets assing the security group to instance...")
         assign_sg_to_ec2(sgid, instance_data.id)
 
     print("The instance with id " + instance_data.id + " is about to be created.")
@@ -201,7 +198,7 @@ def create_security_group(protocolsService) -> str:
             print("You choosed an invalid option. Quiting, nothing done.")
             exit()
         sg_client.set_vpc(vpc_choosed)
-    sg_client.create_default_sg()
+    results_creation = sg_client.create_default_sg()
     sgid = sg_client.getGroupId()
     for port in protocolsService.get_ports():
         sg_client.set_rule(sgid, 'tcp', ip, str(port))

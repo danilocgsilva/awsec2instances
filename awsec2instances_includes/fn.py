@@ -17,35 +17,6 @@ from pathlib import Path
 from wimiapi.Wimi import Wimi
 import boto3, datetime, json, os, paramiko, requests, scp, subprocess, sys, time
 
-# def put_sg_to_instance(instance_id: str, protocols: ProtocolService) -> str:
-
-#     ip = Wimi().get_ip('ipv4')
-
-#     group_name = 'securitygroup-for-' + instance_id + '-at-' + DcgsPythonHelpers().getHashDateFromDate(datetime.datetime.now())
-
-#     ec2 = Client()
-#     sg_client = SG_Client()
-#     sg_client.set_client(ec2).set_group_name(group_name)
-#     if sg_client.is_multiples_vpcs():
-#         ask = Ask( sg_client.fetch_vpcs_list_names() )
-#         vpc_choosed = None
-#         try:
-#             vpc_choosed = ask.ask("Which vpc do you would like to setup the security group?:")
-#         except AskException:
-#             print("You choosed an invalid option. Quiting, nothing done.")
-#             exit()
-#         sg_client.set_vpc(vpc_choosed)
-#     sg_client.create_default_sg()
-
-#     sgid = sg_client.getGroupId()
-
-#     for port in protocols.get_ports():
-#         sg_client.set_rule(sgid, 'tcp', ip, str(port))
-
-#     assign_sg_to_ec2(sgid, instance_id)
-
-#     return group_name
-
 def assign_sg_to_ec2(sgid: str, instance_id: str):
 
     custom_filter = [{
@@ -99,10 +70,15 @@ def create_new_instance(args, commands):
     security_group_name = None
     if protocolsService.is_not_empty():
         print("Setting security group...")
-        security_group_name, sgid = create_security_group(protocolsService)
+        security_group_name, sgid, vpc_choosed = create_security_group(protocolsService)
         print("The new security group name is " + security_group_name)
 
-    instance_data = commands.new(protocolsService, userScript.get_user_script(), args.distro)
+    instance_data = commands.new(
+        protocolsService, 
+        userScript.get_user_script(), 
+        args.distro,
+        create_security_group
+    )
     if security_group_name != None:
         assign_sg_to_ec2(sgid, instance_data.id)
 
@@ -189,9 +165,9 @@ def create_security_group(protocolsService) -> str:
     ec2 = Client()
     sg_client = SG_Client()
     sg_client.set_client(ec2).set_group_name(group_name)
+    vpc_choosed = None
     if sg_client.is_multiples_vpcs():
         ask = Ask( sg_client.fetch_vpcs_list_names() )
-        vpc_choosed = None
         try:
             vpc_choosed = ask.ask("Which vpc do you would like to setup the security group?:")
         except AskException:
@@ -202,7 +178,7 @@ def create_security_group(protocolsService) -> str:
     sgid = sg_client.getGroupId()
     for port in protocolsService.get_ports():
         sg_client.set_rule(sgid, 'tcp', ip, str(port))
-    return group_name, sgid
+    return group_name, sgid, vpc_choosed
 
 def __writeSshSkip(serverAddress: str):
     path_config_ssh = os.path.join(str(Path.home()), ".ssh", "config")

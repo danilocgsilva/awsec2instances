@@ -45,8 +45,8 @@ class AwsClientUtils:
         region: str, 
         keypairname, 
         user_script: str,
-        distro = None,
-        subnet = None
+        subnet,
+        distro = None
     ):
         parameters = {
             "ImageId": GetPreferredIam().getIam(region, distro),
@@ -61,12 +61,11 @@ class AwsClientUtils:
         if user_script:
             parameters["UserData"] = user_script
 
-        if subnet:
-            parameters["NetworkInterfaces"] = {
-                "SubnetId": "<id-da-subnet>",
-                "DeviceIndex": 0,
-                "AssociatePublicIpAddress": True
-            }
+        parameters["NetworkInterfaces"] = {
+            "SubnetId": subnet,
+            "DeviceIndex": 0,
+            "AssociatePublicIpAddress": True
+        }
 
         instances_list_to_create = aws_resource.create_instances(**parameters)
         

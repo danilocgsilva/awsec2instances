@@ -4,7 +4,9 @@ from awsec2instances_includes.Resume import Resume
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
 from awsutils.AWSUtils import AWSUtils
 from awsec2instances_includes.fn import print_instances_single_region
+from awssg.Client import Client
 import boto3
+from awssg.SG_Client import SG_Client
 import os
 
 class Commands:
@@ -26,7 +28,13 @@ class Commands:
                 print("Content for region " + region)
                 print_instances_single_region(region, filter_status, filter_name)
 
-    def new(self, protocolService: ProtocolService, user_script: str, distro = None):
+    def new(
+        self, 
+        protocolService: ProtocolService, 
+        user_script: str, 
+        distro = None, 
+        vpc = None
+    ):
         keypairname = None
         if protocolService.is_have_ssh():
             keypairname = AWSUtils().get_key_pair_name()
@@ -35,7 +43,21 @@ class Commands:
         
         region = self.aws_client.meta.region_name
         aws_resource = boto3.resource('ec2', region_name=region)
-        return AwsClientUtils().create_new_instance_resource(aws_resource, region, keypairname, user_script, distro)
+
+        subnet = None
+        if vpc:
+            ec2 = Client()
+            sg_client = SG_Client()
+            subnet = sg_client.getSubnetId()
+
+        return AwsClientUtils().create_new_instance_resource(
+            aws_resource, 
+            region, 
+            keypairname, 
+            user_script, 
+            distro,
+            subnet
+        )
 
     def kill(self, id_to_kill):
         aws_resource = boto3.resource('ec2', region_name=self.aws_client.meta.region_name)

@@ -32,8 +32,8 @@ class Commands:
         self, 
         protocolService: ProtocolService, 
         user_script: str, 
+        vpc,
         distro = None, 
-        vpc = None
     ):
         keypairname = None
         if protocolService.is_have_ssh():
@@ -44,11 +44,9 @@ class Commands:
         region = self.aws_client.meta.region_name
         aws_resource = boto3.resource('ec2', region_name=region)
 
-        subnet = None
-        if vpc:
-            ec2 = Client()
-            sg_client = SG_Client()
-            subnet = sg_client.getSubnetId()
+        ec2 = Client()
+        sg_client = SG_Client()
+        subnet = sg_client.getSubnetId()
 
         return AwsClientUtils().create_new_instance_resource(
             aws_resource, 

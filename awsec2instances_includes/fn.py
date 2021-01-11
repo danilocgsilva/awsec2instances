@@ -9,6 +9,7 @@ from awsec2instances_includes.UserScript import UserScript
 from awssg.Client import Client
 from awssg.SG_Client import SG_Client
 from awssg.SGConfig import SGConfig
+from awssg.VPC_Client import VPC_Client
 from dcgsasklist.Ask import Ask
 from dcgsasklist.AskException import AskException
 from danilocgsilvame_python_helpers.DcgsPythonHelpers import DcgsPythonHelpers
@@ -166,7 +167,8 @@ def create_security_group(protocolsService) -> str:
     sg_client = SG_Client()
     sg_client.set_client(ec2).set_group_name(group_name)
     vpc_choosed = None
-    if sg_client.is_multiples_vpcs():
+    vpc_client = VPC_Client()
+    if vpc_client.is_multiples_vpcs():
         ask = Ask( sg_client.fetch_vpcs_list_names() )
         try:
             vpc_choosed = ask.ask("Which vpc do you would like to setup the security group?:")
@@ -175,7 +177,7 @@ def create_security_group(protocolsService) -> str:
             exit()
         sg_client.set_vpc(vpc_choosed)
     else:
-        vpc_choosed = sg_client.get_first_vpc()
+        vpc_choosed = vpc_client.get_first_vpc_name()
     sg_client.create_default_sg()
     sgid = sg_client.getGroupId()
     for port in protocolsService.get_ports():

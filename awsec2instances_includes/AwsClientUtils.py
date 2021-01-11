@@ -61,11 +61,11 @@ class AwsClientUtils:
         if user_script:
             parameters["UserData"] = user_script
 
-        parameters["NetworkInterfaces"] = {
+        parameters["NetworkInterfaces"] = [{
             "SubnetId": subnet,
             "DeviceIndex": 0,
             "AssociatePublicIpAddress": True
-        }
+        }]
 
         instances_list_to_create = aws_resource.create_instances(**parameters)
         

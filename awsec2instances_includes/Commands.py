@@ -5,6 +5,7 @@ from awsec2instances_includes.AwsClientUtils import AwsClientUtils
 from awsutils.AWSUtils import AWSUtils
 from awsec2instances_includes.fn import print_instances_single_region
 from awssg.Client import Client
+from awssg.VPC_Client import VPC_Client
 import boto3
 from awssg.SG_Client import SG_Client
 import os
@@ -44,9 +45,10 @@ class Commands:
         region = self.aws_client.meta.region_name
         aws_resource = boto3.resource('ec2', region_name=region)
 
-        ec2 = Client()
-        sg_client = SG_Client()
-        subnet = sg_client.getSubnetId()
+        # ec2 = Client()
+        # sg_client = SG_Client()
+        # subnet = sg_client.getSubnetId()
+        subnet = VPC_Client().get_first_subnet(vpc)
 
         return AwsClientUtils().create_new_instance_resource(
             aws_resource, 

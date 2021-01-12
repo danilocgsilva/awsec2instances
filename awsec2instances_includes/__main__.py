@@ -2,7 +2,7 @@
 
 from awsec2instances_includes.fn import create_new_instance
 from awsec2instances_includes.Commands import Commands
-from awsec2instances_includes.ProtocolService import ProtocolService
+from awsec2instances_includes.AwsClientUtils import AwsClientUtils
 from awsutils.AWSUtils import AWSUtils
 import sys
 import argparse
@@ -46,6 +46,10 @@ def main():
 
     if profile == "":
         print("I cound not guess credentials, sorry. Explicitly set a profile name using -p or --profile or set in the aws configuration using the command: \"aws configure --profile <your_profile>\".")
+        exit()
+
+    if args.region != None and not AwsClientUtils().region_exists(args.region):
+        print("The given region does not exists. Exiting.")
         exit()
 
     commands = Commands(profile, args.region)

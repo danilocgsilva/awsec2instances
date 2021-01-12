@@ -1,0 +1,3 @@
+I have deleted the default VPC subnet.
+After this, the command to create a new instance from boto client are unable to create a new instance.
+I need first is to fetch the vpc subnet after asking for a new instance. And them, provides the received subnet.

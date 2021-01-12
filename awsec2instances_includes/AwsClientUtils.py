@@ -18,8 +18,6 @@ class AwsClientUtils:
         if profile:
             os.environ['AWS_PROFILE'] = profile
 
-        print("----region " + region)
-
         if region:
             os.environ['AWS_DEFAULT_REGION'] = region
         
@@ -45,6 +43,7 @@ class AwsClientUtils:
         region: str, 
         keypairname, 
         user_script: str,
+        subnet,
         distro = None
     ):
         parameters = {
@@ -59,6 +58,12 @@ class AwsClientUtils:
 
         if user_script:
             parameters["UserData"] = user_script
+
+        parameters["NetworkInterfaces"] = [{
+            "SubnetId": subnet,
+            "DeviceIndex": 0,
+            "AssociatePublicIpAddress": True
+        }]
 
         instances_list_to_create = aws_resource.create_instances(**parameters)
         
@@ -101,4 +106,24 @@ class AwsClientUtils:
             instancesData.append(instanceData["Instances"][0])
         return instancesData
         
+    def region_exists(self, region: str):
+        available_regions = [
+            "eu-north-1"
+            "ap-south-1",
+            "eu-west-3",
+            "eu-west-2",
+            "eu-west-1",
+            "ap-northeast-2",
+            "ap-northeast-1",
+            "sa-east-1",
+            "ca-central-1",
+            "ap-southeast-1",
+            "ap-southeast-2",
+            "eu-central-1",
+            "us-east-1",
+            "us-east-2",
+            "us-west-1",
+            "us-west-2"
+        ]
 
+        return region in available_regions

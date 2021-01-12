@@ -18,8 +18,6 @@ class AwsClientUtils:
         if profile:
             os.environ['AWS_PROFILE'] = profile
 
-        print("----region " + region)
-
         if region:
             os.environ['AWS_DEFAULT_REGION'] = region
         

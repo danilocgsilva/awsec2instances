@@ -77,8 +77,8 @@ def create_new_instance(args, commands):
     instance_data = commands.new(
         protocolsService, 
         userScript.get_user_script(), 
-        args.distro,
-        vpc_choosed
+        vpc_choosed,
+        args.distro
     )
     if security_group_name != None:
         assign_sg_to_ec2(sgid, instance_data.id)

@@ -45,9 +45,6 @@ class Commands:
         region = self.aws_client.meta.region_name
         aws_resource = boto3.resource('ec2', region_name=region)
 
-        # ec2 = Client()
-        # sg_client = SG_Client()
-        # subnet = sg_client.getSubnetId()
         subnet = VPC_Client().get_first_subnet(vpc)
 
         return AwsClientUtils().create_new_instance_resource(
@@ -55,8 +52,8 @@ class Commands:
             region, 
             keypairname, 
             user_script, 
-            distro,
-            subnet
+            subnet,
+            distro
         )
 
     def kill(self, id_to_kill):

@@ -130,7 +130,5 @@ class AwsClientUtils:
 
     def sleep_instance(self, awsresource, id: str):
         return awsresource.stop_instances(
-            InstanceIds=[
-                'string'
-            ]
+            InstanceIds=[id]
         )

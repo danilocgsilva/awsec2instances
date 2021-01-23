@@ -67,7 +67,7 @@ class Commands:
         AwsClientUtils().restart_instance(aws_resource, id_to_restart)
 
     def sleep(self, id_to_sleep):
-        aws_resource = boto3.resource('ec2', region_name=self.aws_client.meta.region_name)
+        aws_resource = boto3.client('ec2', region_name=self.aws_client.meta.region_name)
         for id in id_to_sleep.split(","):
             AwsClientUtils().sleep_instance(aws_resource, id)
 

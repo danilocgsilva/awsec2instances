@@ -13,7 +13,6 @@ from awssg.VPC_Client import VPC_Client
 from dcgsasklist.Ask import Ask
 from dcgsasklist.AskException import AskException
 from danilocgsilvame_python_helpers.DcgsPythonHelpers import DcgsPythonHelpers
-# from scp import SCPClient
 from pathlib import Path
 from wimiapi.Wimi import Wimi
 import boto3, datetime, json, os, paramiko, requests, subprocess, sys, time

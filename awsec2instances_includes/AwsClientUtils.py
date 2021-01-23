@@ -127,3 +127,8 @@ class AwsClientUtils:
         ]
 
         return region in available_regions
+
+    def sleep_instance(self, awsresource, id: str):
+        return awsresource.stop_instances(
+            InstanceIds=[id]
+        )

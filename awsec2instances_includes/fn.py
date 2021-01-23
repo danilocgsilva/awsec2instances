@@ -13,10 +13,10 @@ from awssg.VPC_Client import VPC_Client
 from dcgsasklist.Ask import Ask
 from dcgsasklist.AskException import AskException
 from danilocgsilvame_python_helpers.DcgsPythonHelpers import DcgsPythonHelpers
-from scp import SCPClient
+# from scp import SCPClient
 from pathlib import Path
 from wimiapi.Wimi import Wimi
-import boto3, datetime, json, os, paramiko, requests, scp, subprocess, sys, time
+import boto3, datetime, json, os, paramiko, requests, subprocess, sys, time
 
 def assign_sg_to_ec2(sgid: str, instance_id: str):
 
@@ -68,11 +68,14 @@ def create_new_instance(args, commands):
 
     userScript.add_scripts(get_bootstrap_log_end_mark(args.distro))
 
+    sg_client = SG_Client()
+    vpc_choosed = __get_vpc(sg_client)
+
     security_group_name = None
     if protocolsService.is_not_empty():
         print("Setting security group...")
-        security_group_name, sgid, vpc_choosed = create_security_group(protocolsService)
-        print("The new security group name is " + security_group_name)
+        security_group_name, sgid = create_security_group(protocolsService, sg_client)
+        print("The new security group name is " + security_group_name)  
 
     instance_data = commands.new(
         protocolsService, 
@@ -160,29 +163,17 @@ def wait_http(instance_ip: str):
     else:
         print("Woah! The wait is over! Access the address type the ip in the address: " + instance_ip)
 
-def create_security_group(protocolsService) -> str:
+def create_security_group(protocolsService, sg_client) -> str:
     ip = Wimi().get_ip('ipv4')
     group_name = 'securitygroup-at-' + DcgsPythonHelpers().getHashDateFromDate(datetime.datetime.now())
     ec2 = Client()
-    sg_client = SG_Client()
     sg_client.set_client(ec2).set_group_name(group_name)
-    vpc_choosed = None
-    vpc_client = VPC_Client()
-    if vpc_client.is_multiples_vpcs():
-        ask = Ask( sg_client.fetch_vpcs_list_names() )
-        try:
-            vpc_choosed = ask.ask("Which vpc do you would like to setup the security group?:")
-        except AskException:
-            print("You choosed an invalid option. Quiting, nothing done.")
-            exit()
-        sg_client.set_vpc(vpc_choosed)
-    else:
-        vpc_choosed = vpc_client.get_first_vpc_name()
+    
     sg_client.create_default_sg()
     sgid = sg_client.getGroupId()
     for port in protocolsService.get_ports():
         sg_client.set_rule(sgid, 'tcp', ip, str(port))
-    return group_name, sgid, vpc_choosed
+    return group_name, sgid
 
 def __writeSshSkip(serverAddress: str):
     path_config_ssh = os.path.join(str(Path.home()), ".ssh", "config")
@@ -203,3 +194,20 @@ def __sendFile(file: str, pem_file_path: str, serveraddress: str):
     )
     scp = SCPClient(ssh.get_transport())
     scp.put(file, remote_path="/var/www/html/" + file)
+
+def __get_vpc(sg_client):
+
+    vpc_choosed = None
+    vpc_client = VPC_Client()
+
+    if vpc_client.is_multiples_vpcs():
+        ask = Ask(sg_client.fetch_vpcs_list_names() )
+        try:
+            vpc_choosed = ask.ask("Which vpc do you would like to setup the security group?:")
+        except AskException:
+            print("You choosed an invalid option. Quiting, nothing done.")
+            exit()
+        sg_client.set_vpc(vpc_choosed)
+    else:
+        vpc_choosed = vpc_client.get_first_vpc_name()
+    return vpc_choosed

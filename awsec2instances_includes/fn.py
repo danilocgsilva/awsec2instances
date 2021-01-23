@@ -72,7 +72,7 @@ def create_new_instance(args, commands):
     if protocolsService.is_not_empty():
         print("Setting security group...")
         security_group_name, sgid, vpc_choosed = create_security_group(protocolsService)
-        print("The new security group name is " + security_group_name)
+        print("The new security group name is " + security_group_name)  
 
     instance_data = commands.new(
         protocolsService, 

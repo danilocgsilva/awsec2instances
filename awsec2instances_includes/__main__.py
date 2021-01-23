@@ -27,8 +27,7 @@ def main():
         ["distro", "d", False, "A name of a distribuition, if required a specific one"],
         ["filter-name", "fn", False, "Search for instance with the tag name"],
         ["filter-status", "fs", False, "A status filter if desired"],
-        ["id-to-kill", "ik", False, "Set an instance id to terminate"],
-        ["id-to-restart", "ir", False, "Set an existing stopped instance to restart"],
+        ["id", "i", False, "The instance id required for some commands"],
         ["lasts", "l", False, "Say how much time the instance will lasts to avoid unexpected costs"],
         ["name", "n", False, "Set the names's tag"],
         ["profile", "p", False, "Set the aws cli profile, if needed"],
@@ -58,8 +57,10 @@ def main():
         commands.list(args.region, args.filter_status, args.filter_name)
     elif args.command == "new":
         create_new_instance(args, commands)
+    elif args.command == "sleep":
+        commands.sleep(args.id)
     elif args.command == "kill":
-        commands.kill(args.id_to_kill)
+        commands.kill(args.id)
     elif args.command == "restart":
         commands.restart(args.id_to_restart)
     else:

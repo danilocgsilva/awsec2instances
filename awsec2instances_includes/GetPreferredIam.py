@@ -6,9 +6,9 @@ class GetPreferredIam:
                 "default": "ami-08f3d892de259504d",
                 "ubuntu": "ami-0dba2cb6798deb6d8"
             },
-            "sa-east-2": {
-                "default": "ami-0a0ad6b70e61be944",
-                "ubuntu": "ami-0a91cd140a1fc148a"
+            "us-east-2": {
+                "default": "ami-01aab85a5e4a5a0fe",
+                "ubuntu": "ami-02aa7f3de34db391a"
             },
             "sa-east-1": {
                 "default": "ami-018ccfb6b4745882a",

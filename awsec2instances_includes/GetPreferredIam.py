@@ -12,7 +12,6 @@ class GetPreferredIam:
             },
             "sa-east-1": {
                 "default": "ami-018ccfb6b4745882a",
-                
                 "ubuntu": "ami-0c3c87b7d583d618f"
             }  
         }

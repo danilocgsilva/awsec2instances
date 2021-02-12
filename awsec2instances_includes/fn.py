@@ -200,7 +200,8 @@ def __get_vpc(sg_client):
     vpc_client = VPC_Client()
 
     if vpc_client.is_multiples_vpcs():
-        ask = Ask(sg_client.fetch_vpcs_list_names() )
+        vps_list = sg_client.set_client(Client()).fetch_vpcs_list_names()
+        ask = Ask(vps_list)
         try:
             vpc_choosed = ask.ask("Which vpc do you would like to setup the security group?:")
         except AskException:

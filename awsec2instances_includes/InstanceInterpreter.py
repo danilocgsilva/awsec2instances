@@ -37,3 +37,9 @@ class InstanceInterpreter:
             InstanceIds=[instance_id]
         )
         self.instanceData = request_data["Reservations"][0]["Instances"][0]
+
+    def getInstanceKey(self):
+        if "KeyName" in self.instanceData:
+            return self.instanceData["KeyName"]
+        return "---"
+            

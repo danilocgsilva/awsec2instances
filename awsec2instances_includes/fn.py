@@ -35,8 +35,6 @@ def create_new_instance(args, commands):
     scriptService = ScriptService(args.distro).setUserScript(userScript)
     scriptService.firstUpdate()
 
-    pem_file_path = ""
-
     if args.user_data:
 
         userDataProcess = UserDataProcess(scriptService, protocolsService)

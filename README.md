@@ -1,7 +1,10 @@
 # Awsec2instances
 
-Lists machines from AWS environment and exposes its most important informations.
+* Lists machines from AWS environment and exposes its most important informations.
+
 Loops through all regions, so no lost ec2 will be out from your eyes.
+
+* Creates automatically instances in AWS, choosing distro, instance lifetime and other stuffs.
 
 ## Sample output:
 

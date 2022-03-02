@@ -1,8 +1,13 @@
 # Awsec2instances
 
-* Lists machines from AWS environment and exposes its most important informations.
+Several utilities designed to deal with ec2 operations.
 
-Loops through all regions, so no lost ec2 will be out from your eyes.
+Shortly, you can:
+
+* list all vm under your account, over all regions account
+* creates a vm with a service, like webserver or database
+
+Check more in [usages](docs/_usages.md) documentation.
 
 * Creates automatically instances in AWS, choosing distro, instance lifetime and other stuffs.
 

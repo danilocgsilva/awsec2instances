@@ -54,3 +54,7 @@ class ScriptService(ScriptServiceInterface):
     def assingWwwPermissionToLocalUser(self):
         self.scriptService.assingWwwPermissionToLocalUser()
         return self
+
+    def openToMe(self):
+        self.scriptService.openToMe()
+        return self

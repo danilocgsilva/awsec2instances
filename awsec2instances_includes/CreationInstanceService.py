@@ -8,6 +8,7 @@ class CreationInstanceService:
         self.needs_die_warnning = True
         self.die_time = 5
 
+    # Returns self ProtocolService and UsersScript
     def getCreationServices(self, accesses):
         return self, ProtocolService(accesses), UserScript()
 

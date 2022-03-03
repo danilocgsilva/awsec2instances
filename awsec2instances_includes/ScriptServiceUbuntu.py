@@ -1,4 +1,5 @@
 from awsec2instances_includes.ScriptServiceInterface import ScriptServiceInterface
+from wimiapi.Wimi import Wimi
 
 class ScriptServiceUbuntu(ScriptServiceInterface):
 
@@ -39,7 +40,7 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
         self.userScript.add_scripts("service httpd start")
         return self
     
-
+    # Install and enable mariadb
     def database(self):
         self.userScript.add_scripts("apt install mariadb-server mariadb-client -y")
         self.userScript.add_scripts("systemctl enable --now mariadb")
@@ -48,4 +49,18 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
     def assingWwwPermissionToLocalUser(self):
         self.userScript.add_scripts("chmod 775 /var/www/html")
         self.userScript.add_scripts("chgrp ubuntu /var/www/html")
+        return self
+
+    def openToMe(self):
+        scriptTextPlaceholder = '''mysql <<EOF
+CREATE USER eroot@'{0}';
+GRANT ALL ON *.* TO eroot@'{0}';
+EOF
+'''
+        scriptText = scriptTextPlaceholder.format(
+            Wimi().get_ip('ipv4')
+        )
+
+        self.userScript.add_scripts(scriptText)
+
         return self

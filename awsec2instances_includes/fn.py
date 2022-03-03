@@ -56,10 +56,6 @@ def create_new_instance(args, commands):
         else:
             raise Exception("Sorry! I don't know this option for user data pattern.")
 
-        userScript.add_scripts("echo \"#!/bin/bash\n\ntouch one.txt\" > /home/ec2-user/exec1.sh")
-        userScript.add_scripts("chmod +x /home/ec2-user/exec1.sh")
-        userScript.add_scripts("/home/ec2-user/exec1.sh")
-
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())
 
@@ -86,7 +82,7 @@ def create_new_instance(args, commands):
     print("The instance with id " + instance_data.id + " is about to be created.")
 
     if args.name:
-        print("Wanting to starts the instance, so I can add its name...")
+        print("Waiting to starts the instance, so I can add its name...")
         instance_data.wait_until_running()
         boto3.resource('ec2').create_tags(Resources=[instance_data.id], Tags=[{'Key':'Name', 'Value':args.name}])
 

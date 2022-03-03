@@ -36,7 +36,7 @@ class UserDataProcess:
     def processDatabase(self, userScript: UserScript) -> list:
         self.protocolService.ensure_port_3306()
         self.scriptService.database()
-        userScript.add_scripts("systemctl enable --now mariadb")
+        self.scriptService.openToMe()
         return []
 
     def processLaravel(self, userScript: UserScript) -> list:

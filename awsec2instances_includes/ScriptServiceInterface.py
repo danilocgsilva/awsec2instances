@@ -39,11 +39,17 @@ class ScriptServiceInterface(abc.ABC):
     def install_php_dom(self):
         pass
 
+    # Install and enables the database service
     @abc.abstractmethod
     def database(self):
         pass
 
     @abc.abstractmethod
     def assingWwwPermissionToLocalUser(self):
+        pass
+
+    # Set the database to access from current client ip
+    @abc.abstractmethod
+    def openToMe(self):
         pass
 

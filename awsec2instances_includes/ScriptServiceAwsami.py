@@ -1,4 +1,5 @@
 from awsec2instances_includes.ScriptServiceInterface import ScriptServiceInterface
+from wimiapi.Wimi import Wimi
 
 class ScriptServiceAwsami(ScriptServiceInterface):
         
@@ -43,6 +44,21 @@ class ScriptServiceAwsami(ScriptServiceInterface):
     def assingWwwPermissionToLocalUser(self):
         self.userScript.add_scripts("chmod 775 /var/www/html")
         self.userScript.add_scripts("chgrp ec2-user /var/www/html")
+        return self
+
+    def openToMe(self):
+
+        scriptTextPlaceholder = '''mysql <<EOF
+CREATE USER eroot@'{0}';
+GRANT ALL ON *.* TO eroot@'{0}';
+EOF
+'''
+        scriptText = scriptTextPlaceholder.format(
+            Wimi().get_ip('ipv4')
+        )
+
+        self.userScript.add_scripts(scriptText)
+
         return self
 
     def __adds_mariadb_updated_to_os_repository(self):

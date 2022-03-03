@@ -54,7 +54,6 @@ awsec2 --command new --access with-http,with-http
 ```
 And both access by http and ssh will be enabled.
 
-
 ## Creating an instance by some common role
 
 You may need a webserver. In this case, type:
@@ -63,7 +62,7 @@ awsec2 --command new --user-data webserver
 ```
 Then after the new instance is created, you will be able to reach it by web, typing its ip in the browser.
 
-(NOT IMPLEMENTED YET) Want just a database node?
+Want just a database node?
 ```
 awsec2 --command new --user-data database
 ```

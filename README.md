@@ -14,7 +14,7 @@ Check more in [usages](docs/_usages.md) documentation.
 * Python3 interpreter
 * Pip, the python package manager
 
-Don't forget also to run `pip install -r requirements.txt` in the root folder. It is required, so a project to handle security group also is installed.
+Don't forget also to run `pip install -r requirements.txt` in the root folder. It is required, so assh project to handle security group also is installed.
 
 ## Installing
 

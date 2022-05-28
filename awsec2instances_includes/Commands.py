@@ -71,3 +71,5 @@ class Commands:
         for id in id_to_sleep.split(","):
             AwsClientUtils().sleep_instance(aws_resource, id)
 
+    def lists_vpcs(self):
+        print("This comands will lists vpcs to be choosed when creating a new ec2 instance, in case of several vpcs registered in the account. Not yet implemented, as you could see...")

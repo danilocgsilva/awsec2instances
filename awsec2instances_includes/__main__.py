@@ -4,7 +4,6 @@ from awsec2instances_includes.fn import create_new_instance
 from awsec2instances_includes.Commands import Commands
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
 from awsutils.AWSUtils import AWSUtils
-import sys
 import argparse
 
 def mass_parser_arguments(arguments_group_list: list, parser):
@@ -63,5 +62,7 @@ def main():
         commands.kill(args.id)
     elif args.command == "restart":
         commands.restart(args.id_to_restart)
+    elif args.command == "lists_vpcs":
+        commands.lists_vpcs()
     else:
         print("The command " + args.command + " does not exists.")

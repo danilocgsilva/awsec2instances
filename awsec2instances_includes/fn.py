@@ -63,6 +63,7 @@ def create_new_instance(args, commands):
 
     sg_client = SG_Client()
     vpc_choosed = __get_vpc(sg_client)
+    sg_client.set_vpc(vpc_choosed)
 
     security_group_name = None
     if protocolsService.is_not_empty():
@@ -190,13 +191,21 @@ def __sendFile(file: str, pem_file_path: str, serveraddress: str):
 
 def __get_vpc(sg_client):
 
-    vpc_choosed = None
     vpc_client = VPC_Client()
+
+    default_vpc = __get_default_vpc(vpc_client)
+    if default_vpc:
+        return default_vpc
+
+    vpc_choosed = None
 
     if vpc_client.is_multiples_vpcs():
         vps_list = sg_client.set_client(Client()).fetch_vpcs_list_names()
         ask = Ask(vps_list)
         try:
+            multiples_vpc_message = '''There are multiples vpcs in the current account, so it is required to ask which one you will use.
+If there are a default vpc suitable, you can add system variable called DEFAULT_AWS_VPC containing the default vpc id.'''
+            print(multiples_vpc_message)
             vpc_choosed = ask.ask("Which vpc do you would like to setup the security group?:")
         except AskException:
             print("You choosed an invalid option. Quiting, nothing done.")
@@ -205,3 +214,13 @@ def __get_vpc(sg_client):
     else:
         vpc_choosed = vpc_client.get_first_vpc_name()
     return vpc_choosed
+
+def __get_default_vpc(vpc_client):
+    default_vpc = os.environ.get('DEFAULT_AWS_VPC')
+
+    if default_vpc:
+        if vpc_client.vpc_exists(default_vpc):
+            return default_vpc
+        else:
+            print("WARNNING: the environment have the variable called DEFAULT_AWS_VPC, which points to which vpc to choose, if multiple present. But the current value does not corresponds to an existing vpc in the environemnt. You may manuallu inform which one to choose.")
+    return None

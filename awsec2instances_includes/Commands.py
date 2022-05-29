@@ -57,9 +57,11 @@ class Commands:
         )
 
     def kill(self, id_to_kill):
-        aws_resource = boto3.resource('ec2', region_name=self.aws_client.meta.region_name)
+        region_name = self.aws_client.meta.region_name
+        aws_resource = boto3.resource('ec2', region_name=region_name)
 
         for id in id_to_kill.split(","):
+            print("Will try terminate instance {} from region {}.".format(id, region_name))
             AwsClientUtils().kill_instance(aws_resource, id)
 
     def restart(self, id_to_restart):

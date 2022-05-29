@@ -50,7 +50,7 @@ Note: your instance must have an webserver software installed and running to tru
 
 You can set several types of access at once:
 ```
-awsec2 --command new --access with-http,with-http
+awsec2 --command new --access with-http,with-ssh
 ```
 And both access by http and ssh will be enabled.
 

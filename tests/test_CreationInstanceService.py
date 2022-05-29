@@ -75,3 +75,6 @@ class test_CreationInstanceService(unittest.TestCase):
         with self.assertRaises(Exception):
             self.creationalService.ensureMinutesData("not_existing")        
 
+if __name__ == '__main__':
+    unittest.main()
+    

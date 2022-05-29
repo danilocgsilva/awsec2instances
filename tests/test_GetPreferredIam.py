@@ -20,3 +20,7 @@ class test_GetPreferredIam(unittest.TestCase):
         preferred_iam = "ami-08f3d892de259504d"
         returned_iam = self.getPreferredIam.getIam(region)
         self.assertEqual(preferred_iam, returned_iam)
+
+if __name__ == '__main__':
+    unittest.main()
+    

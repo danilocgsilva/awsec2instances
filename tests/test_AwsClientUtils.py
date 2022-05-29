@@ -17,3 +17,7 @@ class test_AwsClientUtils(unittest.TestCase):
     def testregion_exists_false(self):
         regionNoWhere = "nw-east-1"
         self.assertFalse(self.awsClientUtils.region_exists(regionNoWhere))
+
+if __name__ == '__main__':
+    unittest.main()
+    

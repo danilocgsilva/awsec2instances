@@ -22,3 +22,7 @@ class test_InstanceInterpreter(unittest.TestCase):
         expected_result = "---"
         returned_result = instanceInterpreter.getInstanceKey()
         self.assertEqual(expected_result, returned_result)
+
+if __name__ == '__main__':
+    unittest.main()
+    

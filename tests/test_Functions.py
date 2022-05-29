@@ -34,3 +34,6 @@ class test_Functions(unittest.TestCase):
         returned_name =  self.formatter.extractName(instanceInfos)
         self.assertEqual("---", returned_name)
 
+if __name__ == '__main__':
+    unittest.main()
+    

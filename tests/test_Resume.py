@@ -16,3 +16,6 @@ class test_Resume(unittest.TestCase):
         counting_instances = 1
         returned_instances = self.resume.get_instance_count()
         self.assertEqual(counting_instances, returned_instances)
+
+if __name__ == '__main__':
+    unittest.main()

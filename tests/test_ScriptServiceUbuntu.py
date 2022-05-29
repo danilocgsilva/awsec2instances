@@ -66,3 +66,6 @@ class test_ScriptServiceUbuntu(unittest.TestCase):
 
         self.assertEqual(expected_result, self.userScript.get_user_script())
 
+if __name__ == '__main__':
+    unittest.main()
+    

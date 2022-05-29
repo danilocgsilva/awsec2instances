@@ -26,3 +26,7 @@ class test_Formatter(unittest.TestCase):
         region_list = self.formatter.extractRegions(json_string_data)
         region_to_exists = "us-west-2"
         self.assertTrue(region_to_exists in region_list)
+
+if __name__ == '__main__':
+    unittest.main()
+    

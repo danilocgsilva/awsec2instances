@@ -1,4 +1,4 @@
-def get_single_sample():
+def get_single_sample() -> dict:
     return {
         "AmiLaunchIndex": 0,
         "ImageId": "ami-35265247503565644",

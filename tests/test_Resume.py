@@ -2,7 +2,7 @@ import unittest
 import sys
 sys.path.insert(1, "..")
 from awsec2instances_includes.Resume import Resume
-from awsapimock.Instance_Request_Generator import Instance_Request_Generator
+from aws_api_mock.Instance_Request_Generator import Instance_Request_Generator
 
 
 class test_Resume(unittest.TestCase):

@@ -43,3 +43,5 @@ class InstanceInterpreter:
             return self.instanceData["KeyName"]
         return "---"
             
+    def getImageId(self):
+        return self.instanceData["ImageId"]

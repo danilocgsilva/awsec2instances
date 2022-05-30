@@ -12,13 +12,14 @@ class test_Talk(unittest.TestCase):
 
     def test_printData(self):
 
+        instance_generator = Instance_Single_Generator()\
+            .setInstanceId("887cdb040ddfb0288")\
+            .addTag("Name", "Orion")\
+            .setPublicIp("27.229.225.250")\
+            .setImageId("ami-b4eaf27063e2a1e6b")
+
         captured_output = StringIO()
         sys.stdout = captured_output
-
-        instance_generator = Instance_Single_Generator()
-        instance_generator.setInstanceId("887cdb040ddfb0288")
-        instance_generator.addTag("Name", "Orion")
-        instance_generator.setPublicIp("27.229.225.250")
 
         self.talk.setInstanceData([instance_generator.generate()])
         self.talk.printData()
@@ -30,7 +31,8 @@ Name: Orion
 Status: stopped
 Type: t2.micro
 Ip: 27.229.225.250
-Key: my-secret-key\n'''
+Key: my-secret-key
+Image Id: ami-b4eaf27063e2a1e6b\n'''
         
         self.assertEqual(expected_string, captured_output.getvalue())
 

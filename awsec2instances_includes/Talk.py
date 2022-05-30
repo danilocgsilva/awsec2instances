@@ -18,6 +18,7 @@ class Talk:
             print('Type: ' + instanceInterpreter.getInstanceType())
             print('Ip: ' + instanceInterpreter.getInstanceIp())
             print('Key: ' + instanceInterpreter.getInstanceKey())
+            print('Image Id: ' + instanceInterpreter.getImageId())
 
     def print_data_all_regions(self, resume: Resume, string_region_data, getRawDataFromCli, statusfilter):
         for region in Formatter().extractRegions(string_region_data):

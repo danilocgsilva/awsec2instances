@@ -22,6 +22,7 @@ class test_Talk(unittest.TestCase):
         sys.stdout = captured_output
 
         self.talk.setInstanceData([instance_generator.generate()])
+        self.talk.setImageDescription("The image description")
         self.talk.printData()
         sys.stdout = sys.__stdout__
 
@@ -32,7 +33,8 @@ Status: stopped
 Type: t2.micro
 Ip: 27.229.225.250
 Key: my-secret-key
-Image Id: ami-b4eaf27063e2a1e6b\n'''
+Image Id: ami-b4eaf27063e2a1e6b
+Image Description: The image description\n'''
         
         self.assertEqual(expected_string, captured_output.getvalue())
 

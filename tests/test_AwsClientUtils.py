@@ -18,6 +18,10 @@ class test_AwsClientUtils(unittest.TestCase):
         regionNoWhere = "nw-east-1"
         self.assertFalse(self.awsClientUtils.region_exists(regionNoWhere))
 
+    def testGetImageDescription(self):
+        self.assertSame("The Image description, a Slackware from 2012!", self.awsClientUtils.getImageDescription())
+    
+
 if __name__ == '__main__':
     unittest.main()
     

@@ -136,8 +136,18 @@ def get_bootstrap_log_addres(distro = None) -> str:
 
 def print_instances_single_region(region, filter_status, filter_name):
     talk = Talk()
-    rawInstancesData = AwsClientUtils().listInstanceData(region, filter_status, filter_name)
+    awsCliUtils = AwsClientUtils()
+
+    rawInstancesData = awsCliUtils.listInstanceData(region, filter_status, filter_name)
+
+    print(rawInstancesData)
+    exit()
+
+    imageDescription = awsCliUtils.getImageDescription(rawInstancesData["imageId"])
+
     talk.setInstanceData(rawInstancesData)
+    talk.setImageDescription(imageDescription)
+
     talk.printData()
 
 def wait_http(instance_ip: str):

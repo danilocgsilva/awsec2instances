@@ -1,10 +1,13 @@
-from awsec2instances_includes.ScriptServiceAwsami import ScriptServiceAwsami
-from awsec2instances_includes.ScriptServiceUbuntu import ScriptServiceUbuntu
-from awsec2instances_includes.ScriptServiceInterface import ScriptServiceInterface
+from awsec2instances_includes.OsScriptService.ScriptServiceAwsami import ScriptServiceAwsami
+from awsec2instances_includes.OsScriptService.ScriptServiceUbuntu import ScriptServiceUbuntu
+from awsec2instances_includes.OsScriptService.ScriptServiceInterface import ScriptServiceInterface
 
 # Brings more inteligent methods to handle ScriptServiceInterface
 #   implementation.
 class ScriptService(ScriptServiceInterface):
+    '''
+    Automates writting to the script based on instance role
+    '''
 
     def __init__(self, distro = None):
 
@@ -57,4 +60,8 @@ class ScriptService(ScriptServiceInterface):
 
     def openToMe(self):
         self.scriptService.openToMe()
+        return self
+
+    def setFirewall(self):
+        self.scriptService.setFireWall()
         return self

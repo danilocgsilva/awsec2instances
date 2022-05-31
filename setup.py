@@ -1,6 +1,6 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
-VERSION = '1.11.0'
+VERSION = '1.12.3'
 
 def readme():
     with open("README.md") as f:
@@ -16,7 +16,10 @@ setup(
     url="https://github.com/danilocgsilva/awsec2instances",
     author="Danilo Silva",
     author_email="contact@danilocgsilva.me",
-    packages=["awsec2instances_includes"],
+    packages=[
+        "awsec2instances_includes",
+        "awsec2instances_includes.OsScriptService"
+    ],
     entry_points={"console_scripts": ["awsec2=awsec2instances_includes.__main__:main"],},
-    includes_package_data=True
+    include_package_data=True
 )

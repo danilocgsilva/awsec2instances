@@ -1,4 +1,4 @@
-from awsec2instances_includes.ScriptServiceInterface import ScriptServiceInterface
+from awsec2instances_includes.OsScriptService.ScriptServiceInterface import ScriptServiceInterface
 from wimiapi.Wimi import Wimi
 
 class ScriptServiceAwsami(ScriptServiceInterface):
@@ -60,6 +60,9 @@ EOF
         self.userScript.add_scripts(scriptText)
 
         return self
+
+    def setFirewall(self):
+        pass
 
     def __adds_mariadb_updated_to_os_repository(self):
         self.userScript.add_scripts('''tee /etc/yum.repos.d/mariadb.repo << EOF

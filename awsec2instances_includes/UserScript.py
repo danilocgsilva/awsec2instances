@@ -1,4 +1,8 @@
 class UserScript:
+    '''
+    Facilitates writting to the user script, that is, the default initial
+    script to be performaed at instance startup.
+    '''
 
     def __init__(self):
         self.script = "#!/bin/bash\n"

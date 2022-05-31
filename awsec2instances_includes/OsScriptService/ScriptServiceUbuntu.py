@@ -1,5 +1,6 @@
-from awsec2instances_includes.ScriptServiceInterface import ScriptServiceInterface
+from awsec2instances_includes.OsScriptService.ScriptServiceInterface import ScriptServiceInterface
 from wimiapi.Wimi import Wimi
+from awsec2instances_includes.ProtocolService import ProtocolService
 
 class ScriptServiceUbuntu(ScriptServiceInterface):
 
@@ -64,3 +65,9 @@ EOF
         self.userScript.add_scripts(scriptText)
 
         return self
+
+    def setFirewall(self, protocolsService: ProtocolService):
+        if protocolsService.is_not_empty():
+            self.userScript.add_scripts("")
+        
+

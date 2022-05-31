@@ -53,3 +53,7 @@ class ScriptServiceInterface(abc.ABC):
     def openToMe(self):
         pass
 
+    @abc.abstractmethod
+    def setFirewall(self):
+        pass
+

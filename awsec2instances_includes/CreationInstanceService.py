@@ -8,8 +8,10 @@ class CreationInstanceService:
         self.needs_die_warnning = True
         self.die_time = 5
 
-    # Returns self ProtocolService and UsersScript
     def getCreationServices(self, accesses):
+        '''
+        Returns self ProtocolService and UsersScript
+        '''
         return self, ProtocolService(accesses), UserScript()
 
     def setHarakiri(self, userScript: UserScript):

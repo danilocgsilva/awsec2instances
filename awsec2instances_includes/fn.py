@@ -2,7 +2,7 @@ from awsec2instances_includes.AwsClientUtils import AwsClientUtils
 from awsec2instances_includes.CreationInstanceService import CreationInstanceService
 from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.InstanceInterpreter import InstanceInterpreter
-from awsec2instances_includes.ScriptService import ScriptService
+from awsec2instances_includes.OsScriptService.ScriptService import ScriptService
 from awsec2instances_includes.Talk import Talk
 from awsec2instances_includes.UserDataProcess import UserDataProcess
 from awsec2instances_includes.UserScript import UserScript
@@ -29,10 +29,18 @@ def assign_sg_to_ec2(sgid: str, instance_id: str):
     instances[0].modify_attribute(Groups=[sgid], DryRun=False)
 
 def create_new_instance(args, commands):
-    creationInstanceService, protocolsService, userScript = CreationInstanceService().getCreationServices(args.access)
+    creationInstanceService, protocolsService, userScript = CreationInstanceService()\
+        .getCreationServices(args.access)
     creationInstanceService.ensureMinutesData(args.lasts)
     creationInstanceService.setHarakiri(userScript)
-    scriptService = ScriptService(args.distro).setUserScript(userScript)
+
+    '''
+    Instantiating the ScriptService based on distro, the script will know
+    from what distro the script configurations must be done.
+    '''
+    scriptService = ScriptService(args.distro).\
+        setUserScript(userScript)
+    
     scriptService.firstUpdate()
 
     if args.user_data:
@@ -56,6 +64,8 @@ def create_new_instance(args, commands):
         else:
             raise Exception("Sorry! I don't know this option for user data pattern.")
 
+    scriptService.setFirewall(protocolsService)
+
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())
 
@@ -71,6 +81,11 @@ def create_new_instance(args, commands):
         security_group_name, sgid = create_security_group(protocolsService, sg_client)
         print("The new security group name is " + security_group_name)  
 
+    '''
+    Important to notice that the scripts generated for the instance
+    bootstraping are consumed here. So, in case of script change,
+    necessarily must be done before here.
+    '''
     instance_data = commands.new(
         protocolsService, 
         userScript.get_user_script(), 
@@ -85,11 +100,20 @@ def create_new_instance(args, commands):
     if args.name:
         print("Waiting to starts the instance, so I can add its name...")
         instance_data.wait_until_running()
-        boto3.resource('ec2').create_tags(Resources=[instance_data.id], Tags=[{'Key':'Name', 'Value':args.name}])
+        boto3.resource('ec2').create_tags(
+            Resources=[instance_data.id], 
+            Tags=[{'Key':'Name', 'Value':args.name}]
+        )
 
     instance_interpreter = InstanceInterpreter()
     instance_is_running = False
     print("Waiting the instance be ready...")
+
+    '''
+    After command that triggers the instance creation, loops in an time
+    time interval to check if the instance is ready and prints
+    in the console.
+    '''
     while not instance_is_running:
         instance_interpreter.loadById(instance_data.id)
         if not instance_interpreter.getStatus() == "running":
@@ -97,6 +121,7 @@ def create_new_instance(args, commands):
             time.sleep(4)
         else:
             instance_is_running = True
+
     print("Your instance is running! Have a nice devops.")
     if protocolsService.is_have_ssh() or protocolsService.is_have_http():
         print("You can access your instance by the ip: " + instance_interpreter.getInstanceIp())

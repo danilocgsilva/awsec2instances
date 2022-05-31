@@ -1,11 +1,14 @@
 from awsec2instances_includes.ProtocolService import ProtocolService
-from awsec2instances_includes.ScriptService import ScriptService
+from awsec2instances_includes.OsScriptService.ScriptService import ScriptService
 from awsec2instances_includes.UserScript import UserScript
 import os
 import re
 
 class UserDataProcess:
-
+    '''
+    This class is a big consumer for ScriptService, so the biggest part of
+    "bootstraping script modeling" can be found here.
+    '''
     def __init__(self, scriptService: ScriptService, protocolService: ProtocolService):
         self.scriptService = scriptService
         self.protocolService = protocolService

@@ -37,12 +37,15 @@ class AwsClientUtils:
 
         return raw_return["Reservations"]
 
-    def getImageDescription(self, imageId) -> str:
-        aws_client = boto3.client('ec2')
-        image_id_properties = aws_client.describe_images(ImageIds=[imageId])
-        print(image_id_properties)
-        exit()
-        return "image_id_properties"
+    def addImageDescriptionToInstanceData(self, instanceResources: dict, aws_client = None):
+
+        if not aws_client:
+            aws_client = boto3.client('ec2')
+
+        for instanceData in instanceResources:
+            imageId = instanceData["ImageId"]
+            imageDescriptionData = aws_client.describe_images(ImageIds=[imageId])
+            instanceData["imageIdDescription"] = imageDescriptionData["Images"][0]["Description"]
 
     def create_new_instance_resource(
         self, 

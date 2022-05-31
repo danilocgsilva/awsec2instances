@@ -45,3 +45,7 @@ class InstanceInterpreter:
             
     def getImageId(self):
         return self.instanceData["ImageId"]
+
+    def getImageDescription(self):
+        return self.instanceData["imageIdDescription"]
+        

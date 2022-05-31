@@ -6,12 +6,15 @@ class Talk:
 
     def setInstanceData(self, instances_data: list):
         self.instances_data = instances_data
+        return self
 
     def setImageDescription(self, imageDescription: str):
         self.imageDescription = imageDescription
 
     def printData(self):
+
         instanceInterpreter = InstanceInterpreter()
+
         for instance_raw in self.instances_data:
             instanceInterpreter.setInstanceData(instance_raw)
             print('---')
@@ -22,7 +25,7 @@ class Talk:
             print('Ip: ' + instanceInterpreter.getInstanceIp())
             print('Key: ' + instanceInterpreter.getInstanceKey())
             print('Image Id: ' + instanceInterpreter.getImageId())
-            print('Image Description: ' + self.imageDescription)
+            print('Image Description: ' + instanceInterpreter.getImageDescription())
 
     def print_data_all_regions(self, resume: Resume, string_region_data, getRawDataFromCli, statusfilter):
         for region in Formatter().extractRegions(string_region_data):

@@ -169,6 +169,8 @@ def print_instances_single_region(region, filter_status, filter_name):
 
 def wait_http(instance_ip: str):
     print("Right now, the http server still is not ready, but in a moment, it will be ready. I will check till it is ready...")
+    date_string = DcgsPythonHelpers().getHashDateFromDate(datetime.datetime.now())
+    print(date_string)
     http_is_on = False
     trials = 0
     while not http_is_on and trials < 20:

@@ -1,6 +1,8 @@
 from awsec2instances_includes.OsScriptService.ScriptServiceInterface import ScriptServiceInterface
 from wimiapi.Wimi import Wimi
 
+from awsec2instances_includes.ProtocolService import ProtocolService
+
 class ScriptServiceAwsami(ScriptServiceInterface):
         
     def setUserScript(self, userStript):
@@ -61,7 +63,7 @@ EOF
 
         return self
 
-    def setFirewall(self):
+    def setFirewall(self, protocolService: ProtocolService):
         pass
 
     def __adds_mariadb_updated_to_os_repository(self):

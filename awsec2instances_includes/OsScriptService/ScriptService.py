@@ -1,6 +1,7 @@
 from awsec2instances_includes.OsScriptService.ScriptServiceAwsami import ScriptServiceAwsami
 from awsec2instances_includes.OsScriptService.ScriptServiceUbuntu import ScriptServiceUbuntu
 from awsec2instances_includes.OsScriptService.ScriptServiceInterface import ScriptServiceInterface
+from awsec2instances_includes.ProtocolService import ProtocolService
 
 # Brings more inteligent methods to handle ScriptServiceInterface
 #   implementation.
@@ -62,6 +63,6 @@ class ScriptService(ScriptServiceInterface):
         self.scriptService.openToMe()
         return self
 
-    def setFirewall(self):
-        self.scriptService.setFireWall()
+    def setFirewall(self, protocolsService: ProtocolService):
+        self.scriptService.setFirewall(protocolsService)
         return self

@@ -68,6 +68,15 @@ EOF
 
     def setFirewall(self, protocolsService: ProtocolService):
         if protocolsService.is_not_empty():
-            self.userScript.add_scripts("")
-        
+            if protocolsService.is_have_http():
+                self.userScript.add_scripts("ufw allow 80")
+            if protocolsService.is_have_ssh():
+                self.userScript.add_scripts("ufw allow 22")
+            if protocolsService.is_have_https():
+                self.userScript.add_scripts("ufw allow 443")
+            if protocolsService.is_have_database():
+                self.userScript.add_scripts("ufw allow 3306")
+            if protocolsService.is_have_desktop():
+                self.userScript.add_scripts("ufw allow 3389")
+            self.userScript.add_scripts("ufw enable")
 

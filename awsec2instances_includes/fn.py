@@ -10,8 +10,7 @@ from awssg.Client import Client
 from awssg.SG_Client import SG_Client
 from awssg.SGConfig import SGConfig
 from awssg.VPC_Client import VPC_Client
-from dcgsasklist.Ask import Ask
-from dcgsasklist.AskException import AskException
+from cli_ask.Ask import Ask
 from danilocgsilvame_python_helpers.DcgsPythonHelpers import DcgsPythonHelpers
 from pathlib import Path
 from wimiapi.Wimi import Wimi

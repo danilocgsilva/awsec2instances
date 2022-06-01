@@ -12,7 +12,7 @@ class ScriptService(ScriptServiceInterface):
 
     def __init__(self, distro = None):
 
-        if distro == None:
+        if distro == None or distro == "aws-ami-old":
             self.scriptService = ScriptServiceAwsami()
         elif distro == "ubuntu" or distro == "ubuntu-20.04":
             self.scriptService = ScriptServiceUbuntu()

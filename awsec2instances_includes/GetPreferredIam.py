@@ -9,6 +9,10 @@ class GetPreferredIam:
         self.regionsIam = {
             "us-east-1": {
                 "default": {
+                    "id": "ami-0e449176cecc3e577",
+                    "instance_type": "t4g.nano"
+                },
+                "aws-ami-old": {
                     "id": "ami-08f3d892de259504d",
                     "instance_type": "t2.nano"
                 },
@@ -44,6 +48,10 @@ class GetPreferredIam:
         }
 
     def getDistroData(self, region = None) -> dict:
+
+        if not self.distro:
+            self.distro = "default"
+        
         return self.regionsIam[self.region][self.distro]
 
     def setRegion(self, region: str):

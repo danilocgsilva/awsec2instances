@@ -1,7 +1,7 @@
 import unittest
 import sys
 sys.path.insert(1, "..")
-from awsec2instances_includes.ScriptService.ScriptServiceUbuntu import ScriptServiceUbuntu
+from awsec2instances_includes.OsScriptService.ScriptServiceUbuntu import ScriptServiceUbuntu
 from awsec2instances_includes.UserScript import UserScript
 
 class test_ScriptServiceUbuntu(unittest.TestCase):

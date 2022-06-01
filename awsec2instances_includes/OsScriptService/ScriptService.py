@@ -14,7 +14,7 @@ class ScriptService(ScriptServiceInterface):
 
         if distro == None:
             self.scriptService = ScriptServiceAwsami()
-        elif distro == "ubuntu":
+        elif distro == "ubuntu" or distro == "ubuntu-20.04":
             self.scriptService = ScriptServiceUbuntu()
         else:
             raise Exception("The provided distro parameter " + distro + " is not known.")

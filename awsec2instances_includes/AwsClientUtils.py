@@ -56,11 +56,15 @@ class AwsClientUtils:
         subnet,
         distro = None
     ):
+        getPreferredIam = GetPreferredIam().\
+            setDistro(distro).\
+            setRegion(region)
+    
         parameters = {
-            "ImageId": GetPreferredIam().getIam(region, distro),
+            "ImageId": getPreferredIam.getIamId(),
             "MinCount": 1,
             "MaxCount": 1,
-            "InstanceType": 't2.nano'
+            "InstanceType": getPreferredIam.getDistroData()["instance_type"]
         }
 
         if keypairname:

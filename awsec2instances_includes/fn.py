@@ -73,6 +73,7 @@ def create_new_instance(args, commands):
 
     sg_client = SG_Client()
     vpc_choosed = __get_vpc(sg_client)
+    print("The deployt will be performed to a VPC with id {}.".format(vpc_choosed))
     sg_client.set_vpc(vpc_choosed)
 
     security_group_name = None
@@ -169,11 +170,12 @@ def print_instances_single_region(region, filter_status, filter_name):
 
 def wait_http(instance_ip: str):
     print("Right now, the http server still is not ready, but in a moment, it will be ready. I will check till it is ready...")
-    date_string = DcgsPythonHelpers().getHashDateFromDate(datetime.datetime.now())
-    print(date_string)
+    dcgsPythonHelpers = DcgsPythonHelpers()
+    print(dcgsPythonHelpers.getHashDateFromDate())
     http_is_on = False
     trials = 0
-    while not http_is_on and trials < 20:
+    limit_trials = 30
+    while not http_is_on and trials < limit_trials:
         try:
             requests.get('http://' + instance_ip)
             http_is_on = True
@@ -181,9 +183,11 @@ def wait_http(instance_ip: str):
             print("Waiting http to be ready...")
         trials = trials + 1
         time.sleep(12)
-    if trials == 20:
+    if trials >= limit_trials:
+        print(dcgsPythonHelpers.getHashDateFromDate())
         print("Oops! May the server is taking too long to restart or something nasty really hapenned... Anyway, tries to access in the browser the ip " + instance_ip + " some few times by a while. If not, something wrong really hapenned... :(.")
     else:
+        print(dcgsPythonHelpers.getHashDateFromDate())
         print("Woah! The wait is over! Access the address type the ip in the address: " + instance_ip)
 
 def create_security_group(protocolsService, sg_client) -> str:
@@ -224,6 +228,7 @@ def __get_vpc(sg_client):
 
     default_vpc = __get_default_vpc(vpc_client)
     if default_vpc:
+        print("ATENTION: VPC HAS BEEN choosed by a environment variable called DEFAULT_AWS_VPC. You may change it anytime.")
         return default_vpc
 
     vpc_choosed = None

@@ -1,7 +1,7 @@
 import unittest
 import sys
 sys.path.insert(1, "..")
-from awsec2instances_includes.ScriptService.ScriptServiceAwsami import ScriptServiceAwsami
+from awsec2instances_includes.OsScriptService.ScriptServiceAwsami import ScriptServiceAwsami
 from awsec2instances_includes.UserScript import UserScript
 
 class test_ScriptServiceAwsami(unittest.TestCase):

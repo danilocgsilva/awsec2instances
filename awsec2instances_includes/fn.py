@@ -1,5 +1,6 @@
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
 from awsec2instances_includes.CreationInstanceService import CreationInstanceService
+from awsec2instances_includes.OsFamily import OsFamily
 from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.InstanceInterpreter import InstanceInterpreter
 from awsec2instances_includes.OsScriptService.ScriptService import ScriptService
@@ -10,8 +11,7 @@ from awssg.Client import Client
 from awssg.SG_Client import SG_Client
 from awssg.SGConfig import SGConfig
 from awssg.VPC_Client import VPC_Client
-from dcgsasklist.Ask import Ask
-from dcgsasklist.AskException import AskException
+from cli_ask.Ask import Ask
 from danilocgsilvame_python_helpers.DcgsPythonHelpers import DcgsPythonHelpers
 from pathlib import Path
 from wimiapi.Wimi import Wimi
@@ -155,7 +155,10 @@ def init_user_script() -> str:
     return "#!/bin/bash\n\n"
 
 def get_bootstrap_log_addres(distro = None) -> str:
-    if distro == "ubuntu":
+
+    os_family = OsFamily()
+    
+    if os_family.is_ubuntu_family(distro):
         return "/home/ubuntu/log-bootstrap.txt"
     else:
         return "/home/ec2-user/log-bootstrap.txt"

@@ -1,5 +1,6 @@
 import abc
 from awsec2instances_includes.UserScript import UserScript
+from awsec2instances_includes.ProtocolService import ProtocolService
 
 class ScriptServiceInterface(abc.ABC):
 
@@ -54,6 +55,6 @@ class ScriptServiceInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def setFirewall(self):
+    def setFirewall(self, protocolsService: ProtocolService):
         pass
 

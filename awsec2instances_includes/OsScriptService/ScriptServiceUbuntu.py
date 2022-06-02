@@ -66,17 +66,17 @@ EOF
 
         return self
 
-    def setFirewall(self, protocolsService: ProtocolService):
-        if protocolsService.is_not_empty():
-            if protocolsService.is_have_http():
+    def setFirewall(self, protocolService: ProtocolService):
+        if protocolService.is_not_empty():
+            if protocolService.is_have_http():
                 self.userScript.add_scripts("ufw allow 80")
-            if protocolsService.is_have_ssh():
+            if protocolService.is_have_ssh():
                 self.userScript.add_scripts("ufw allow 22")
-            if protocolsService.is_have_https():
+            if protocolService.is_have_https():
                 self.userScript.add_scripts("ufw allow 443")
-            if protocolsService.is_have_database():
+            if protocolService.is_have_database():
                 self.userScript.add_scripts("ufw allow 3306")
-            if protocolsService.is_have_desktop():
+            if protocolService.is_have_desktop():
                 self.userScript.add_scripts("ufw allow 3389")
             self.userScript.add_scripts("ufw enable")
 

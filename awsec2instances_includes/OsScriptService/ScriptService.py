@@ -1,3 +1,4 @@
+from awsec2instances_includes.OsFamily import OsFamily
 from awsec2instances_includes.OsScriptService.ScriptServiceAwsami import ScriptServiceAwsami
 from awsec2instances_includes.OsScriptService.ScriptServiceUbuntu import ScriptServiceUbuntu
 from awsec2instances_includes.OsScriptService.ScriptServiceInterface import ScriptServiceInterface
@@ -12,9 +13,11 @@ class ScriptService(ScriptServiceInterface):
 
     def __init__(self, distro = None):
 
+        os_family = OsFamily()
+
         if distro == None or distro == "aws-ami-old":
             self.scriptService = ScriptServiceAwsami()
-        elif distro == "ubuntu" or distro == "ubuntu-20.04":
+        elif os_family.is_ubuntu_family(distro):
             self.scriptService = ScriptServiceUbuntu()
         else:
             raise Exception("The provided distro parameter " + distro + " is not known.")

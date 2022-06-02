@@ -12,7 +12,8 @@ def mass_parser_arguments(arguments_group_list: list, parser):
             "--" + argument_list[0],
             "-" + argument_list[1],
             required=argument_list[2],
-            help=argument_list[3]
+            help=argument_list[3],
+            action=argument_list[4]
         )
     return parser
 
@@ -21,18 +22,19 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser = mass_parser_arguments([
-        ["access", "a", False, "Set a way to access the instance if you are creating a new one"],
-        ["command", "c", False, "Defines a specific action"],
-        ["distro", "d", False, "A name of a distribuition, if required a specific one"],
-        ["filter-name", "fn", False, "Search for instance with the tag name"],
-        ["filter-status", "fs", False, "A status filter if desired"],
-        ["id", "i", False, "The instance id required for some commands"],
-        ["lasts", "l", False, "Say how much time the instance will lasts to avoid unexpected costs"],
-        ["name", "n", False, "Set the names's tag"],
-        ["profile", "p", False, "Set the aws cli profile, if needed"],
-        ["region", "r", False, "Restrict search just for a single region"],
-        ["status-filter", "sf", False, "Filter instance by status"],
-        ["user-data", "u", False, "Path for user data as shell script for instance"],
+        ["access", "a", False, "Set a way to access the instance if you are creating a new one", "store"],
+        ["add-firewall", "af", False, "If it is required to setup an firewall", "store_true"]
+        ["command", "c", False, "Defines a specific action", "store"],
+        ["distro", "d", False, "A name of a distribuition, if required a specific one", "store"],
+        ["filter-name", "fn", False, "Search for instance with the tag name", "store"],
+        ["filter-status", "fs", False, "A status filter if desired", "store"],
+        ["id", "i", False, "The instance id required for some commands", "store"],
+        ["lasts", "l", False, "Say how much time the instance will lasts to avoid unexpected costs", "store"],
+        ["name", "n", False, "Set the names's tag", "store"],
+        ["profile", "p", False, "Set the aws cli profile, if needed", "store"],
+        ["region", "r", False, "Restrict search just for a single region", "store"],
+        ["status-filter", "sf", False, "Filter instance by status", "store"],
+        ["user-data", "u", False, "Path for user data as shell script for instance", "store"],
     ], parser)
 
     args = parser.parse_args()

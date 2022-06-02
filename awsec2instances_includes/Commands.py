@@ -75,3 +75,10 @@ class Commands:
 
     def lists_vpcs(self):
         print("This comands will lists vpcs to be choosed when creating a new ec2 instance, in case of several vpcs registered in the account. Not yet implemented, as you could see...")
+
+    def floating_parameters(self, args) -> bool:
+
+        if args.access or args.user_data or args.lasts:
+            if args.command != "new":
+                return True
+        return False

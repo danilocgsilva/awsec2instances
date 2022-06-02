@@ -52,8 +52,12 @@ def main():
 
     commands = Commands(profile, args.region)
 
-    if not args.command or args.command == "list":
-        commands.list(args.region, args.filter_status, args.filter_name)
+    if not args.command:
+        if commands.floating_parameters(args):
+            print("You may have forgetted the action that script must takes. You provided arguments compatible to an action not provided - do you forget to call --command new?")
+            exit()
+        if args.command == "list":
+            commands.list(args.region, args.filter_status, args.filter_name)
     elif args.command == "new":
         create_new_instance(args, commands)
     elif args.command == "sleep":

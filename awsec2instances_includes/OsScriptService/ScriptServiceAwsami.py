@@ -64,7 +64,23 @@ EOF
         return self
 
     def setFirewall(self, protocolService: ProtocolService):
-        pass
+        if protocolService.is_not_empty():
+
+            self.userScript.add_scripts("amazon-linux-extras install epel -y")
+            self.userScript.add_scripts('yum install --enablerepo="epel" ufw -y')
+
+            if protocolService.is_have_http():
+                self.userScript.add_scripts("ufw allow 80")
+            if protocolService.is_have_ssh():
+                self.userScript.add_scripts("ufw allow 22")
+            if protocolService.is_have_https():
+                self.userScript.add_scripts("ufw allow 443")
+            if protocolService.is_have_database():
+                self.userScript.add_scripts("ufw allow 3306")
+            if protocolService.is_have_desktop():
+                self.userScript.add_scripts("ufw allow 3389")
+            self.userScript.add_scripts('echo "y" | ufw enable')
+        
 
     def __adds_mariadb_updated_to_os_repository(self):
         self.userScript.add_scripts('''tee /etc/yum.repos.d/mariadb.repo << EOF

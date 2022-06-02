@@ -21,7 +21,7 @@ class test_GetPreferredIam(unittest.TestCase):
     def test_preferred_iam_us_east_1(self):
         region = "us-east-1"
         self.getPreferredIam.setRegion(region)
-        preferred_iam = "ami-08f3d892de259504d"
+        preferred_iam = "ami-0e449176cecc3e577"
         returned_iam = self.getPreferredIam.getIamId()
         self.assertEqual(preferred_iam, returned_iam)
 

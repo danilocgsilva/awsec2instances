@@ -1,5 +1,6 @@
 from awsec2instances_includes.AwsClientUtils import AwsClientUtils
 from awsec2instances_includes.CreationInstanceService import CreationInstanceService
+from awsec2instances_includes.OsFamily import OsFamily
 from awsec2instances_includes.ProtocolService import ProtocolService
 from awsec2instances_includes.InstanceInterpreter import InstanceInterpreter
 from awsec2instances_includes.OsScriptService.ScriptService import ScriptService
@@ -154,7 +155,10 @@ def init_user_script() -> str:
     return "#!/bin/bash\n\n"
 
 def get_bootstrap_log_addres(distro = None) -> str:
-    if distro == "ubuntu":
+
+    os_family = OsFamily()
+    
+    if os_family.is_ubuntu_family(distro):
         return "/home/ubuntu/log-bootstrap.txt"
     else:
         return "/home/ec2-user/log-bootstrap.txt"

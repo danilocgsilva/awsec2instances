@@ -4,8 +4,11 @@ from awsec2instances_includes.ProtocolService import ProtocolService
 
 class ScriptServiceUbuntu(ScriptServiceInterface):
 
+    def __init__(self):
+        self.arch = None
+
     def setArch(self, arch: str):
-        self.scriptService.setArch(arch)
+        self.arch = arch
         return self
 
     def setUserScript(self, userStript):
@@ -34,7 +37,7 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
         else:
             self.userScript.add_scripts("apt install php7.4 php7.4-mysql -y")
 
-        self.userScript.add_scripts("service httpd restart")
+        self.userScript.add_scripts("service apache2 restart")
 
         return self
 

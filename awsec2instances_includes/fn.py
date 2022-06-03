@@ -29,6 +29,15 @@ def assign_sg_to_ec2(sgid: str, instance_id: str):
     instances[0].modify_attribute(Groups=[sgid], DryRun=False)
 
 def create_new_instance(args, commands):
+
+    os_family = OsFamily()
+    if not os_family.is_ubuntu_family(args.distro)\
+        and args.add_firewall:
+        message = "You cannot set a firewall in the current Linux distro: " + os_family.default_os() + ". Not working yet. Sorry. Tries to use --distro ubuntu."
+        print(message)
+        exit()
+
+    
     creationInstanceService, protocolsService, userScript = CreationInstanceService()\
         .getCreationServices(args.access)
     creationInstanceService.ensureMinutesData(args.lasts)
@@ -64,7 +73,8 @@ def create_new_instance(args, commands):
         else:
             raise Exception("Sorry! I don't know this option for user data pattern.")
 
-    scriptService.setFirewall(protocolsService)
+    if args.add_firewall:
+        scriptService.setFirewall(protocolsService)
 
     if creationInstanceService.needs_die_warnning:
         print(creationInstanceService.getHarakiriMessage())

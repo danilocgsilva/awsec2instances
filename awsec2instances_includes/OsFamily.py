@@ -9,3 +9,6 @@ class OsFamily:
         if designation == "ubuntu" or designation == "ubuntu-20.04":
             return True
         return False
+
+    def default_os(self) -> str:
+        return "AWS AMI"

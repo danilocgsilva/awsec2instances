@@ -23,7 +23,7 @@ def main():
 
     parser = mass_parser_arguments([
         ["access", "a", False, "Set a way to access the instance if you are creating a new one", "store"],
-        ["add-firewall", "af", False, "If it is required to setup an firewall", "store_true"]
+        ["add-firewall", "af", False, "If it is required to setup an firewall", "store_true"],
         ["command", "c", False, "Defines a specific action", "store"],
         ["distro", "d", False, "A name of a distribuition, if required a specific one", "store"],
         ["filter-name", "fn", False, "Search for instance with the tag name", "store"],

@@ -64,6 +64,10 @@ EOF
         return self
 
     def setFirewall(self, protocolService: ProtocolService):
+        '''
+        Not working! Needs be checked.
+        '''
+
         if protocolService.is_not_empty():
 
             self.userScript.add_scripts("amazon-linux-extras install epel -y")
@@ -80,7 +84,8 @@ EOF
             if protocolService.is_have_desktop():
                 self.userScript.add_scripts("ufw allow 3389")
             self.userScript.add_scripts('echo "y" | ufw enable')
-        
+
+        raise Exception("This method must be reviewd. Not working.")
 
     def __adds_mariadb_updated_to_os_repository(self):
         self.userScript.add_scripts('''tee /etc/yum.repos.d/mariadb.repo << EOF

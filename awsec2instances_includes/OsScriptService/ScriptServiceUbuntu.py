@@ -49,6 +49,10 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
         self.userScript.add_scripts("apt install php-dom -y")
         return self
 
+    def install_php_zip(self):
+        self.userScript.add_scripts("apt install php-zip -y")
+        return self
+
     def enable_httpd(self):
         self.userScript.add_scripts("chkconfig httpd on")
         self.userScript.add_scripts("service httpd start")

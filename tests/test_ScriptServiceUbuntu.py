@@ -33,8 +33,8 @@ class test_ScriptServiceUbuntu(unittest.TestCase):
 
     def testInstall_php(self):
         expected_result = "#!/bin/bash\n\nset -e\n\n"
-        expected_result += "apt install php7.4 php7.4-mysql -y\n\n"
-        expected_result += "service httpd restart\n"
+        expected_result += "apt install php php-mysql -y\n\n"
+        expected_result += "service apache2 restart\n"
 
         self.scriptService.install_php()
         

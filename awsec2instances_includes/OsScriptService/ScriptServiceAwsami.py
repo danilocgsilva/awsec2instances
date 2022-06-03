@@ -40,6 +40,10 @@ class ScriptServiceAwsami(ScriptServiceInterface):
         self.userScript.add_scripts("yum install php-dom -y")
         return self
 
+    def install_php_zip(self):
+        self.userScript.add_scripts("yum install php-zip -y")
+        return self
+
     def database(self):
         self.__adds_mariadb_updated_to_os_repository()
         self.userScript.add_scripts("yum makecache")

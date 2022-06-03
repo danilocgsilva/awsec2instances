@@ -58,3 +58,7 @@ class ScriptServiceInterface(abc.ABC):
     def setFirewall(self, protocolsService: ProtocolService):
         pass
 
+    @abc.abstractmethod
+    def install_php_zip(self):
+        pass
+

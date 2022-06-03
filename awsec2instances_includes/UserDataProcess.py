@@ -47,7 +47,8 @@ class UserDataProcess:
             install_httpd().\
             install_php().\
             install_php_mbstring().\
-            install_php_dom()
+            install_php_dom().\
+            install_php_zip()
         userScript.add_scripts(self.__get_composer_scripts_download())
         userScript.add_scripts(self.__prepare_laravel_aws())
         userScript.add_scripts("rm -r /var/www/html")

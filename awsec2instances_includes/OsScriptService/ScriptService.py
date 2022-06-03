@@ -54,6 +54,10 @@ class ScriptService(ScriptServiceInterface):
         self.scriptService.install_php_dom()
         return self
 
+    def install_php_zip(self):
+        self.scriptService.install_php_zip()
+        return self
+
     def enable_httpd(self):
         self.scriptService.enable_httpd()
         return self

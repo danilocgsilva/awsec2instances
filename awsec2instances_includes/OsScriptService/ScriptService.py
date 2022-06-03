@@ -22,6 +22,10 @@ class ScriptService(ScriptServiceInterface):
         else:
             raise Exception("The provided distro parameter " + distro + " is not known.")
 
+    def setArch(self, arch: str):
+        self.scriptService.setArch(arch)
+        return self
+
     def firstUpdate(self):
         self.scriptService.firstUpdate()
         return self

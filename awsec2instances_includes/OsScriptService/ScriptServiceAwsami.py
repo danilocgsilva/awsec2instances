@@ -5,6 +5,10 @@ from awsec2instances_includes.ProtocolService import ProtocolService
 
 class ScriptServiceAwsami(ScriptServiceInterface):
         
+    def setArch(self, arch: str):
+        self.scriptService.setArch(arch)
+        return self
+
     def setUserScript(self, userStript):
         self.userScript = userStript
         return self

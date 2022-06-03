@@ -58,7 +58,9 @@ class UserDataProcess:
         userScript.add_scripts('php artisan key:generate --ansi')
         userScript.add_scripts('/usr/local/bin/composer install')
         userScript.add_scripts('chown -Rv apache /var/www/laravel/storage')
+
         self.protocolService.ensure_port_80()
+        
         return []
 
     def processDesktop(self) -> list:
@@ -111,13 +113,5 @@ chown apache wordpress/wordpress
         return string_to_return
 
     def __prepare_laravel_aws(self) -> str:
-        string_to_return = '''cd /var/www
-curl -Ls -o laravel-master.zip https://github.com/laravel/laravel/archive/master.zip
-unzip laravel-master.zip
-rm laravel-master.zip
-mv laravel-master laravel
-cd laravel
-/usr/local/bin/composer install'''
-
-        return string_to_return
+        return '/usr/local/bin/composer create-project laravel/laravel --working-dir=/var/www/'
 

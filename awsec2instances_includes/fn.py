@@ -36,7 +36,6 @@ def create_new_instance(args, commands):
         message = "You cannot set a firewall in the current Linux distro: " + os_family.default_os() + ". Not working yet. Sorry. Tries to use --distro ubuntu."
         print(message)
         exit()
-
     
     creationInstanceService, protocolsService, userScript = CreationInstanceService()\
         .getCreationServices(args.access)

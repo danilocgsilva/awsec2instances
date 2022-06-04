@@ -29,6 +29,7 @@ def main():
         ["filter-name", "fn", False, "Search for instance with the tag name", "store"],
         ["filter-status", "fs", False, "A status filter if desired", "store"],
         ["id", "i", False, "The instance id required for some commands", "store"],
+        ["key", "k", False, "If required, antecipates the need to provides a key to be accessible by ssh,", "store"]
         ["lasts", "l", False, "Say how much time the instance will lasts to avoid unexpected costs", "store"],
         ["name", "n", False, "Set the names's tag", "store"],
         ["profile", "p", False, "Set the aws cli profile, if needed", "store"],

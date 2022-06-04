@@ -61,4 +61,9 @@ class ScriptServiceInterface(abc.ABC):
     @abc.abstractmethod
     def install_php_zip(self):
         pass
+    
+    @abc.abstractmethod
+    def install_php_curl(self):
+        pass
+        
 

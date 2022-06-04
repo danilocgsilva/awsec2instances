@@ -51,7 +51,7 @@ class ScriptServiceAwsami(ScriptServiceInterface):
     def database(self):
         self.__adds_mariadb_updated_to_os_repository()
         self.userScript.add_scripts("yum makecache")
-        self.userScript.add_scripts("yum install MariaDB-server MariaDB-client -y")
+        self.userScript.add_scripts("yum install mariadb-server mariadb-client -y")
         self.userScript.add_scripts("systemctl enable --now mariadb")
         return self
 

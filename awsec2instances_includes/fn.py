@@ -15,7 +15,9 @@ from cli_ask.Ask import Ask
 from danilocgsilvame_python_helpers.DcgsPythonHelpers import DcgsPythonHelpers
 from pathlib import Path
 from wimiapi.Wimi import Wimi
-import boto3, datetime, json, os, paramiko, requests, subprocess, sys, time
+import boto3, datetime, os, paramiko, requests, time
+from scp import SCPClient
+
 
 def assign_sg_to_ec2(sgid: str, instance_id: str):
 
@@ -82,7 +84,7 @@ def create_new_instance(args, commands):
 
     sg_client = SG_Client()
     vpc_choosed = __get_vpc(sg_client)
-    print("The deployt will be performed to a VPC with id {}.".format(vpc_choosed))
+    print("The deploy will be performed to a VPC with id {}.".format(vpc_choosed))
     sg_client.set_vpc(vpc_choosed)
 
     security_group_name = None

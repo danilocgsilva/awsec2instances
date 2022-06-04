@@ -88,10 +88,21 @@ class UserDataProcess:
         return self.__askLocalPem(), filelist
 
     def __askLocalPem(self):
-        local_pem = input("Where is the local pem file? ")
-        if not os.path.isfile(local_pem):
-            print("The givel local pem is not a file.")
-            exit()
+
+        pem_file_given = False
+
+        while not pem_file_given:
+            local_pem = input("Where is the local pem file? ")
+
+            if local_pem == "exit":
+                exit()
+
+            if not os.path.isfile(local_pem):
+                print("The givel local pem is not a file.")
+                print("Responds with \"exit\" if you desires cancel action.")
+            else:
+                pem_file_given = True
+
         return local_pem
 
     def __get_composer_scripts_download(self) -> str:

@@ -35,7 +35,7 @@ def main():
         ["profile", "p", False, "Set the aws cli profile, if needed", "store"],
         ["region", "r", False, "Restrict search just for a single region", "store"],
         ["status-filter", "sf", False, "Filter instance by status", "store"],
-        ["user-data", "u", False, "Path for user data as shell script for instance", "store"],
+        ["user-data", "u", False, "Abstracts several webserver settings based on instance role.", "store"]
     ], parser)
 
     args = parser.parse_args()

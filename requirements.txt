@@ -7,3 +7,4 @@
 -e git+https://github.com/danilocgsilva/cli-ask-python.git@main#egg=cli_ask
 boto3
 requests
+scp

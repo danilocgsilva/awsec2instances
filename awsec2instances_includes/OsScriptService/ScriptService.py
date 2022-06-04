@@ -22,6 +22,8 @@ class ScriptService(ScriptServiceInterface):
         else:
             raise Exception("The provided distro parameter " + distro + " is not known.")
 
+        self.distro = distro
+
     def setArch(self, arch: str):
         self.scriptService.setArch(arch)
         return self
@@ -58,7 +60,7 @@ class ScriptService(ScriptServiceInterface):
         self.scriptService.install_php_zip()
         return self
         
-    def install_php_crul(self):
+    def install_php_curl(self):
         self.scriptService.install_php_curl()
         return self
 
@@ -81,3 +83,6 @@ class ScriptService(ScriptServiceInterface):
     def setFirewall(self, protocolsService: ProtocolService):
         self.scriptService.setFirewall(protocolsService)
         return self
+
+    def get_distro(self) -> str:
+        return self.distro

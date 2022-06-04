@@ -48,7 +48,8 @@ class UserDataProcess:
             install_php().\
             install_php_mbstring().\
             install_php_dom().\
-            install_php_zip()
+            install_php_zip().\
+            install_php_curl()
         userScript.add_scripts(self.__get_composer_scripts_download())
         userScript.add_scripts(self.__prepare_laravel_aws())
         userScript.add_scripts("rm -r /var/www/html")
@@ -58,7 +59,10 @@ class UserDataProcess:
         userScript.add_scripts('cp .env.example .env')
         userScript.add_scripts('php artisan key:generate --ansi')
         userScript.add_scripts('/usr/local/bin/composer install')
-        userScript.add_scripts('chown -Rv apache /var/www/laravel/storage')
+        if self.scriptService.get_distro() == "ubuntu":
+            userScript.add_scripts('chown -Rv www-data /var/www/laravel/storage')
+        else:
+            userScript.add_scripts('chown -Rv apache /var/www/laravel/storage')
 
         self.protocolService.ensure_port_80()
         

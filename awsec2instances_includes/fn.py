@@ -133,8 +133,10 @@ def create_new_instance(args, commands):
             instance_is_running = True
 
     print("Your instance is running! Have a nice devops.")
+
     if protocolsService.is_have_ssh() or protocolsService.is_have_http():
         print("You can access your instance by the ip: " + instance_interpreter.getInstanceIp())
+        
     if protocolsService.is_have_http():
         wait_http(instance_interpreter.getInstanceIp())
         if args.user_data == "webserver-here":

@@ -21,13 +21,13 @@ class Commands:
 
         self.aws_client = boto3.client('ec2')
 
-    def list(self, region, filter_status = None, filter_name = None):
+    def list(self, region, filter_status = None, filter_name = None, fields = None):
         if region:
-            print_instances_single_region(region, filter_status, filter_name)
+            print_instances_single_region(region, filter_status, filter_name, fields)
         else:
             for region in AWSUtils().get_regions_name():
                 print("Content for region " + region)
-                print_instances_single_region(region, filter_status, filter_name)
+                print_instances_single_region(region, filter_status, filter_name, fields)
 
     def new(
         self, 

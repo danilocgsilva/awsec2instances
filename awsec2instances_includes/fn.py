@@ -17,7 +17,7 @@ from pathlib import Path
 from wimiapi.Wimi import Wimi
 import boto3, datetime, os, paramiko, requests, time
 from scp import SCPClient
-
+import re
 
 def assign_sg_to_ec2(sgid: str, instance_id: str):
 
@@ -176,12 +176,17 @@ def get_bootstrap_log_addres(distro = None) -> str:
     else:
         return "/home/ec2-user/log-bootstrap.txt"
 
-def print_instances_single_region(region, filter_status, filter_name):
+def print_instances_single_region(region, filter_status, filter_name, fields):
     talk = Talk()
     awsCliUtils = AwsClientUtils()
     rawInstancesData = awsCliUtils.listInstanceData(region, filter_status, filter_name)
     awsCliUtils.addImageDescriptionToInstanceData(rawInstancesData)
     talk.setInstanceData(rawInstancesData)
+
+    if fields:
+        fields_treated = re.sub('_', r' ', fields)
+        talk.chooseFields(fields_treated)
+
     talk.printData()
 
 def wait_http(instance_ip: str):

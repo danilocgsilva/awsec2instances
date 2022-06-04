@@ -26,6 +26,7 @@ def main():
         ["add-firewall", "af", False, "If it is required to setup an firewall", "store_true"],
         ["command", "c", False, "Defines a specific action", "store"],
         ["distro", "d", False, "A name of a distribuition, if required a specific one", "store"],
+        ["fields", "f", False, "Select fields to show at instance listing", "store"],
         ["filter-name", "fn", False, "Search for instance with the tag name", "store"],
         ["filter-status", "fs", False, "A status filter if desired", "store"],
         ["id", "i", False, "The instance id required for some commands", "store"],
@@ -60,10 +61,10 @@ def main():
             print("You may have forgetted the action that script must takes. You provided arguments compatible to an action not provided - do you forget to call --command new?")
             exit()
         else:
-            commands.list(args.region, args.filter_status, args.filter_name)
+            commands.list(args.region, args.filter_status, args.filter_name, args.fields)
             exit()
     if args.command == "list":
-        commands.list(args.region, args.filter_status, args.filter_name)
+        commands.list(args.region, args.filter_status, args.filter_name, args.fields)
     elif args.command == "new":
         create_new_instance(args, commands)
     elif args.command == "sleep":

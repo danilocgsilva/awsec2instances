@@ -42,5 +42,49 @@ Image Description: Canonical, Ubuntu, 20.04 LTS, amd64 focal image build on 2020
         
         self.assertEqual(expected_string, captured_output.getvalue())
 
+    def test_printData_setting_field(self):
+
+        instance_generator = Instance_Single_Generator()\
+            .addTag("Name", "Orion")
+
+        captured_output = StringIO()
+        sys.stdout = captured_output
+        instanceData = [instance_generator.generate()]
+
+        AwsClientUtils().addImageDescriptionToInstanceData(instanceData, EC2_Client())
+
+        self.talk.setInstanceData(instanceData)
+        self.talk.chooseFields("Name")
+        self.talk.printData()
+        sys.stdout = sys.__stdout__
+
+        expected_string = '''---
+Name: Orion\n'''
+        
+        self.assertEqual(expected_string, captured_output.getvalue())
+
+    def test_printData_setting_multiple_field(self):
+
+        instance_generator = Instance_Single_Generator()\
+            .setImageId("ami-b4eaf27063e2a1e6b")\
+            .addTag("Name", "Orion")
+
+        captured_output = StringIO()
+        sys.stdout = captured_output
+        instanceData = [instance_generator.generate()]
+
+        AwsClientUtils().addImageDescriptionToInstanceData(instanceData, EC2_Client())
+
+        self.talk.setInstanceData(instanceData)
+        self.talk.chooseFields("Name,Image Id")
+        self.talk.printData()
+        sys.stdout = sys.__stdout__
+
+        expected_string = '''---
+Name: Orion
+Image Id: ami-b4eaf27063e2a1e6b\n'''
+        
+        self.assertEqual(expected_string, captured_output.getvalue())
+
 if __name__ == '__main__':
     unittest.main()

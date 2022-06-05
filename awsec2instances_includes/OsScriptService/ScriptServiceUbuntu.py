@@ -63,10 +63,10 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
         return self
     
     # Install and enable mariadb
-    def database(self):
-        self.userScript.add_scripts("apt install mariadb-server mariadb-client -y")
-        self.userScript.add_scripts("systemctl enable --now mariadb")
-        return self
+    # def database(self):
+    #     self.userScript.add_scripts("apt install mariadb-server mariadb-client -y")
+    #     self.userScript.add_scripts("systemctl enable --now mariadb")
+    #     return self
 
     def assingWwwPermissionToLocalUser(self):
         self.userScript.add_scripts("chmod 775 /var/www/html")
@@ -74,6 +74,7 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
         return self
 
     def openToMe(self):
+        
         scriptTextPlaceholder = '''mysql <<EOF
 CREATE USER eroot@'{0}';
 GRANT ALL ON *.* TO eroot@'{0}';

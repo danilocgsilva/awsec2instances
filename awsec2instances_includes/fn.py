@@ -18,6 +18,7 @@ from wimiapi.Wimi import Wimi
 import boto3, datetime, os, paramiko, requests, time
 from scp import SCPClient
 import re
+from awsec2instances_includes.DatabaseProcess.DatabaseProcess import DatabaseProcess
 
 def assign_sg_to_ec2(sgid: str, instance_id: str):
 
@@ -64,7 +65,10 @@ def create_new_instance(args, commands):
         elif args.user_data == "wordpress":
             userDataProcess.processWordPress()
         elif args.user_data == "database":
-            userDataProcess.processDatabase(userScript)
+            databaseProcess = DatabaseProcess()
+            databaseProcess.prepare(protocolsService, userScript)
+            # userDataProcess.processDatabase()
+            # userDataProcess.setDatabaseUser(args.database_user, userScript, Wimi().get_ip('ipv4'))
         elif args.user_data == "laravel":
             userDataProcess.processLaravel(userScript)
         elif args.user_data == "desktop":

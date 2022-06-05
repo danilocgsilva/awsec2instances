@@ -41,9 +41,9 @@ class ScriptServiceInterface(abc.ABC):
         pass
 
     # Install and enables the database service
-    @abc.abstractmethod
-    def database(self):
-        pass
+    # @abc.abstractmethod
+    # def database(self):
+    #     pass
 
     @abc.abstractmethod
     def assingWwwPermissionToLocalUser(self):

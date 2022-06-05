@@ -36,11 +36,14 @@ class UserDataProcess:
         self.protocolService.ensure_port_80()
         return []
         
-    def processDatabase(self, userScript: UserScript) -> list:
-        self.protocolService.ensure_port_3306()
-        self.scriptService.database()
-        self.scriptService.openToMe()
-        return []
+#    def processDatabase(self) -> list:
+#        self.protocolService.ensure_port_3306()
+#        self.scriptService.database()
+#        self.scriptService.openToMe()
+#        return []
+
+#    def setDatabaseUser(self, database_user, userScript: UserScript):
+        
 
     def processLaravel(self, userScript: UserScript) -> list:
         self.scriptService.\
@@ -50,6 +53,7 @@ class UserDataProcess:
             install_php_dom().\
             install_php_zip().\
             install_php_curl()
+            
         userScript.add_scripts(self.__get_composer_scripts_download())
         userScript.add_scripts(self.__prepare_laravel_aws())
         userScript.add_scripts("rm -r /var/www/html")

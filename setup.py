@@ -18,7 +18,8 @@ setup(
     author_email="contact@danilocgsilva.me",
     packages=[
         "awsec2instances_includes",
-        "awsec2instances_includes.OsScriptService"
+        "awsec2instances_includes.OsScriptService",
+        "awsec2instances_includes.DatabaseProcess"
     ],
     entry_points={"console_scripts": ["awsec2=awsec2instances_includes.__main__:main"],},
     include_package_data=True

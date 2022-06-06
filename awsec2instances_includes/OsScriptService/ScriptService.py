@@ -68,10 +68,6 @@ class ScriptService(ScriptServiceInterface):
         self.scriptService.enable_httpd()
         return self
 
-    # def database(self):
-    #     self.scriptService.database()
-    #     return self
-
     def assingWwwPermissionToLocalUser(self):
         self.scriptService.assingWwwPermissionToLocalUser()
         return self

@@ -5,7 +5,7 @@ from awsec2instances_includes.UserScript import UserScript
 class DatabaseProcessAwsami(DatabaseProcessInterface):
 
     def prepare(self, protocolService: ProtocolService, userScript: UserScript):
-        self.__adds_mariadb_updated_to_os_repository()
+        self.__adds_mariadb_updated_to_os_repository(userScript)
         userScript.add_scripts("yum makecache")
         userScript.add_scripts("yum install mariadb-server mariadb-client -y")
         userScript.add_scripts("systemctl enable --now mariadb")

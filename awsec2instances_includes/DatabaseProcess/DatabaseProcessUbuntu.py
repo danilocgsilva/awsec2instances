@@ -10,21 +10,5 @@ class DatabaseProcessUbuntu(DatabaseProcessInterface):
 
         userScript.add_scripts("apt install mariadb-server mariadb-client -y")
         userScript.add_scripts("systemctl enable --now mariadb")
-        self.__openToMe(userScript)
         
-        return self
-
-    def __openToMe(self, userScript: UserScript):
-        
-        scriptTextPlaceholder = '''mysql <<EOF
-CREATE USER eroot@'{0}';
-GRANT ALL ON *.* TO eroot@'{0}';
-EOF
-'''
-        scriptText = scriptTextPlaceholder.format(
-            Wimi().get_ip('ipv4')
-        )
-
-        userScript.add_scripts(scriptText)
-
         return self

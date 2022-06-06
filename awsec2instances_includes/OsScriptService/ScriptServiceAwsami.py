@@ -48,13 +48,6 @@ class ScriptServiceAwsami(ScriptServiceInterface):
         self.userScript.add_scripts("yum install php-curl -y")
         return self
 
-    # def database(self):
-    #     self.__adds_mariadb_updated_to_os_repository()
-    #     self.userScript.add_scripts("yum makecache")
-    #     self.userScript.add_scripts("yum install mariadb-server mariadb-client -y")
-    #     self.userScript.add_scripts("systemctl enable --now mariadb")
-    #     return self
-
     def assingWwwPermissionToLocalUser(self):
         self.userScript.add_scripts("chmod 775 /var/www/html")
         self.userScript.add_scripts("chgrp ec2-user /var/www/html")

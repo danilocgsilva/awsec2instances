@@ -67,8 +67,6 @@ def create_new_instance(args, commands):
         elif args.user_data == "database":
             databaseProcess = DatabaseProcess(args.distro)
             databaseProcess.prepare(protocolsService, userScript)
-            # userDataProcess.processDatabase()
-            # userDataProcess.setDatabaseUser(args.database_user, userScript, Wimi().get_ip('ipv4'))
         elif args.user_data == "laravel":
             userDataProcess.processLaravel(userScript)
         elif args.user_data == "desktop":

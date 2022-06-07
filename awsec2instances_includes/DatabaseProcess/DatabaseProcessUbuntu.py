@@ -10,10 +10,5 @@ class DatabaseProcessUbuntu(DatabaseProcessInterface):
 
         userScript.add_scripts("apt install mariadb-server mariadb-client -y")
         userScript.add_scripts("systemctl enable --now mariadb")
-        create_user_script_mysql = '''
-mysql << EOF
-CREATE USER 'ubuntu'@'%';
-EOF'''
-        userScript.add_scripts(create_user_script_mysql);
         
         return self

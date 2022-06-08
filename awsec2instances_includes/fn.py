@@ -57,24 +57,11 @@ def create_new_instance(args, commands):
     if args.user_data:
 
         userDataProcess = UserDataProcess(scriptService, protocolsService)
-        
-        if args.user_data == "webserver":
-            userDataProcess.processWebserver()
-        elif args.user_data == "webserver-php":
-            userDataProcess.processWebserverPhp()
-        elif args.user_data == "wordpress":
-            userDataProcess.processWordPress()
-        elif args.user_data == "database":
-            databaseProcess = DatabaseProcess(args.distro)
-            databaseProcess.prepare(protocolsService, userScript)
-        elif args.user_data == "laravel":
-            userDataProcess.processLaravel(userScript)
-        elif args.user_data == "desktop":
-            userDataProcess.processDesktop()
-        elif args.user_data == "webserver-here":
-            pem_file_path, filelist = userDataProcess.processWebserverHere()
-        else:
-            raise Exception("Sorry! I don't know this option for user data pattern.")
+
+        user_datas = args.user_data.split(",")
+
+        for role in user_datas:
+            __user_data_process(role, userDataProcess, userScript, args.distro, protocolsService)
 
     if args.add_firewall:
         scriptService.setFirewall(protocolsService)
@@ -281,3 +268,28 @@ def __get_default_vpc(vpc_client):
         else:
             print("WARNNING: the environment have the variable called DEFAULT_AWS_VPC, which points to which vpc to choose, if multiple present. But the current value does not corresponds to an existing vpc in the environemnt. You may manuallu inform which one to choose.")
     return None
+
+def __user_data_process(
+        role: str, 
+        userDataProcess: UserDataProcess, 
+        userScript: UserScript, 
+        distro: str,
+        protocolsService: ProtocolService
+    ):
+    if role == "webserver":
+        userDataProcess.processWebserver()
+    elif role == "webserver-php":
+        userDataProcess.processWebserverPhp()
+    elif role == "wordpress":
+        userDataProcess.processWordPress(userScript)
+    elif role == "database":
+        databaseProcess = DatabaseProcess(distro)
+        databaseProcess.prepare(protocolsService, userScript)
+    elif role == "laravel":
+        userDataProcess.processLaravel(userScript)
+    elif role == "desktop":
+        userDataProcess.processDesktop()
+    elif role == "webserver-here":
+        pem_file_path, filelist = userDataProcess.processWebserverHere()
+    else:
+        raise Exception("Sorry! I don't know this option for user data pattern.")

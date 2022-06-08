@@ -89,6 +89,12 @@ awsec2 --command new --user-data webserver-here
 ```
 With this option, it is supposed that the current directory ships the files required to go to the public acessible folder from an webserver. So, after setting the webserver VM, sends recursivelly all files from current directory to the server public acessible folder.
 
+Multiples roles as supported as well:
+```
+awsec2 --command new --user-data wordpress,database
+```
+Then, you instance will have wordpress installed and a database instance running as well. So you can run and install a WordPress using a database within same machine.
+
 ## Setting instances to live more than just 5 minutes
 
 By default, for shrinks the risk of setting an useless instance in mistake, the instance just created will be setted to lasts for just 5 minutes.

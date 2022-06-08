@@ -31,20 +31,9 @@ class UserDataProcess:
         userScript.add_scripts(self.__get_wordpress_installation())
         userScript.add_scripts("rm -r html")
         userScript.add_scripts("ln -s /var/www/wordpress/wordpress html")
-        self.scriptService.database()
-        userScript.add_scripts(self.__set_basic_and_unsecure_wordpress_database_config())
         self.protocolService.ensure_port_80()
         return []
         
-#    def processDatabase(self) -> list:
-#        self.protocolService.ensure_port_3306()
-#        self.scriptService.database()
-#        self.scriptService.openToMe()
-#        return []
-
-#    def setDatabaseUser(self, database_user, userScript: UserScript):
-        
-
     def processLaravel(self, userScript: UserScript) -> list:
         self.scriptService.\
             install_httpd().\
@@ -114,14 +103,6 @@ class UserDataProcess:
 curl -sS https://getcomposer.org/installer | sudo php
 mv composer.phar /usr/local/bin/composer
 chmod +x /usr/local/bin/composer'''
-        return string_to_return
-
-    def __set_basic_and_unsecure_wordpress_database_config(self) -> str:
-        string_to_return = '''mysql -uroot -e "CREATE USER username@localhost identified by 'password'"
-mysql -uroot -e "CREATE DATABASE wordpress"
-mysql -uroot -e "GRANT ALL PRIVILEGES ON wordpress.* TO username@localhost"
-mysql -uroot -e "FLUSH PRIVILEGES"
-'''
         return string_to_return
 
     def __get_wordpress_installation(self) -> str:

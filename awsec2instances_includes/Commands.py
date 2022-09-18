@@ -68,7 +68,7 @@ class Commands:
         aws_resource = boto3.resource('ec2', region_name=self.aws_client.meta.region_name)
         AwsClientUtils().restart_instance(aws_resource, id_to_restart)
 
-    def sleep(self, id_to_sleep):
+    def send_instance_to_bed(self, id_to_sleep):
         aws_resource = boto3.client('ec2', region_name=self.aws_client.meta.region_name)
         for id in id_to_sleep.split(","):
             AwsClientUtils().sleep_instance(aws_resource, id)
@@ -76,7 +76,7 @@ class Commands:
     def lists_vpcs(self):
         print("This comands will lists vpcs to be choosed when creating a new ec2 instance, in case of several vpcs registered in the account. Not yet implemented, as you could see...")
 
-    def floating_parameters(self, args) -> bool:
+    def parameters_with_wrong_command(self, args) -> bool:
 
         if args.access or args.user_data or args.lasts:
             if args.command != "new":

@@ -1,4 +1,4 @@
-## @todo: creates a getDistroData test
+## @TODO: creates a getDistroData test
 
 import unittest
 import sys

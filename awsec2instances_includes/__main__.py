@@ -58,7 +58,7 @@ def main():
     commands = Commands(profile, args.region)
 
     if not args.command:
-        if commands.floating_parameters(args):
+        if commands.parameters_with_wrong_command(args):
             print("You may have forgetted the action that script must takes. You provided arguments compatible to an action not provided - do you forget to call --command new?")
             exit()
         else:
@@ -69,7 +69,7 @@ def main():
     elif args.command == "new":
         create_new_instance(args, commands)
     elif args.command == "sleep":
-        commands.sleep(args.id)
+        commands.send_instance_to_bed(args.id)
     elif args.command == "kill":
         commands.kill(args.id)
     elif args.command == "restart":

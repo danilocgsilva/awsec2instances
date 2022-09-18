@@ -19,6 +19,7 @@ import boto3, datetime, os, paramiko, requests, time
 from scp import SCPClient
 import re
 from awsec2instances_includes.DatabaseProcess.DatabaseProcess import DatabaseProcess
+from awsec2instances_includes.Commands import Commands
 
 def assign_sg_to_ec2(sgid: str, instance_id: str):
 
@@ -31,14 +32,9 @@ def assign_sg_to_ec2(sgid: str, instance_id: str):
     instances = list(ec2.instances.filter(Filters=custom_filter))
     instances[0].modify_attribute(Groups=[sgid], DryRun=False)
 
-def create_new_instance(args, commands):
+def create_new_instance(args, commands: Commands):
 
-    os_family = OsFamily()
-    if not os_family.is_ubuntu_family(args.distro)\
-        and args.add_firewall:
-        message = "You cannot set a firewall in the current Linux distro: " + os_family.default_os() + ". Not working yet. Sorry. Tries to use --distro ubuntu."
-        print(message)
-        exit()
+    __check_can_add_firewall_or_exits(args.add_firewall, args.distro)
     
     creationInstanceService, protocolsService, userScript = CreationInstanceService()\
         .getCreationServices(args.access)
@@ -55,11 +51,8 @@ def create_new_instance(args, commands):
     scriptService.firstUpdate()
 
     if args.user_data:
-
         userDataProcess = UserDataProcess(scriptService, protocolsService)
-
         user_datas = args.user_data.split(",")
-
         for role in user_datas:
             __user_data_process(role, userDataProcess, userScript, args.distro, protocolsService)
 
@@ -294,3 +287,12 @@ def __user_data_process(
         pem_file_path, filelist = userDataProcess.processWebserverHere()
     else:
         raise Exception("Sorry! I don't know this option for user data pattern.")
+
+    
+def __check_can_add_firewall_or_exits(add_firewall, distro):
+    os_family = OsFamily()
+    if not os_family.is_ubuntu_family(distro)\
+        and add_firewall:
+        message = "You cannot set a firewall in the current Linux distro: " + os_family.default_os() + ". Not working yet. Sorry. Tries to use --distro ubuntu."
+        print(message)
+        exit()

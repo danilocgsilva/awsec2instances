@@ -73,8 +73,30 @@ class test_CreationInstanceService(unittest.TestCase):
 
     def test_ensureMinutesData_wrongvalue(self):
         with self.assertRaises(Exception):
-            self.creationalService.ensureMinutesData("not_existing")        
+            self.creationalService.ensureMinutesData("not_existing")
+            
+    def test_get_lifetime(self):
+        self.creationalService.ensureMinutesData("for-an-hour")
+        expected_result = "for an hour"
+        self.assertEqual(expected_result, self.creationalService.get_lifetime())
+        
+    def test_get_lifetime_forever(self):
+        self.creationalService.ensureMinutesData("forever")
+        expected_result = "four years"
+        self.assertEqual(expected_result, self.creationalService.get_lifetime())
+        
+    def test_ensureMinutesData_default(self):
+        self.assertEqual(
+            5,
+            self.creationalService.die_time
+        )
 
+    def test_ensureMinutesData_default_lifetime(self):
+        self.assertEqual(
+            "five minutes",
+            self.creationalService.get_lifetime()
+        )
+        
 if __name__ == '__main__':
     unittest.main()
     

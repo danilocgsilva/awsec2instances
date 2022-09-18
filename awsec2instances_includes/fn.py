@@ -97,6 +97,7 @@ def create_new_instance(args, commands):
         assign_sg_to_ec2(sgid, instance_data.id)
 
     print("The instance with id " + instance_data.id + " is about to be created.")
+    print("The instance have a lifetime of " + creationInstanceService.get_lifetime() + ".")
 
     if args.name:
         print("Waiting to starts the instance, so I can add its name...")

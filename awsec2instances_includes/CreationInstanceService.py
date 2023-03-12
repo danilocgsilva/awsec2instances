@@ -1,6 +1,5 @@
 from awsec2instances_includes.UserScript import UserScript
 from awsec2instances_includes.ProtocolService import ProtocolService
-from awsec2instances_includes.UserScript import UserScript
 import re
 
 class CreationInstanceService:

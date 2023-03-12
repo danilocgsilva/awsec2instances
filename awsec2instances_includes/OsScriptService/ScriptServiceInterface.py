@@ -65,5 +65,9 @@ class ScriptServiceInterface(abc.ABC):
     @abc.abstractmethod
     def install_php_curl(self):
         pass
+    
+    @abc.abstractmethod
+    def getData(self) -> dict:
+        pass
         
 

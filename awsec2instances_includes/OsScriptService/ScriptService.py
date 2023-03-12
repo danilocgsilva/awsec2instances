@@ -23,6 +23,7 @@ class ScriptService(ScriptServiceInterface):
             raise Exception("The provided distro parameter " + distro + " is not known.")
 
         self.distro = distro
+        self.data = {}
 
     def setArch(self, arch: str):
         self.scriptService.setArch(arch)
@@ -78,11 +79,15 @@ class ScriptService(ScriptServiceInterface):
 
     def openToMe(self):
         self.scriptService.openToMe()
+        self.data = self.scriptService.getData()
         return self
 
     def setFirewall(self, protocolsService: ProtocolService):
         self.scriptService.setFirewall(protocolsService)
         return self
+    
+    def getData(self) -> dict:
+        return self.data
 
     def get_distro(self) -> str:
         return self.distro

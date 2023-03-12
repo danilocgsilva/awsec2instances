@@ -146,6 +146,10 @@ def create_new_instance(args, commands):
             __writeSshSkip(instance_interpreter.getInstanceIp())
             for file in filelist:
                 __sendFile(file, pem_file_path, instance_interpreter.getInstanceIp())
+                
+    if args.tell and args.user_data == "database":
+        dataFromScript = userDataProcess.getData()
+        print("Database user: {0}".format(dataFromScript["dbUserName"]))
 
 def get_shell_install_httpd() -> str:
     return "yum install httpd -y"

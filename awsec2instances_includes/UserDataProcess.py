@@ -12,6 +12,7 @@ class UserDataProcess:
     def __init__(self, scriptService: ScriptService, protocolService: ProtocolService):
         self.scriptService = scriptService
         self.protocolService = protocolService
+        self.data = {}
 
     def processWebserver(self):
         self.scriptService.install_httpd()
@@ -40,6 +41,7 @@ class UserDataProcess:
         self.protocolService.ensure_port_3306()
         self.scriptService.database()
         self.scriptService.openToMe()
+        self.data = self.scriptService.getData()
         return []
 
     def processLaravel(self, userScript: UserScript) -> list:
@@ -86,6 +88,9 @@ class UserDataProcess:
             self.scriptService.install_php()
 
         return self.__askLocalPem(), filelist
+    
+    def getData(self) -> dict:
+        return self.data
 
     def __askLocalPem(self):
 

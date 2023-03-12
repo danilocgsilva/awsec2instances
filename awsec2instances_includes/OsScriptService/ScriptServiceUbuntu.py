@@ -6,6 +6,7 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
 
     def __init__(self):
         self.arch = None
+        self.data = {}
 
     def setArch(self, arch: str):
         self.arch = arch
@@ -74,18 +75,27 @@ class ScriptServiceUbuntu(ScriptServiceInterface):
         return self
 
     def openToMe(self):
+
+        dbUserName = "eroot"
+        
         scriptTextPlaceholder = '''mysql <<EOF
-CREATE USER eroot@'{0}';
-GRANT ALL ON *.* TO eroot@'{0}';
+CREATE USER {0}@'{1}';
+GRANT ALL ON *.* TO eroot@'{1}';
 EOF
 '''
         scriptText = scriptTextPlaceholder.format(
+            dbUserName,
             Wimi().get_ip('ipv4')
         )
 
         self.userScript.add_scripts(scriptText)
+        
+        self.data = {"dbUserName": dbUserName}
 
         return self
+    
+    def getData(self) -> dict:
+        return self.data
 
     def setFirewall(self, protocolService: ProtocolService):
         if protocolService.is_not_empty():

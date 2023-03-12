@@ -1,15 +1,18 @@
 from awsec2instances_includes.OsScriptService.ScriptServiceInterface import ScriptServiceInterface
 from wimiapi.Wimi import Wimi
-
+from awsec2instances_includes.UserScript import UserScript
 from awsec2instances_includes.ProtocolService import ProtocolService
 
 class ScriptServiceAwsami(ScriptServiceInterface):
+    
+    def __init__(self):
+        self.data = {}
         
     def setArch(self, arch: str):
         self.scriptService.setArch(arch)
         return self
 
-    def setUserScript(self, userStript):
+    def setUserScript(self, userStript: UserScript):
         self.userScript = userStript
         return self
 
@@ -61,17 +64,22 @@ class ScriptServiceAwsami(ScriptServiceInterface):
         return self
 
     def openToMe(self):
+        
+        dbUserName = "eroot"
 
         scriptTextPlaceholder = '''mysql <<EOF
-CREATE USER eroot@'{0}';
-GRANT ALL ON *.* TO eroot@'{0}';
+CREATE USER {0}@'{1}';
+GRANT ALL ON *.* TO eroot@'{1}';
 EOF
 '''
         scriptText = scriptTextPlaceholder.format(
+            dbUserName,
             Wimi().get_ip('ipv4')
         )
 
         self.userScript.add_scripts(scriptText)
+        
+        self.data = {"dbUserName": dbUserName}
 
         return self
 
@@ -98,6 +106,9 @@ EOF
             self.userScript.add_scripts('echo "y" | ufw enable')
 
         raise Exception("This method must be reviewd. Not working.")
+    
+    def getData(self) -> dict:
+        return self.data
 
     def __adds_mariadb_updated_to_os_repository(self):
         self.userScript.add_scripts('''tee /etc/yum.repos.d/mariadb.repo << EOF

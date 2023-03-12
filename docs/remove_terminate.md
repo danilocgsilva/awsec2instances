@@ -1,5 +1,7 @@
 # Remove/terminate instance
 
+Notice: as you may know, this action will completely wipe the instance from the environment. The instace still will be there for a while with a status called `terminated`, but soon it will disapear completely from the environment.
+
 ```
 awsec2 --command kill --id <your_id_instance_to_terminate>
 ```

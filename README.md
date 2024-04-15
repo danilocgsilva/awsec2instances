@@ -24,5 +24,11 @@ In the terminal, from the root project folder:
 pip install .
 ```
 
+If the operation system complains about something like *externally managed*..., ignore all of that and use:
+
+```
+pip install . --break-system-packages
+```
+
 Check [usages](docs/_usages.md).
 
